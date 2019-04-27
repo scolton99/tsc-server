@@ -22,7 +22,6 @@ router.post('/', async (req, res) => {
       username
     }
   } = JSON.parse(req.body.payload);
-  console.dir(req.body);
 
   const api_token = process.env.SLACK_API_TOKEN;
   const [action_value, record_id] = action_data.split("_");
@@ -49,8 +48,10 @@ router.post('/', async (req, res) => {
 
   if (action_value === "approve") {
     a_base('Feedback').update(record_id, {
-      "Display Text": display_text,
+      "Approved Text": display_text,
       "Display": true
+    }, (err, rec) => {
+      if (err) console.error(err);
     });
   } else {
     a_base('Feedback').update(record_id, {
@@ -60,7 +61,7 @@ router.post('/', async (req, res) => {
 
   let extra = "";
 
-  if (display_text !== "" && action_value === "approve") {
+  if (display_text !== null && action_value === "approve") {
     extra = " The text of the feedback was updated.";
   }
 
