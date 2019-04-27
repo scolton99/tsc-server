@@ -4,7 +4,7 @@ var request = require('request-promise');
 var airtable = require('airtable');
 var a_base = new airtable({apiKey: process.env.AIRTABLE_API_KEY}).base('appydp8wFv8Yd5nVE');
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   const {
     channel: {
       id: channel
@@ -31,18 +31,21 @@ router.post('/', async (req, res) => {
   let display_text = null;
   try {
     fetch_response = await request(`https://slack.com/api/conversations.replies?token=${api_token}&channel=${channel}&ts=${message_ts}`);
-    const { messages } = JSON.parse(fetch_response);
+    const s_res = JSON.parse(fetch_response);
+    if ('error' in s_res && s_res.error !== "") {
+      return next(new Error(s_res.error));
+    }
 
+    const messages = s_res.messages;
     if (messages.length >= 2) {
       display_text = messages[1].text;
     }
   } catch (e) {
-    console.error(e);
+    return next(e);
   }
 
   if (fetch_response == null) {
-    res.send("error");
-    return;
+    return next(new Error("error"));
   }
 
   const verb = action_value === "approve" ? "approved" : "rejected";
@@ -51,14 +54,14 @@ router.post('/', async (req, res) => {
     a_base('Feedback').update(record_id, {
       "Approved Text": display_text,
       "Display": true
-    }, (err, rec) => {
-      if (err) console.error(err);
+    }, (err) => {
+      return next(err);
     });
   } else {
     a_base('Feedback').update(record_id, {
       "Display": false
-    }, (err, rec) => {
-      if (err) console.error(err);
+    }, (err) => {
+      return next(err);
     });
   }
 

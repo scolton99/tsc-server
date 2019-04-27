@@ -1,0 +1,16 @@
+body {
+  background-color: #E57373;
+}
+
+a[href] {
+	color: #FFEBEE;
+}
+
+a[href]:visited {
+	color: #FFEBEE;
+}
+
+a[href]:hover {
+	text-decoration: none;
+	color: #FFCDD2;
+}
