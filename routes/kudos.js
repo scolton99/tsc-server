@@ -65,7 +65,7 @@ router.post('/', async (req, res) => {
     extra = " The text of the feedback was updated.";
   }
 
-  const end_response = {blocks: blocks};
+  const end_response = {blocks: blocks, text: "None"};
   end_response.blocks[4] = {
     type: "section",
     text: {
