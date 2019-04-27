@@ -20,7 +20,8 @@ router.post('/', async (req, res) => {
     ],
     user: {
       username
-    }
+    },
+    response_url
   } = JSON.parse(req.body.payload);
 
   const api_token = process.env.SLACK_API_TOKEN;
@@ -65,6 +66,8 @@ router.post('/', async (req, res) => {
     extra = " The text of the feedback was updated.";
   }
 
+  res.end("Loading...");
+
   const end_response = {blocks: blocks, text: "None"};
   end_response.blocks[4] = {
     type: "section",
@@ -73,7 +76,7 @@ router.post('/', async (req, res) => {
       text: "_This compliment has been " + verb + " by " + username + "." + extra + "_"
     }
   };
-  res.json(end_response);
+  request({method: 'post', body: end_response, json: true, url: response_url}, err => {console.error(err)});
 });
 
 module.exports = router;
