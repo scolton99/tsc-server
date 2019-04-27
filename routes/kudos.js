@@ -57,6 +57,8 @@ router.post('/', async (req, res) => {
   } else {
     a_base('Feedback').update(record_id, {
       "Display": false
+    }, (err, rec) => {
+      if (err) console.error(err);
     });
   }
 
@@ -76,7 +78,7 @@ router.post('/', async (req, res) => {
       text: "_This compliment has been " + verb + " by " + username + "." + extra + "_"
     }
   };
-  request({method: 'post', body: end_response, json: true, url: response_url}, err => {console.error(err)});
+  request({method: 'post', body: end_response, json: true, url: response_url}, err => {if (err) console.error(err)});
 });
 
 module.exports = router;
