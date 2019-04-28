@@ -52,3 +52,12 @@ a[href]:hover {
 	color: #836EAA;
 }
 
+@media (max-width: 600px) {
+	span.description {
+		padding: 0 20px;
+	}
+
+	h1.title, h2.title, h3.title, h4.title, h5.title, h6.title {
+		padding: 0 10px;
+	}
+}
