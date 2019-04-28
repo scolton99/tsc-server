@@ -29,10 +29,12 @@ h1.title, h2.title, h3.title, h4.title, h5.title, h6.title {
 	font-weight: 200;
 	letter-spacing: 3px;
 	margin: 0 0 30px 0;
+	text-align: center;
 }
 
 span.description {
 	font-family: 'Roboto', sans-serif;
+	text-align: center;
 }
 
 a[href] {
