@@ -7,30 +7,36 @@ const fs = require('fs');
 const a_base = new airtable({apiKey: process.env.AIRTABLE_API_KEY}).base('appydp8wFv8Yd5nVE');
 
 // GET /photo
-router.get('/', (req, res, next) => {
+router.get('/', (_req, res) => {
   res.sendFile('/public/photo_form.html', {root: global.root_dir});
 });
 
 // POST /photo
-router.post('/', (req, res, next) => {
+router.post('/', (req, res) => {
+  // If no file was uploaded, return a request error
   if (Object.keys(req.files).length === 0) {
     return res.status(400).end();
   }
 
   const { redirect, netid } = req.body;
   const { name: filename, mimetype } = req.files.photo;
+  
+  // Get the file's extension
   const segments = filename.split('.');
   const ext = segments[segments.length - 1];
 
+  // Get the record corresponding to the submitted NetID
   a_base('Main').select({
-    filterByFormula: '{NetID} = "' + netid + '"',
-    fields: ['Name']
+    filterByFormula: 'AND({NetID} = "' + netid + '", {Current})',
+    fields: ['Name'],
   }).firstPage((err, records) => {
-    if (err) {
+    // If there was an issue with the Airtable request, redirect to error page
+    if (err) { 
       console.error(err);
       return res.redirect(redirect + '#failure');
     }
 
+    // If we couldn't find a user with that NetID, redirect to error page
     if (records.length === 0) {
       console.error("Couldn't find record with NetID " + netid);
       return res.redirect(redirect + '#failure');
@@ -65,6 +71,7 @@ router.post('/', (req, res, next) => {
   });
 });
 
+// Convert a MIME type to an extension
 function mimeToExt(mime) {
   switch (mime) {
     case "image/jpeg": {
@@ -88,12 +95,14 @@ function mimeToExt(mime) {
   }
 }
 
+// GET /photo/:netid
 router.get('/:netid', (req, res, next) => {
   const photos = fs.readdirSync(global.root_dir + '/public/photos');
   let { netid } = req.params;
   netid = netid.toLowerCase();
   const con_photos = photos.filter(photo => photo.startsWith(netid.toLowerCase()));
   
+  // If we can't find a photo for this con, return 404
   if (con_photos.length === 0) {
     return next();
   }
