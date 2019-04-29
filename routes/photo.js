@@ -6,11 +6,6 @@ const fs = require('fs');
 // Setup connection to Airtable
 const a_base = new airtable({apiKey: process.env.AIRTABLE_API_KEY}).base('appydp8wFv8Yd5nVE');
 
-// GET /photo
-router.get('/', (_req, res) => {
-  res.sendFile('/public/photo_form.html', {root: global.root_dir});
-});
-
 // POST /photo
 router.post('/', (req, res) => {
   // If no file was uploaded, return a request error
