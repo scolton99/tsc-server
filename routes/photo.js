@@ -42,30 +42,37 @@ router.post('/', (req, res) => {
       return res.redirect(redirect + '#failure');
     }
 
+    // Get all OLD photos for this NetID and delete them
     const photos = fs.readdirSync(global.root_dir + '/public/photos');
     photos.forEach(photo => {
       if (!photo.startsWith(netid)) return;
       fs.unlinkSync(global.root_dir + '/public/photos/' + photo);
     });
 
+    // Move the temporary file into our public photos directory so that Airtable can read it later
     req.files.photo.mv(global.root_dir + '/public/photos/' + netid + '.' + ext, err => {
       if (err) return res.redirect(redirect + "#failure");
     });
 
+    // Get the record ID for this con in Airtable
     const rec_id = records[0].id;
     a_base('Main').update(rec_id, {
       "Photo": [
         {
+          // Refer to this server; file only needs to be available for a few seconds according to http://bit.ly/2UI9yQE
           url: 'https://tsc-server.herokuapp.com/photo/' + netid + '?' + Date.now(),
+          // Add filename to fix previews
           filename: netid + '.' + mimeToExt(mimetype)
         }
       ]
     }, err => {
+      // If there was an error updating the record, log it and redirect to error page
       if (err) {
         console.error(err);
         return res.redirect(redirect + "#failure");
       }
 
+      // Everything worked! Refer them back.
       res.redirect(redirect + "#success");
     });
   });
