@@ -65,14 +65,16 @@ router.post('/', (req, res, next) => {
 });
 
 router.get('/:netid', (req, res, next) => {
-   const photos = fs.readdirSync(global.root_dir + '/public/photos');
-   const { netid } = req.params;
+  const photos = fs.readdirSync(global.root_dir + '/public/photos');
+  const { netid } = req.params;
+  const con_photos = photos.filter(photo => photo.startsWith(netid.toLowerCase()));
+  
+  if (con_photos.length === 0) {
+    return next();
+  }
 
-   console.log(photos);
-   const con_photo = photos.filter(photo => photo.startsWith(netid.toLowerCase()))[0];
-
-   console.log(con_photo);
-   res.sendFile(con_photo, {root: global.root_dir + '/public/photos'});
+  const con_photo = con_photos[0];
+  res.sendFile(con_photo, {root: global.root_dir + '/public/photos'});
 });
 
 module.exports = router;
