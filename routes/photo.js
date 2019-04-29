@@ -23,7 +23,7 @@ router.post('/', async (req, res, next) => {
   const ext = segments[segments.length - 1];
 
   req.files.photo.mv(global.root_dir + '/public/photos/' + netid + '.' + ext, err => {
-    if (err) return res.redirect('/error');
+    if (err) return res.redirect(redirect + "#failure");
 
     a_base('Main').select({
       filterByFormula: '{NetID} = "' + netid + '"',
@@ -31,7 +31,7 @@ router.post('/', async (req, res, next) => {
     }).firstPage((err, records) => {
       if (err) {
         console.error(err);
-        return;
+        return res.redirect(redirect + '#failure');
       }
 
       const rec_id = records[0].id;
@@ -44,7 +44,7 @@ router.post('/', async (req, res, next) => {
       }, (err, record) => {
         if (err) {
           console.error(err);
-          return res.redirect('/error');
+          return res.redirect(redirect + "#failure");
         }
 
         res.redirect(redirect + "#success");
