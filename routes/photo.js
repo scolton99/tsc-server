@@ -22,6 +22,12 @@ router.post('/', async (req, res, next) => {
   const segments = filename.split('.');
   const ext = segments[segments.length - 1];
 
+  const photos = fs.readdirSync(global.root_dir + '/public/photos');
+  photos.forEach(photo => {
+    if (!photo.startsWith(netid)) return;
+    fs.unlinkSync(global.root_dir + '/public/photos/' + photo);
+  });
+
   req.files.photo.mv(global.root_dir + '/public/photos/' + netid + '.' + ext, err => {
     if (err) return res.redirect(redirect + "#failure");
 
