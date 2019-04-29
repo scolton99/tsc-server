@@ -18,7 +18,7 @@ router.post('/', (req, res, next) => {
   }
 
   const { redirect, netid } = req.body;
-  const { name: filename } = req.files.photo;
+  const { name: filename, mimetype } = req.files.photo;
   const segments = filename.split('.');
   const ext = segments[segments.length - 1];
 
@@ -50,7 +50,8 @@ router.post('/', (req, res, next) => {
     a_base('Main').update(rec_id, {
       "Photo": [
         {
-          url: 'https://tsc-server.herokuapp.com/photo/' + netid + '?' + Date.now()
+          url: 'https://tsc-server.herokuapp.com/photo/' + netid + '?' + Date.now(),
+          type: mimetype
         }
       ]
     }, err => {
@@ -66,18 +67,16 @@ router.post('/', (req, res, next) => {
 
 router.get('/:netid', (req, res, next) => {
   const photos = fs.readdirSync(global.root_dir + '/public/photos');
-  const { netid } = req.params;
+  let { netid } = req.params;
+  netid = netid.toLowerCase();
   const con_photos = photos.filter(photo => photo.startsWith(netid.toLowerCase()));
   
   if (con_photos.length === 0) {
     return next();
   }
 
-  res.header({
-    'Cache-Control': 'no-cache'
-  });
-
   const con_photo = con_photos[0];
+
   res.sendFile(con_photo, {root: global.root_dir + '/public/photos'});
 });
 
