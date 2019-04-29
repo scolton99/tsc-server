@@ -50,7 +50,7 @@ router.post('/', (req, res, next) => {
     a_base('Main').update(rec_id, {
       "Photo": [
         {
-          url: 'https://tsc-server.herokuapp.com/photo/' + netid
+          url: 'https://tsc-server.herokuapp.com/photo/' + netid + '?' + Date.now()
         }
       ]
     }, err => {
