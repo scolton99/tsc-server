@@ -1,0 +1,22 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    background-color: #E6E6E6;
+}
+
+body > header {
+    height: 50px;
+    padding: 10px 15px;
+    display: flex;
+    background-color: #4E2A84;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+body > header > img {
+    height: 35px;
+}
