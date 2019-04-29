@@ -12,7 +12,7 @@ router.get('/', (req, res, next) => {
 });
 
 // POST /photo
-router.post('/', async (req, res, next) => {
+router.post('/', (req, res, next) => {
   if (Object.keys(req.files).length === 0) {
     return res.status(400).end();
   }
@@ -22,44 +22,44 @@ router.post('/', async (req, res, next) => {
   const segments = filename.split('.');
   const ext = segments[segments.length - 1];
 
-  const photos = fs.readdirSync(global.root_dir + '/public/photos');
-  photos.forEach(photo => {
-    if (!photo.startsWith(netid)) return;
-    fs.unlinkSync(global.root_dir + '/public/photos/' + photo);
-  });
+  a_base('Main').select({
+    filterByFormula: '{NetID} = "' + netid + '"',
+    fields: ['Name']
+  }).firstPage((err, records) => {
+    if (err) {
+      console.error(err);
+      return res.redirect(redirect + '#failure');
+    }
 
-  req.files.photo.mv(global.root_dir + '/public/photos/' + netid + '.' + ext, err => {
-    if (err) return res.redirect(redirect + "#failure");
+    if (records.length === 0) {
+      console.error("Couldn't find record with NetID " + netid);
+      return res.redirect(redirect + '#failure');
+    }
 
-    a_base('Main').select({
-      filterByFormula: '{NetID} = "' + netid + '"',
-      fields: ['Name']
-    }).firstPage((err, records) => {
+    const photos = fs.readdirSync(global.root_dir + '/public/photos');
+    photos.forEach(photo => {
+      if (!photo.startsWith(netid)) return;
+      fs.unlinkSync(global.root_dir + '/public/photos/' + photo);
+    });
+
+    req.files.photo.mv(global.root_dir + '/public/photos/' + netid + '.' + ext, err => {
+      if (err) return res.redirect(redirect + "#failure");
+    });
+
+    const rec_id = records[0].id;
+    a_base('Main').update(rec_id, {
+      "Photo": [
+        {
+          url: 'https://tsc-server.herokuapp.com/photo/' + netid
+        }
+      ]
+    }, err => {
       if (err) {
         console.error(err);
-        return res.redirect(redirect + '#failure');
+        return res.redirect(redirect + "#failure");
       }
 
-      if (records.length === 0) {
-        console.error("Couldn't find record with NetID " + netid);
-        return res.redirect(redirect + '#failure');
-      }
-
-      const rec_id = records[0].id;
-      a_base('Main').update(rec_id, {
-        "Photo": [
-          {
-            url: 'https://tsc-server.herokuapp.com/photo/' + netid + '.' + ext
-          }
-        ]
-      }, (err, record) => {
-        if (err) {
-          console.error(err);
-          return res.redirect(redirect + "#failure");
-        }
-
-        res.redirect(redirect + "#success");
-      });
+      res.redirect(redirect + "#success");
     });
   });
 });
