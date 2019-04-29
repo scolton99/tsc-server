@@ -1,7 +1,9 @@
 var express = require('express');
 var parser = require('body-parser');
+var files = require('express-fileupload');
 
 var kudosRouter = require('./routes/kudos');
+var photoRouter = require('./routes/photo');
 
 var app = express();
 
@@ -9,9 +11,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
 app.use(parser.json());
+app.use(files());
 
 // TSC Kudos handler
 app.use('/kudos', kudosRouter);
+
+// TSC Photo change handler
+app.use('/photo', photoRouter);
 
 // Catch any errors
 app.use((err, _req, res, _next) => {
@@ -24,4 +30,5 @@ app.use((_req, res, _next) => {
   res.sendFile('public/not_found.html', {root: __dirname});
 })
 
+global.root_dir = __dirname;
 module.exports = app;
