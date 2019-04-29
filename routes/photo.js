@@ -40,6 +40,11 @@ router.post('/', async (req, res, next) => {
         return res.redirect(redirect + '#failure');
       }
 
+      if (records.length === 0) {
+        console.error("Couldn't find record with NetID " + netid);
+        return res.redirect(redirect + '#failure');
+      }
+
       const rec_id = records[0].id;
       a_base('Main').update(rec_id, {
         "Photo": [
