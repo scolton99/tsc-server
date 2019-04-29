@@ -51,7 +51,7 @@ router.post('/', (req, res, next) => {
       "Photo": [
         {
           url: 'https://tsc-server.herokuapp.com/photo/' + netid + '?' + Date.now(),
-          type: mimetype
+          filename: netid + '.' + mimeToExt(mimetype)
         }
       ]
     }, err => {
@@ -64,6 +64,29 @@ router.post('/', (req, res, next) => {
     });
   });
 });
+
+function mimeToExt(mime) {
+  switch (mime) {
+    case "image/jpeg": {
+      return "jpg";
+    }
+    case "image/png": {
+      return ".png";
+    }
+    case "image/tiff": {
+      return ".tiff";
+    }
+    case "image/gif": {
+      return ".gif";
+    }
+    case "image/bmp": {
+      return ".bmp"
+    }
+    default: {
+      return null;
+    }
+  }
+}
 
 router.get('/:netid', (req, res, next) => {
   const photos = fs.readdirSync(global.root_dir + '/public/photos');
