@@ -73,6 +73,10 @@ router.get('/:netid', (req, res, next) => {
     return next();
   }
 
+  res.header({
+    'Cache-Control': 'no-cache'
+  });
+
   const con_photo = con_photos[0];
   res.sendFile(con_photo, {root: global.root_dir + '/public/photos'});
 });
