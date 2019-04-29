@@ -38,7 +38,7 @@ router.post('/', async (req, res, next) => {
       a_base('Main').update(rec_id, {
         "Photo": [
           {
-            url: 'https://tsc-server.herokuapp.com/photos/' + netid + '.' + ext
+            url: 'https://tsc-server.herokuapp.com/photo/' + netid + '.' + ext
           }
         ]
       }, (err, record) => {
