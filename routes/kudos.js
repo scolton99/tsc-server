@@ -6,6 +6,123 @@ var airtable = require('airtable');
 // Setup connection to Airtable
 var a_base = new airtable({apiKey: process.env.AIRTABLE_API_KEY}).base('appydp8wFv8Yd5nVE');
 
+const toDateString = (month_num, year) => {
+  let month = "";
+
+  switch (month_num) {
+    case 1: {
+      month = "January";
+      break;
+    }
+    case 2: {
+      month = "February";
+      break;
+    }
+    case 3: {
+      month = "March";
+      break;
+    }
+    case 4: {
+      month = "April";
+      break;
+    }
+    case 5: {
+      month = "May";
+      break;
+    }
+    case 6: {
+      month = "June";
+      break;
+    }
+    case 7: {
+      month = "July";
+      break;
+    }
+    case 8: {
+      month = "August";
+      break;
+    }
+    case 9: {
+      month = "September";
+      break;
+    }
+    case 10: {
+      month = "October";
+      break;
+    }
+    case 11: {
+      month = "November";
+      break;
+    }
+    case 12: {
+      month = "December";
+      break;
+    }
+  }
+
+  return month + " " + year;
+}
+
+// GET /kudos/:netid
+router.get('/:netid', (req, res, next) => {
+  const { netid } = req.params;
+  let name = null;
+
+  a_base('Main').select({
+    filterByFormula: '{NetID} = "' + netid + '"',
+    fields: ["Name"]
+  }).firstPage((err, nameRecord) => {
+    if (err || nameRecord.length === 0) {
+      console.error("Name not found for NetID " + netid);
+      return next();
+    }
+
+    name = nameRecord[0].get('Name');
+
+    let feedbacks = [];
+    a_base('Feedback').select({
+      filterByFormula: "AND({Con NetID} = '" + netid + "', {Type} = 'Compliment', {Display})",
+      sort: [
+        {
+          field: "Time Submitted",
+          direction: "desc"
+        }
+      ],
+      fields: ['Con Name', 'Con NetID', 'Display Text', 'Time Submitted']
+    }).eachPage((records, fetchNext) => {
+      feedbacks = feedbacks.concat(records);
+
+      fetchNext();
+    }, err => {
+      if (err) return next(err);
+
+      if (feedbacks.length == 0) return next();
+
+      feedbacks = feedbacks.map(feedback => {
+        const date = new Date(feedback.get('Time Submitted'));
+
+        return [date.getFullYear(), date.getMonth() + 1, date.getHours(), date.getMinutes(), feedback.get('Display Text')];
+      });
+      
+      feedbacks = feedbacks.sort((a, b) => {
+        return a[0] - b[0] || a[1] - b[1] || a[2] - b[2] || a[3] - b[3];
+      });
+
+      const kudos = {};
+      for(let i = 0; i < feedbacks.length; i++) {
+        const name = toDateString(feedbacks[i][1], feedbacks[i][0]);
+
+        if (typeof(kudos[name]) === "undefined")
+          kudos[name] = [];
+
+        kudos[name].push(feedbacks[i][4]);
+      }
+
+      res.render('kudos', { name: name, kudos: kudos });
+    });
+  });
+});
+
 // POST /kudos
 router.post('/', async (req, res, next) => {
   // Fetch information from Slack's request
