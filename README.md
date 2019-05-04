@@ -36,11 +36,11 @@ Past Kudos that have been approved for display by the LC team are visible at the
 This server handles the back-end side of uploading consultant photos. 
 
 At the endpoint `/photo`, `POST` requests can be submitted with the following key-pair form values:
-| Key | Value |
-| --- | ----- |
-| `photo` | The uploaded photo. |
-| `redirect` | The URL to redirect to after the submission is complete. If the process succeeded, the server will redirect to `redirect`#success, and otherwise it will redirect to `redirect`#failure. The server provides no UI for photo uploads and something bad **will** happen if this value is left out. |
-| `netid` | The NetID of the person whose photo is to be replaced. |
+ Key | Value 
+ --- | --- 
+ `photo` | The uploaded photo. 
+ `redirect` | The URL to redirect to after the submission is complete. If the process succeeded, the server will redirect to `redirect`#success, and otherwise it will redirect to `redirect`#failure. The server provides no UI for photo uploads and something bad **will** happen if this value is left out. 
+ `netid` | The NetID of the person whose photo is to be replaced. 
 
 Form submissions should be encoded in `application/x-www-form-urlencoded` format. All fields are required.
 
