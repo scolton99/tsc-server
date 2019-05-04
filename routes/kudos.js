@@ -67,15 +67,18 @@ const toDateString = (month_num, year) => {
 router.get('/', (_req, res, next) => {
   // Get from Feedback table
 	a_base('Feedback').select({
-      fields: ['Con Name', 'Display Text'],
-      filterByFormula: 'AND({Display}, {Type} = "Compliment", DATETIME_DIFF(NOW(), {Time Submitted}, "days") <= 14)',    // Show compliments that have been approved and are less than two weeks old
-      sort: [
-        {
-          field: 'Time Submitted',    // Make newest feedback show up first so that con order shuffles
-          direction: 'desc'
-        }
-      ]
+    fields: ['Con Name', 'Display Text'],
+    filterByFormula: 'AND({Display}, {Type} = "Compliment", DATETIME_DIFF(NOW(), {Time Submitted}, "days") <= 14)',    // Show compliments that have been approved and are less than two weeks old
+    sort: [
+      {
+        field: 'Time Submitted',    // Make newest feedback show up first so that con order shuffles
+        direction: 'desc'
+      }
+    ]
   }).firstPage((err, records) => {
+    // Allow this to be loaded by the KB
+    res.header("Access-Control-Allow-Origin", "https://kb.northwestern.edu");
+    
     // Display errors if they occur 
     if (err) {
       console.error(err);
