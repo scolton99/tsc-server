@@ -46,3 +46,5 @@ At the endpoint `/photo`, `POST` requests can be submitted with the following ke
 Form submissions should be encoded in `application/x-www-form-urlencoded` format. All fields are required.
 
 Photos are stored on the server until the server is restarted or a new photo is uploaded for that NetID. Until this time, uploaded photos are accessible at the endpoint `/photo/[NetID]`. Airtable is given this URL and within several minutes after a request is made to this server, Airtable will download the photo from our server and will copy it to theirs. At this point, the copy stored on this server is no longer necessary. 
+
+An example of a form that works to fill this purpose can be found at https://kb.northwestern.edu.internal/62391.
