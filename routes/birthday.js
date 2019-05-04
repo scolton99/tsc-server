@@ -5,7 +5,7 @@ var airtable = require('airtable');
 // Setup connection to Airtable
 var a_base = new airtable({apiKey: process.env.AIRTABLE_API_KEY}).base('appydp8wFv8Yd5nVE');
 
-router.get('/', (req, res, next) => {
+router.get('/', (_req, res, next) => {
     // Allow this to be loaded by the KB
     res.header("Access-Control-Allow-Origin", "https://kb.northwestern.edu");
 
