@@ -6,6 +6,9 @@ var airtable = require('airtable');
 var a_base = new airtable({apiKey: process.env.AIRTABLE_API_KEY}).base('appydp8wFv8Yd5nVE');
 
 router.get('/', (req, res, next) => {
+    // Allow this to be loaded by the KB
+    res.header("Access-Control-Allow-Origin", "kb.northwestern.edu");
+
 	const bday_date = (new Date()).toLocaleDateString("en-US", {month: 'short', day: 'numeric'});
 	a_base('Main').select({
 		fields: ['First Name', 'Birthday', 'Name'],
