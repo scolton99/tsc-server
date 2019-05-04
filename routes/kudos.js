@@ -64,6 +64,40 @@ const toDateString = (month_num, year) => {
   return month + " " + year;
 }
 
+router.get('/kudos', (req, res, next) => {
+  // Get from Feedback table
+	a_base('Feedback').select({
+      fields: ['Con Name', 'Display Text'],
+      filterByFormula: 'AND({Display}, {Type} = "Compliment", DATETIME_DIFF(NOW(), {Time Submitted}, "days") <= 14)',    // Show compliments that have been approved and are less than two weeks old
+      sort: [
+        {
+          field: 'Time Submitted',    // Make newest feedback show up first so that con order shuffles
+          direction: 'desc'
+        }
+      ]
+  }).firstPage((err, records) => {
+    // Display errors if they occur 
+    if (err) {
+      console.error(err);
+      return next(err);
+    }
+    
+    // Get consultant names and remove duplicates (using Set)
+    const names = new Set(records.map(record => record["fields"]["Con Name"]).flat());
+    
+    const feedback = {};
+    names.forEach(name => {
+      // Get the feedback applicable to this con as strings
+      const con_feedback = records.filter(record => record["fields"]["Con Name"].includes(name)).map(record => record["fields"]["Display Text"]);
+      
+      // Store the feedback string in our feedback object
+      feedback[name] = con_feedback;
+    });
+    
+    res.json(feedback);
+  });
+});
+
 // GET /kudos/:netid
 router.get('/:netid', (req, res, next) => {
   const { netid } = req.params;
