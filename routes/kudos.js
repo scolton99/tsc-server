@@ -6,6 +6,7 @@ var airtable = require('airtable');
 // Setup connection to Airtable
 var a_base = new airtable({apiKey: process.env.AIRTABLE_API_KEY}).base('appydp8wFv8Yd5nVE');
 
+// Convert a numerical month (1-indexed) and year to a human-readable string.
 const toDateString = (month_num, year) => {
   let month = "";
 
@@ -68,18 +69,23 @@ router.get('/:netid', (req, res, next) => {
   const { netid } = req.params;
   let name = null;
 
+  // Get the user's name for display given their NetID
   a_base('Main').select({
     filterByFormula: '{NetID} = "' + netid + '"',
     fields: ["Name"]
   }).firstPage((err, nameRecord) => {
     if (err || nameRecord.length === 0) {
+      // If we can't find this user (they're not an employee), return 404
       console.error("Name not found for NetID " + netid);
       return next();
     }
 
+    // Save name for later
     name = nameRecord[0].get('Name');
 
     let feedbacks = [];
+
+    // Get feedback appropriate to this con that has been marked as "display"
     a_base('Feedback').select({
       filterByFormula: "AND({Con NetID} = '" + netid + "', {Type} = 'Compliment', {Display})",
       sort: [
@@ -90,24 +96,38 @@ router.get('/:netid', (req, res, next) => {
       ],
       fields: ['Con Name', 'Con NetID', 'Display Text', 'Time Submitted']
     }).eachPage((records, fetchNext) => {
+      // Keep fetching until there's no feedback left; store each in the feedback variable
       feedbacks = feedbacks.concat(records);
 
       fetchNext();
     }, err => {
-      if (err) return next(err);
+      // 500 error if Airtable returns an error
+      if (err) {
+        console.log(err);
+        return next(err);
+      }
 
+      // If we didn't find any feedback for this person, return 404
       if (feedbacks.length == 0) return next();
 
+      // Turn each feedback into an object into an array with this structure:
+      // [year, month, hour, minute, text]
       feedbacks = feedbacks.map(feedback => {
         const date = new Date(feedback.get('Time Submitted'));
 
         return [date.getFullYear(), date.getMonth() + 1, date.getHours(), date.getMinutes(), feedback.get('Display Text')];
       });
       
+      // Sort feedback in descending order
       feedbacks = feedbacks.sort((a, b) => {
         return a[0] - b[0] || a[1] - b[1] || a[2] - b[2] || a[3] - b[3];
       });
 
+      // Make feedback into an object of this structure:
+      /* { "April 2019": [
+       *  "Feedback 1", "Feedback 2", ...
+       * ], ... }
+       */
       const kudos = {};
       for(let i = 0; i < feedbacks.length; i++) {
         const name = toDateString(feedbacks[i][1], feedbacks[i][0]);
@@ -118,6 +138,7 @@ router.get('/:netid', (req, res, next) => {
         kudos[name].push(feedbacks[i][4]);
       }
 
+      // Pass the restructured kudos to Pug for rendering
       res.render('kudos', { name: name, kudos: kudos });
     });
   });
