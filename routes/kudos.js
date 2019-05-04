@@ -83,7 +83,7 @@ router.get('/', (_req, res, next) => {
     }
     
     // Get consultant names and remove duplicates (using Set)
-    const names = new Set(records.map(record => record["fields"]["Con Name"]).flat());
+    const names = new Set(records.map(record => record["fields"]["Con Name"]).reduce((prev, cur) => prev.concat(cur)));
     
     const feedback = {};
     names.forEach(name => {
