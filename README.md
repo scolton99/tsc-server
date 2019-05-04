@@ -36,6 +36,7 @@ Past Kudos that have been approved for display by the LC team are visible at the
 This server handles the back-end side of uploading consultant photos. 
 
 At the endpoint `/photo`, `POST` requests can be submitted with the following key-pair form values:
+
  Key | Value 
  --- | --- 
  `photo` | The uploaded photo. 
