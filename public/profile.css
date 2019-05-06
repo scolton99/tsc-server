@@ -1,0 +1,55 @@
+div.profile-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+div.profile-header > div.profile-header-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+div.profile-header > div.profile-header-text > span {
+    text-align: inherit;
+    margin: 0;
+    line-height: 1.3em;
+}
+
+div.profile-header > div.profile-header-text > span.profile-header-name {
+    font-weight: bold;
+    font-size: 1.45em;
+}
+
+div.profile-header > div.profile-header-text > span.profile-header-position {
+    font-style: italic;
+    font-size: 1.15em;
+    margin-bottom: 1em;
+}
+
+div.profile-header > img {
+    height: 225px;
+    border: 5px solid #333;
+    margin-bottom: 8px;
+}
+
+div.profile-row {
+    display: flex;
+}
+
+div.profile-row > section {
+    width: 50%;
+    flex-grow: 0;
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+
+div.contact-record {
+    margin-bottom: 8px;
+}
+
+div.contact-record > span.fas, div.contact-record > span.far {
+    margin-right: 7px;
+}

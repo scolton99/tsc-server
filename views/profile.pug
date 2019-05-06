@@ -1,0 +1,32 @@
+html   
+    head
+        title Profile
+        link(rel="stylesheet", href="/fonts.css")
+        link(rel="stylesheet", href="/kb_theme.css")
+        link(rel="stylesheet", href="/profile.css")
+        link(rel="stylesheet", href="https://use.fontawesome.com/releases/v5.8.1/css/all.css", integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf", crossorigin="anonymous")
+    body    
+        header
+            img(src="/conweb-logo.png")
+        main
+            div(class="profile-header")
+                img(src=user.Photo[0].url)
+                div(class="profile-header-text")
+                    span(class="profile-header-name")= user.Name
+                    span(class="profile-header-position")= user.Position
+                    span(class="profile-header-start-date") Joined us #{user["Start Date"]}
+            div(class="profile-row")
+                section(id="contact-info")
+                    h3 Contact Info
+                    div(class="contact-record")
+                        span(class="fas fa-phone")
+                        span= formatPhone(user["Phone Number"])
+                    div(class="contact-record")
+                        span(class="fas fa-envelope")
+                        span
+                            a(href="mailto:" + user.Email)= user.Email
+                    div(class="contact-record")
+                        span(class="far fa-envelope")
+                        span
+                            a(href="mailto:" + user.Exchange)= user["Exchange"].toLowerCase()
+                section(id="")
