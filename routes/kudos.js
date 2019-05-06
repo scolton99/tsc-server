@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var request = require('request-promise');
+var request = require('request-promise-native');
 var airtable = require('airtable');
 
 // Setup connection to Airtable
