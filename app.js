@@ -5,6 +5,7 @@ var files = require('express-fileupload');
 var kudosRouter = require('./routes/kudos');
 var photoRouter = require('./routes/photo');
 var birthdayRouter = require('./routes/birthday');
+var queueRouter = require('./routes/queue');
 
 var app = express();
 
@@ -24,6 +25,8 @@ app.use('/kudos', kudosRouter);
 app.use('/photo', photoRouter);
 
 app.use('/birthdays', birthdayRouter);
+
+app.use('/queue', queueRouter);
 
 // Catch any errors
 app.use((err, _req, res, _next) => {
