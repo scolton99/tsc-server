@@ -10,7 +10,7 @@
             <param0 xsi:type="xsd:string">{{FP_USERNAME}}</param0>
             <param1 xsi:type="xsd:string">{{FP_PASSWORD}}</param1>
             <param2 xsi:type="xsd:string"></param2>
-            <param3 xsi:type="xsd:string">SELECT COUNT(*) from MASTER1 WHERE (mrSTATUS IN ('Customer__bResponded', 'In__bProgress', 'Open', 'Request') AND mrASSIGNEES LIKE '%AA_SUPPORT__bCENTER%')</param3>
+            <param3 xsi:type="xsd:string">{{FP_QUERY}}</param3>
         </ns1:MRWebServices__search>
     </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>

@@ -4,7 +4,7 @@ var fs = require('fs');
 var request = require('request-promise-native');
 var xml2js = require('xml2js');
 
-const queue_request = fs.readFileSync(__dirname + '/../assets/queue_request.xml', {encoding: 'UTF-8'});
+const fp_request = fs.readFileSync(__dirname + '/../assets/fp_request.xml', {encoding: 'UTF-8'});
 
 const get_background_color = num_tickets => {
     if (num_tickets === 0) {
@@ -24,7 +24,9 @@ const get_num_tickets = async () => {
     const fp_username = process.env.FP_USERNAME;
     const fp_password = process.env.FP_PASSWORD;
 
-    const queue_request_auth = queue_request.replace('{{FP_USERNAME}}', fp_username).replace('{{FP_PASSWORD}}', fp_password);
+    const query = "SELECT COUNT(*) from MASTER1 WHERE (mrSTATUS IN ('Customer__bResponded', 'In__bProgress', 'Open', 'Request') AND mrASSIGNEES LIKE '%AA_SUPPORT__bCENTER%')";
+
+    const queue_request_auth = fp_request.replace('{{FP_USERNAME}}', fp_username).replace('{{FP_PASSWORD}}', fp_password).replace("{{FP_QUERY}}", query);
     
     const response = await request({
         method: 'POST',
