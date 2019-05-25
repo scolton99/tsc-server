@@ -1,6 +1,6 @@
 div.profile-header {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
 }
@@ -9,7 +9,7 @@ div.profile-header > div.profile-header-text {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    text-align: center;
+    margin-left: 20px;
 }
 
 div.profile-header > div.profile-header-text > span {
@@ -27,6 +27,10 @@ div.profile-header > div.profile-header-text > span.profile-header-position {
     font-style: italic;
     font-size: 1.15em;
     margin-bottom: 1em;
+}
+
+div.profile-header > div.profile-header-text > span.profile-header-num-tickets {
+    font-style: italic;
 }
 
 div.profile-header > img {
@@ -52,4 +56,17 @@ div.contact-record {
 
 div.contact-record > span.fas, div.contact-record > span.far {
     margin-right: 7px;
+}
+
+#num_tickets > .lds-dual-ring {
+    height: 1em;
+    width: 1em;
+}
+
+#num_tickets > .lds-dual-ring::after {
+    height: 12px;
+    width: 12px;
+    border-width: 1px;
+    margin: 0;
+    border-color: #4e2a84 #4e2a84 #4e2a84 transparent;
 }
