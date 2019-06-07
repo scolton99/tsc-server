@@ -12,31 +12,36 @@ html
         header
             img(src="/conweb-logo.png")
         main
-            div(class="profile-header")
+            div.profile-header
                 img(src=user.Photo[0].url)
-                div(class="profile-header-text")
-                    span(class="profile-header-name")= user.Name
-                    span(class="profile-header-position")= user.Position
-                    span(class="profile-header-start-date") Joined us #{user["Start Date"]}
-                    span(class="profile-header-num-tickets")
+                div.profile-header-text
+                    span.profile-header-name
+                        | #{user.Name}
+                        span.profile-header-pronouns= user.Pronouns
+                    span.profile-header-position= user.Position
+                    span.profile-header-start-date Joined us #{user["Start Date"]}
+                    span.profile-header-num-tickets
                         | Completed 
-                        span(id="num_tickets")
-                            div(class="lds-dual-ring")
+                        span#num_tickets
+                            div.lds-dual-ring
                         | tickets
-            div(class="profile-row")
-                section(id="bio")
+                    span.profile-header-birthday
+                        span.fas.fa-birthday-cake
+                        span#birthday= user.Birthday
+            div.profile-row
+                section#bio
                     h3 Bio
                     p= user.Bio
-                section(id="contact-info")
+                section#contact-info
                     h3 Contact Info
-                    div(class="contact-record")
-                        span(class="fas fa-phone")
+                    div.contact-record
+                        span.fas.fa-phone
                         span= formatPhone(user["Phone Number"])
-                    div(class="contact-record")
-                        span(class="fas fa-envelope")
+                    div.contact-record
+                        span.fas.fa-envelope
                         span
                             a(href="mailto:" + user.Email)= user.Email
-                    div(class="contact-record")
-                        span(class="far fa-envelope")
+                    div.contact-record
+                        span.far.fa-envelope
                         span
                             a(href="mailto:" + user.Exchange)= user["Exchange"].toLowerCase()

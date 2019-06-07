@@ -1,0 +1,21 @@
+div.profile-photo-container {
+    position: relative;
+}
+
+div.profile-photo-container:hover::before {
+    position: absolute;
+    top: 5px;
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    content: "\f304";
+    cursor: pointer;
+    font-weight: 900;
+    font-size: 2em;
+    font-family: "Font Awesome 5 Free";
+} 

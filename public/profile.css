@@ -23,6 +23,21 @@ div.profile-header > div.profile-header-text > span.profile-header-name {
     font-size: 1.45em;
 }
 
+div.profile-header > div.profile-header-text span.profile-header-pronouns {
+    font-weight: normal;
+    font-style: italic;
+    font-size: 0.65em;
+    margin-left: 7px;
+}
+
+div.profile-header-text span.profile-header-pronouns::before {
+    content: '(';
+}
+
+div.profile-header-text span.profile-header-pronouns::after {
+    content: ')';
+}
+
 div.profile-header > div.profile-header-text > span.profile-header-position {
     font-style: italic;
     font-size: 1.15em;
@@ -31,12 +46,16 @@ div.profile-header > div.profile-header-text > span.profile-header-position {
 
 div.profile-header > div.profile-header-text > span.profile-header-num-tickets {
     font-style: italic;
+    margin-bottom: 1em;
 }
 
-div.profile-header > img {
+div.profile-header > div.profile-header-text > span.profile-header-birthday > span.fas {
+    margin-right: 7px;
+}
+
+div.profile-header img {
     height: 225px;
     border: 5px solid #333;
-    margin-bottom: 8px;
 }
 
 div.profile-row {

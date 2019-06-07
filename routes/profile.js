@@ -112,4 +112,28 @@ router.get("/tickets/:netid", async (req, res, _next) => {
     res.json({num_tickets: num_tickets});
 });
 
+router.get("/:netid/edit", async (req, res, _next) => {
+    const { netid } = req.params;
+
+    a_base('Main').select({
+        filterByFormula: 'AND({NetID} = "' + netid + '", {Current})'
+    }).firstPage((err, records) => {
+        // If Airtable returns an error, log it and return 500
+        if (err) {
+            console.error(err);
+            return next(err);
+        }
+
+        // If we can't find a record with that ID, return 404
+        if (records.length === 0) {
+            console.error("No record found with ID " + record_id);
+            return next();
+        }
+
+        console.log(records[0].fields);
+
+        res.render('edit-profile', {user: records[0].fields, formatPhone: formatPhone});
+    });
+});
+
 module.exports = router;
