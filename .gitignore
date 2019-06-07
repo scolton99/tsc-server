@@ -62,3 +62,5 @@ typings/
 
 public/photos/*
 !public/photos/.gitkeep
+
+.DS_Store
