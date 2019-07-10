@@ -14,9 +14,9 @@ const get_background_color = num_tickets => {
     } else if (num_tickets < 20) {
         return "#c6a700";
     } else if (num_tickets < 50) {
-        return "#c63f17";
-    } else {
         return "#ba000d";
+    } else {
+        return "#000000";
     }
 }
 
