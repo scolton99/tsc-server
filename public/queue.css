@@ -16,6 +16,35 @@
     animation: lds-dual-ring 0.8s linear infinite;
 }
 
+#ticket_info {
+    z-index: 2;
+}
+
+video#background-fire {
+    position: absolute;
+    z-index: -1;
+    transition: opacity 1.5s ease-in;
+    opacity: 0.0;
+
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: 100vh;
+    width: 100vw;
+
+    filter: brightness(0.3);
+
+    object-fit: fill;
+
+    outline: none;
+}
+
+video#background-fire.active {
+    opacity: 1.0;
+}
+
 @keyframes lds-dual-ring {
     0% {
         transform: rotate(0deg);

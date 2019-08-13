@@ -68,17 +68,27 @@ router.get('/', async (_req, res, _next) => {
 });
 
 router.get('/status', async (_req, res, next) => {
-    const num_tickets = await get_num_tickets();
-    const verb = num_tickets === 1 ? "is" : "are";
-    const noun = num_tickets === 1 ? "ticket" : "tickets";
-    const background_color = get_background_color(num_tickets);
-
-    res.json({
-        num_tickets: num_tickets,
-        verb: verb,
-        noun: noun,
-        background_color: background_color
-    });
+    try {
+        const num_tickets = await get_num_tickets();
+        const verb = num_tickets === 1 ? "is" : "are";
+        const noun = num_tickets === 1 ? "ticket" : "tickets";
+        const background_color = get_background_color(num_tickets);
+    
+        res.json({
+            num_tickets: num_tickets,
+            verb: verb,
+            noun: noun,
+            background_color: background_color
+        });
+    } catch (_) {
+        res.json({
+            num_tickets: 99,
+            verb: 'are',
+            noun: 'tickets',
+            background_color: '#000'
+        });
+    }
+    
 })
 
 module.exports = router;
