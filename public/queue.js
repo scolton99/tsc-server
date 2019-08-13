@@ -8,7 +8,7 @@ const refresh_tickets = async () => {
         ticket_info.innerHTML = `<h1 class="title">There ${verb} ${num_tickets} ${noun} in the queue.</h1>`;
 
         const fire = document.getElementById("background-fire");
-        if (num_tickets >= 100)
+        if (typeof(num_tickets) === "number" && num_tickets >= 100)
             fire.classList.add("active");
         else
             fire.classList.remove("active");

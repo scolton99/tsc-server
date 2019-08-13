@@ -59,7 +59,7 @@ const get_num_tickets = async () => {
 
         num_tickets = parseInt(ticket_num_str);
     });
-    
+
     return num_tickets;
 };
 
@@ -73,22 +73,23 @@ router.get('/status', async (_req, res, next) => {
         const verb = num_tickets === 1 ? "is" : "are";
         const noun = num_tickets === 1 ? "ticket" : "tickets";
         const background_color = get_background_color(num_tickets);
-    
+
         res.json({
             num_tickets: num_tickets,
             verb: verb,
             noun: noun,
             background_color: background_color
         });
-    } catch (_) {
+    } catch (e) {
+	console.log(e.message);
+
         res.json({
-            num_tickets: 99,
-            verb: 'are',
+            num_tickets: 'an unknown amount of',
+            verb: 'is',
             noun: 'tickets',
             background_color: '#000'
         });
     }
-    
 })
 
 module.exports = router;
