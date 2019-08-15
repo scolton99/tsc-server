@@ -11,11 +11,11 @@ global.stored_ticket_value = -1;
 const get_background_color = num_tickets => {
     if (num_tickets === 0) {
         return "#401F68";
-    } else if (num_tickets <= 5) {
+    } else if (num_tickets <= 10) {
         return "#087f23";
-    } else if (num_tickets < 20) {
+    } else if (num_tickets <= 25) {
         return "#c6a700";
-    } else if (num_tickets < 50) {
+    } else if (num_tickets <= 50) {
         return "#ba000d";
     } else {
         return "#000000";
