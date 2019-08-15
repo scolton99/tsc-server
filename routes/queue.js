@@ -6,6 +6,8 @@ var xml2js = require('xml2js');
 
 const queue_request = fs.readFileSync(__dirname + '/../assets/queue_request.xml', {encoding: 'UTF-8'});
 
+global.stored_ticket_value = -1;
+
 const get_background_color = num_tickets => {
     if (num_tickets === 0) {
         return "#401F68";
@@ -67,12 +69,14 @@ router.get('/', async (_req, res, _next) => {
     res.sendFile('queue.html', {root: global.root_dir + '/public'});
 });
 
-router.get('/status', async (_req, res, next) => {
+router.get('/status', async (_req, res, _next) => {
     try {
         const num_tickets = await get_num_tickets();
         const verb = num_tickets === 1 ? "is" : "are";
         const noun = num_tickets === 1 ? "ticket" : "tickets";
         const background_color = get_background_color(num_tickets);
+
+        global.stored_ticket_value = num_tickets;
 
         res.json({
             num_tickets: num_tickets,
@@ -81,7 +85,7 @@ router.get('/status', async (_req, res, next) => {
             background_color: background_color
         });
     } catch (e) {
-	console.log(e.message);
+	    console.log(e.message);
 
         res.json({
             num_tickets: 'an unknown amount of',
@@ -90,6 +94,15 @@ router.get('/status', async (_req, res, next) => {
             background_color: '#000'
         });
     }
-})
+});
+
+router.get('/quick', async (_req, res, _next) => {
+    res.json({
+        num_tickets: global.stored_ticket_value,
+        verb: global.stored_ticket_value === 1 ? 'is' : 'are',
+        noun: global.stored_ticket_value === 1 ? 'ticket' : 'tickets',
+        background_color: get_background_color(global.stored_ticket_value)
+    });
+});
 
 module.exports = router;
