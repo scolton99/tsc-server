@@ -3,10 +3,11 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "start12": "node --tls-min-v1.0 ./bin/www"
   },
   "dependencies": {
-    "airtable": "^0.5.10",
+    "airtable": "^0.7.1",
     "body-parser": "^1.19.0",
     "express": "~4.16.0",
     "express-fileupload": "^1.1.4",

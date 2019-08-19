@@ -6,17 +6,19 @@ var xml2js = require('xml2js');
 
 const fp_request = fs.readFileSync(__dirname + '/../assets/fp_request.xml', {encoding: 'UTF-8'});
 
+global.stored_ticket_value = -1;
+
 const get_background_color = num_tickets => {
     if (num_tickets === 0) {
         return "#401F68";
-    } else if (num_tickets <= 5) {
+    } else if (num_tickets <= 10) {
         return "#087f23";
-    } else if (num_tickets < 20) {
+    } else if (num_tickets <= 25) {
         return "#c6a700";
-    } else if (num_tickets < 50) {
-        return "#c63f17";
-    } else {
+    } else if (num_tickets <= 50) {
         return "#ba000d";
+    } else {
+        return "#000000";
     }
 }
 
@@ -61,7 +63,7 @@ const get_num_tickets = async () => {
 
         num_tickets = parseInt(ticket_num_str);
     });
-    
+
     return num_tickets;
 };
 
@@ -69,18 +71,40 @@ router.get('/', async (_req, res, _next) => {
     res.sendFile('queue.html', {root: global.root_dir + '/public'});
 });
 
-router.get('/status', async (_req, res, next) => {
-    const num_tickets = await get_num_tickets();
-    const verb = num_tickets === 1 ? "is" : "are";
-    const noun = num_tickets === 1 ? "ticket" : "tickets";
-    const background_color = get_background_color(num_tickets);
+router.get('/status', async (_req, res, _next) => {
+    try {
+        const num_tickets = await get_num_tickets();
+        const verb = num_tickets === 1 ? "is" : "are";
+        const noun = num_tickets === 1 ? "ticket" : "tickets";
+        const background_color = get_background_color(num_tickets);
 
+        global.stored_ticket_value = num_tickets;
+
+        res.json({
+            num_tickets: num_tickets,
+            verb: verb,
+            noun: noun,
+            background_color: background_color
+        });
+    } catch (e) {
+	    console.log(e.message);
+
+        res.json({
+            num_tickets: 'an unknown amount of',
+            verb: 'is',
+            noun: 'tickets',
+            background_color: '#000'
+        });
+    }
+});
+
+router.get('/quick', async (_req, res, _next) => {
     res.json({
-        num_tickets: num_tickets,
-        verb: verb,
-        noun: noun,
-        background_color: background_color
+        num_tickets: global.stored_ticket_value,
+        verb: global.stored_ticket_value === 1 ? 'is' : 'are',
+        noun: global.stored_ticket_value === 1 ? 'ticket' : 'tickets',
+        background_color: get_background_color(global.stored_ticket_value)
     });
-})
+});
 
 module.exports = router;
