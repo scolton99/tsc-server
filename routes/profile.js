@@ -6,7 +6,7 @@ var request = require('request-promise-native');
 var xml2js = require('xml2js');
 
 // Setup connection to Airtable
-var a_base = new airtable({apiKey: process.env.AIRTABLE_API_KEY}).base('appydp8wFv8Yd5nVE');
+var a_base = new airtable({apiKey: process.env.AIRTABLE_API_KEY || "null"}).base('appydp8wFv8Yd5nVE');
 
 const formatPhone = number => {
     const all = number.split("-");
@@ -77,8 +77,6 @@ router.get("/edit/:record_id", async (req, res, next) => {
             return next();
         }
 
-        console.log(record.fields);
-
         res.render('edit-profile', {user: record.fields});
     });
 });
@@ -100,8 +98,6 @@ router.get("/:netid", (req, res, next) => {
             console.error("No record found with ID " + record_id);
             return next();
         }
-
-        console.log(records[0].fields);
 
         res.render('profile', {user: records[0].fields, formatPhone: formatPhone});
     });
