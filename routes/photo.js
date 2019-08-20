@@ -4,7 +4,7 @@ const airtable = require('airtable');
 const fs = require('fs');
 
 // Setup connection to Airtable
-const a_base = new airtable({apiKey: process.env.AIRTABLE_API_KEY}).base('appydp8wFv8Yd5nVE');
+const a_base = new airtable({apiKey: process.env.AIRTABLE_API_KEY || "null"}).base('appydp8wFv8Yd5nVE');
 
 // POST /photo
 router.post('/', (req, res) => {
