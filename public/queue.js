@@ -10,12 +10,12 @@ const refresh_tickets = async () => {
         const fire = document.getElementById("background-fire");
         const blue_fire = document.getElementById("blue-fire");
 
-        if (num_tickets >= 100)
+        if (typeof(num_tickets) === "number" && num_tickets >= 100)
             fire.classList.add("active");
         else
             fire.classList.remove("active");
 
-        if (num_tickets === 0)
+        if (typeof(num_tickets) === "number" && num_tickets === 0)
             blue_fire.classList.add("active");
         else
             blue_fire.classList.remove("active");

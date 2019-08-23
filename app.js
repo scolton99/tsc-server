@@ -5,6 +5,7 @@ var files = require('express-fileupload');
 var kudosRouter = require('./routes/kudos');
 var photoRouter = require('./routes/photo');
 var birthdayRouter = require('./routes/birthday');
+var profileRouter = require('./routes/profile');
 var queueRouter = require('./routes/queue');
 
 var app = express();
@@ -24,8 +25,13 @@ app.use('/kudos', kudosRouter);
 // TSC Photo change handler
 app.use('/photo', photoRouter);
 
+// TSC Today's Birthdays JSON
 app.use('/birthdays', birthdayRouter);
 
+// TSC Profile handler
+app.use('/profile', profileRouter);
+
+// FP Queue Handler
 app.use('/queue', queueRouter);
 
 // Catch any errors
