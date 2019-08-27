@@ -1,0 +1,126 @@
+.container {
+    font-family: 'Raleway', sans-serif;
+}
+
+.container > form > div {
+    text-align: center;
+}
+
+div#netid-entry, div#ticket-details {
+    font-size: 3.5em;
+    text-transform: lowercase;
+}
+
+input[type="text"], input[type="number"] {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    font-family: inherit;
+    padding: 0 3px;
+    font-size: 1em;
+    border-bottom: 1px solid white;
+}
+
+input#netid-field {
+    width: 200px;
+}
+
+input#ticket-id-field {
+    width: 194px;
+}
+
+#test-span {
+    font-size: 3.5em;
+    font-family: 'Raleway', sans-serif;
+    opacity: 0.0;
+    z-index: -2;
+    pointer-events: none;
+    position: fixed;
+    bottom: 100%;
+    right: 100%;
+}
+
+#submission-tracking-display {
+    display: inline-block;
+    cursor: pointer;
+    position: relative;
+}
+
+#submission-tracking-display-text {
+    display: inline-block;
+    border-bottom: 1px solid white;
+}
+
+#submission-tracking-options {
+    position: absolute;
+    top: 75%;
+    right: 0;
+    font-size: 0.75em;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: white;
+    color: #401F68;
+    cursor: default;
+
+    opacity: 0.0;
+    transition: opacity 0.2s, top 0.2s;
+
+    pointer-events: none;
+
+    box-shadow: 1px 1px 7px 0px rgba(0,0,0,0.6);
+}
+
+#submission-tracking-options.active {
+    opacity: 1.0;
+    top: 100%;
+    pointer-events: all;
+}
+
+#submission-tracking-options span {
+    transition: color 0.2s linear;
+    cursor: pointer;
+    display: block;
+}
+
+#submission-tracking-options span:hover {
+    color: #836EAA;
+}
+
+#submission-tracking-options span:not(:last-of-type) {
+    margin-bottom: 5px;
+}
+
+#submit-button-container {
+    margin-top: 60px;
+}
+
+button[type='button'][disabled] {
+    opacity: 0.0;
+    pointer-events: none;
+}
+
+button[type='button'] {
+    font-family: 'Roboto', sans-serif;
+    text-transform: uppercase;
+    background: white;
+    color: #401F68;
+    font-weight: bold;
+    font-size: 2em;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    opacity: 1.0;
+    outline: none;
+}
+
+.lds-dual-ring {
+    width: 54px;
+    height: 48px;
+}
+
+.lds-dual-ring:after {
+    border-color: #401F68 #401F68 #401F68 transparent;
+}

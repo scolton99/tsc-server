@@ -7,6 +7,7 @@ var photoRouter = require('./routes/photo');
 var birthdayRouter = require('./routes/birthday');
 var profileRouter = require('./routes/profile');
 var queueRouter = require('./routes/queue');
+var editTicketRouter = require('./routes/edit-ticket');
 
 var app = express();
 
@@ -34,16 +35,19 @@ app.use('/profile', profileRouter);
 // FP Queue Handler
 app.use('/queue', queueRouter);
 
+// Ticket Editor Handler
+app.use('/edit-ticket', editTicketRouter);
+
 // Catch any errors
 app.use((err, _req, res, _next) => {
   console.error(err.stack);
   res.status(500).sendFile('/public/error.html', {root: __dirname});
-})
+});
 
 // Otherwise, it's a 404
 app.use((_req, res, _next) => {
   res.sendFile('public/not_found.html', {root: __dirname});
-})
+});
 
 global.root_dir = __dirname;
 module.exports = app;

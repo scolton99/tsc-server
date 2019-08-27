@@ -3,7 +3,7 @@ var router = express.Router();
 var airtable = require('airtable');
 
 // Setup connection to Airtable
-var a_base = new airtable({apiKey: process.env.AIRTABLE_API_KEY}).base('appydp8wFv8Yd5nVE');
+var a_base = new airtable({apiKey: process.env.AIRTABLE_API_KEY || "null"}).base('appydp8wFv8Yd5nVE');
 
 router.get('/', (_req, res, next) => {
     // Allow this to be loaded by the KB
