@@ -1,10 +1,10 @@
-var express = require('express');
-var router = express.Router();
-var request = require('request-promise-native');
-var airtable = require('airtable');
+const express = require('express');
+const router = express.Router();
+const request = require('request-promise-native');
+const airtable = require('airtable');
 
 // Setup connection to Airtable
-var a_base = new airtable({apiKey: process.env.AIRTABLE_API_KEY || "null"}).base('appydp8wFv8Yd5nVE');
+const a_base = new airtable({apiKey: process.env.AIRTABLE_API_KEY || "null"}).base('appydp8wFv8Yd5nVE');
 
 // Convert a numerical month (1-indexed) and year to a human-readable string.
 const toDateString = (month_num, year) => {
@@ -133,7 +133,7 @@ router.get('/:netid', (req, res, next) => {
       ],
       fields: ['Con Name', 'Con NetID', 'Display Text', 'Time Submitted']
     }).eachPage((records, fetchNext) => {
-      // Keep fetching until there's no feedback left; store each in the feedback variable
+      // Keep fetching until there's no feedback left; store each in the feedback constiable
       feedbacks = feedbacks.concat(records);
 
       fetchNext();
@@ -282,7 +282,7 @@ router.post('/', async (req, res, next) => {
   
   // This line is run asynchronously without await, so we can't modify the response with it.
   // Errors that occur here can be found in Heroku logs.
-  // This line sends the replacement message where Slack told us to through the end_response variable.
+  // This line sends the replacement message where Slack told us to through the end_response constiable.
   request({method: 'post', body: end_response, json: true, url: response_url}, err => {if (err) console.error(err)});
 });
 

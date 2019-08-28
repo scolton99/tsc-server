@@ -74,7 +74,7 @@ router.post('/', (req, res) => {
 });
 
 // Convert a MIME type to an extension
-function mimeToExt(mime) {
+const mimeToExt = mime => {
   switch (mime) {
     case "image/jpeg": {
       return "jpg";
@@ -95,7 +95,7 @@ function mimeToExt(mime) {
       return null;
     }
   }
-}
+};
 
 // GET /photo/:netid
 router.get('/:netid', (req, res, next) => {

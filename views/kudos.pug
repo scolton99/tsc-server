@@ -1,20 +1,20 @@
 html
-    head
-        title Compliments for #{name}
-        link(rel="stylesheet", href="/fonts.css")
-        link(rel="stylesheet", href="/kb_theme.css")
-    body
-        header
-            img(src="/conweb-logo.png")
-        main
-            h1 Compliments for #{name}
-            p
-                | Something missing? Want to highlight a good quality you don't see
-                | listed here?
-                | 
-                a(href="https://bit.ly/nuitfeedback",target="_blank") Submit feedback!
-            -for(const [key, value] of Object.entries(kudos).reverse())
-                h3= key
-                ul
-                    each feedback in value
-                        li= feedback
+  head
+    title Compliments for #{name}
+    link(rel="stylesheet" href="/fonts.css")
+    link(rel="stylesheet" href="/kb_theme.css")
+  body
+    header
+      img(src="/conweb-logo.png")
+    main
+      h1 Compliments for #{name}
+      p
+        | Something missing? Want to highlight a good quality you don't see
+        | listed here?
+        | 
+        a(href="https://bit.ly/nuitfeedback" target="_blank") Submit feedback!
+      -for(const [key, value] of Object.entries(kudos).reverse())
+        h3= key
+        ul
+          each feedback in value
+            li= feedback

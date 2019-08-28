@@ -1,15 +1,15 @@
-var express = require('express');
-var parser = require('body-parser');
-var files = require('express-fileupload');
+const express = require('express');
+const parser = require('body-parser');
+const files = require('express-fileupload');
 
-var kudosRouter = require('./routes/kudos');
-var photoRouter = require('./routes/photo');
-var birthdayRouter = require('./routes/birthday');
-var profileRouter = require('./routes/profile');
-var queueRouter = require('./routes/queue');
-var editTicketRouter = require('./routes/edit-ticket');
+const kudosRouter = require('./routes/kudos');
+const photoRouter = require('./routes/photo');
+const birthdayRouter = require('./routes/birthday');
+const profileRouter = require('./routes/profile');
+const queueRouter = require('./routes/queue');
+const editTicketRouter = require('./routes/edit-ticket');
 
-var app = express();
+const app = express();
 
 app.set('view engine', 'pug');
 app.set('views', './views');
