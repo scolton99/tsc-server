@@ -101,8 +101,6 @@ router.get("/:netid", (req, res, next) => {
       return next();
     }
 
-    console.log(records[0].fields);
-
     res.render('profile', { user: records[0].fields, formatPhone: formatPhone });
   });
 });
