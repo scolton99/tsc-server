@@ -20,7 +20,7 @@
   z-index: 2;
 }
 
-video#background-fire {
+video#background-fire, video#background-nuke {
   position: absolute;
   z-index: -1;
   transition: opacity 1.5s ease-in;
@@ -36,7 +36,7 @@ video#background-fire {
   outline: none;
 }
 
-video#background-fire.active {
+video#background-fire.active, video#background-nuke.active {
   opacity: 1.0;
 }
 
