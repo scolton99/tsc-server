@@ -8,6 +8,7 @@ const birthdayRouter = require('./routes/birthday');
 const profileRouter = require('./routes/profile');
 const queueRouter = require('./routes/queue');
 const editTicketRouter = require('./routes/edit-ticket');
+const contactsRouter = require('./routes/contacts');
 
 const app = express();
 
@@ -37,6 +38,9 @@ app.use('/queue', queueRouter);
 
 // Ticket Editor Handler
 app.use('/edit-ticket', editTicketRouter);
+
+// Contact CSV Handler
+app.use('/contacts', contactsRouter);
 
 // Catch any errors
 app.use((err, _req, res, _next) => {
