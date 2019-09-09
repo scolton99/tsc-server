@@ -6,6 +6,7 @@ const xml2js = require('xml2js');
 const FP = require('../util/FP');
 
 const fp_request = fs.readFileSync(__dirname + '/../assets/category_request.xml', { encoding: 'UTF-8' });
+const sep = " → ";
 
 // Taken from https://stackoverflow.com/questions/7744912/making-a-javascript-string-sql-friendly
 const escape_string = str => {
@@ -56,6 +57,7 @@ router.get('/:service_family/:service?/:category?/:sub_category?', async (req, r
   }
 
   const query = sql.join(' AND ');
+  const categorization = sql.join(sep);
 
   const fp_request_auth = fp_request.replace("{{FP_USERNAME}}", fp_username)
     .replace("{{FP_PASSWORD}}", fp_password)
@@ -93,6 +95,7 @@ router.get('/:service_family/:service?/:category?/:sub_category?', async (req, r
 
         const response_json = {
           result: 'success',
+          categorization: categorization,
           stats: formatted_items
         }
         
