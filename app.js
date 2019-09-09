@@ -10,6 +10,7 @@ const queueRouter = require('./routes/queue');
 const editTicketRouter = require('./routes/edit-ticket');
 const contactsRouter = require('./routes/contacts');
 const assignmentGroupRouter = require('./routes/assignment-group');
+const categorizationRouter = require('./routes/categorization');
 
 const app = express();
 
@@ -45,6 +46,9 @@ app.use('/contacts', contactsRouter);
 
 // Assignment Group Stats Handler
 app.use('/assignment-group', assignmentGroupRouter);
+
+// Category Stats Handler
+app.use('/categorization', categorizationRouter);
 
 // Catch any errors
 app.use((err, _req, res, _next) => {

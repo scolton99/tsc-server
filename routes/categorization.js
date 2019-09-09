@@ -5,8 +5,7 @@ const request = require('request-promise-native');
 const xml2js = require('xml2js');
 const FP = require('../util/FP');
 
-const fp_request = fs.readFileSync(__dirname + '/../assets/assignment_group_request.xml', { encoding: 'UTF-8' });
-const sep = " → ";
+const fp_request = fs.readFileSync(__dirname + '/../assets/category_request.xml', { encoding: 'UTF-8' });
 
 // Taken from https://stackoverflow.com/questions/7744912/making-a-javascript-string-sql-friendly
 const escape_string = str => {
@@ -41,15 +40,26 @@ const escape_string = str => {
   });
 };
 
-router.get('/:group', async (req, res, next) => {
+router.get('/:service_family/:service?/:category?/:sub_category?', async (req, res, next) => {
   res.header("Access-Control-Allow-Origin", "https://kb.northwestern.edu");
 
-  const { group } = req.params;
   const { FP_USERNAME: fp_username, FP_PASSWORD: fp_password } = process.env;
+
+  const field_names = ["service__bfamily", "service", "category", "sub__ucategory"];
+  const fields = [req.params.service_family, req.params.service, req.params.category, req.params.sub_category];
+  const sql = [];
+
+  for (let i = 0; i < fields.length; i++) {
+    if (!fields[i]) break;
+
+    sql.push(field_names[i] + "='" + escape_string(fields[i]) + "'");
+  }
+
+  const query = sql.join(' AND ');
 
   const fp_request_auth = fp_request.replace("{{FP_USERNAME}}", fp_username)
     .replace("{{FP_PASSWORD}}", fp_password)
-    .replace("{{GROUP_NAME}}", escape_string(group));
+    .replace("{{FP_QUERY}}", query);
 
   try {
     const response = await request({
@@ -73,24 +83,16 @@ router.get('/:group', async (req, res, next) => {
 
         const items = result["SOAP-ENV:Envelope"]["SOAP-ENV:Body"][0]["namesp1:MRWebServices__searchResponse"][0]["return"][0]["item"];
         let formatted_items = [];
-        const possible_categories = ["service__bfamily", "service", "category", "sub__ucategory"];
 
         for(const item of items) {
-          const categories = [];
-
-          for (let possible_category of possible_categories)
-            if ("_" in item[possible_category][0])
-              categories.push(FP.unfix(item[possible_category][0]["_"]))
-
           formatted_items.push({
-            category: categories.join(sep),
+            category: FP.unfix(item["mrassignees"][0]["_"]),
             count: parseInt(item["count"][0]["_"])
           });
         }
 
         const response_json = {
           result: 'success',
-          group_name: FP.unfix(group),
           stats: formatted_items
         }
         
