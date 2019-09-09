@@ -57,7 +57,7 @@ router.get('/:service_family/:service?/:category?/:sub_category?', async (req, r
   }
 
   const query = sql.join(' AND ');
-  const categorization = sql.join(sep);
+  const categorization = fields.map(x => FP.unfix(x)).join(sep);
 
   const fp_request_auth = fp_request.replace("{{FP_USERNAME}}", fp_username)
     .replace("{{FP_PASSWORD}}", fp_password)
