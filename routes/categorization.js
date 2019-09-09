@@ -48,16 +48,18 @@ router.get('/:service_family/:service?/:category?/:sub_category?', async (req, r
 
   const field_names = ["service__bfamily", "service", "category", "sub__ucategory"];
   const fields = [req.params.service_family, req.params.service, req.params.category, req.params.sub_category];
+  const fields_clean = [];
   const sql = [];
 
   for (let i = 0; i < fields.length; i++) {
     if (!fields[i]) break;
 
+    fields_clean.push(fields[i]);
     sql.push(field_names[i] + "='" + escape_string(fields[i]) + "'");
   }
 
   const query = sql.join(' AND ');
-  const categorization = fields.map(x => FP.unfix(x)).join(sep);
+  const categorization = fields_clean.map(x => FP.unfix(x)).join(sep);
 
   const fp_request_auth = fp_request.replace("{{FP_USERNAME}}", fp_username)
     .replace("{{FP_PASSWORD}}", fp_password)
