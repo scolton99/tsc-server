@@ -86,7 +86,7 @@ router.get('/:service_family/:service?/:category?/:sub_category?', async (req, r
 
         for(const item of items) {
           formatted_items.push({
-            category: FP.unfix(item["mrassignees"][0]["_"]),
+            group: FP.unfix(item["mrassignees"][0]["_"]),
             count: parseInt(item["count"][0]["_"])
           });
         }
