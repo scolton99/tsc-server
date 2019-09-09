@@ -9,22 +9,40 @@ const refresh_tickets = async () => {
 
     const fire = document.getElementById("background-fire");
     const nuke = document.getElementById("background-nuke");
+    const nova = document.getElementById("background-nova");
+    const hole = document.getElementById("background-hole");
 
     if (typeof (num_tickets) === "number" && num_tickets >= 100 && num_tickets < 150)
       fire.classList.add("active");
     else
       fire.classList.remove("active");
 
-    if (typeof (num_tickets) === "number" && num_tickets >= 150)
+    if (typeof (num_tickets) === "number" && num_tickets >= 150 && num_tickets < 200)
       nuke.classList.add("active");
     else
       nuke.classList.remove("active");
+
+    if (typeof (num_tickets) === "number" && num_tickets >= 200 && num_tickets < 250)
+      nova.classList.add("active");
+    else
+      nova.classList.remove("active");
+
+    if (typeof (num_tickets) === "number" && num_tickets >= 250)
+      hole.classList.add("active");
+    else
+      hole.classList.remove("active");
 
     if (fire.paused)
       fire.play();
 
     if (nuke.paused)
       nuke.play();
+
+    if (nova.paused)
+      nova.play();
+    
+    if (hole.paused)
+      hole.play();
   });
 };
 

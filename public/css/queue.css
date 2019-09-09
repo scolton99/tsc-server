@@ -20,7 +20,7 @@
   z-index: 2;
 }
 
-video#background-fire, video#background-nuke {
+video#background-fire, video#background-nuke, video#background-nova, video#background-hole {
   position: absolute;
   z-index: -1;
   transition: opacity 1.5s ease-in;
@@ -31,12 +31,19 @@ video#background-fire, video#background-nuke {
   bottom: 0;
   height: 100vh;
   width: 100vw;
-  filter: brightness(0.3);
-  object-fit: fill;
+  object-fit: cover;
   outline: none;
 }
 
-video#background-fire.active, video#background-nuke.active {
+video#background-nuke, video#background-nova, video#background-hole {
+  filter: brightness(0.8);
+}
+
+video#background-fire {
+  filter: brightness(0.3);
+}
+
+video#background-fire.active, video#background-nuke.active, video#background-nova.active, video#background-hole.active {
   opacity: 1.0;
 }
 
