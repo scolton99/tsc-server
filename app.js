@@ -11,6 +11,7 @@ const editTicketRouter = require('./routes/edit-ticket');
 const contactsRouter = require('./routes/contacts');
 const assignmentGroupRouter = require('./routes/assignment-group');
 const categorizationRouter = require('./routes/categorization');
+const spamRouter = require('./routes/spam');
 
 const app = express();
 
@@ -49,6 +50,9 @@ app.use('/assignment-group', assignmentGroupRouter);
 
 // Category Stats Handler
 app.use('/categorization', categorizationRouter);
+
+// Spam Handler
+app.use('/spam', spamRouter);
 
 // Catch any errors
 app.use((err, _req, res, _next) => {

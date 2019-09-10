@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+                   xmlns:ns1="MRWebServices"
+                   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+                   SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+    <SOAP-ENV:Body>
+        <ns1:MRWebServices__search>
+            <param0 xsi:type="xsd:string">{{FP_USERNAME}}</param0>
+            <param1 xsi:type="xsd:string">{{FP_PASSWORD}}</param1>
+            <param2 xsi:type="xsd:string"></param2>
+            <param3 xsi:type="xsd:string">SELECT MASTER1.mrID, MASTER1.mrSTATUS FROM MASTER1 INNER JOIN MASTER1_ABDATA ON MASTER1_ABDATA.mrID = MASTER1.mrID WHERE MASTER1.mrASSIGNEES LIKE '%AA_SUPPORT__bCENTER%' AND MASTER1_ABDATA.Email__bAddress NOT LIKE '%northwestern.edu' AND MASTER1_ABDATA.Email__bAddress NOT LIKE '%nm.org' AND MASTER1.mrSTATUS IN ('Open', 'In__bProgress', 'Customer__bResponded') AND MASTER1.submission__btracking = 'Email' ORDER BY mrID ASC FETCH NEXT 15 ROWS ONLY</param3>
+        </ns1:MRWebServices__search>
+    </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
