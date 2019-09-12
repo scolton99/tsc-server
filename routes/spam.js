@@ -11,7 +11,7 @@ router.get('/', (_req, res, _next) => {
   res.sendFile('spam.html', { root: global.root_dir + '/public' });
 });
 
-router.get('/status', async (req, res, next) => {
+router.get('/status', async (_req, res, next) => {
   const { FP_USERNAME, FP_PASSWORD } = process.env;
 
   const fp_request_auth = fp_request.replace('{{FP_USERNAME}}', FP_USERNAME)

@@ -15,8 +15,13 @@ const refresh_spam = async () => {
 
     for (const spam_tick of spam) {
       const p = document.createElement("p");
-      p.textContent = spam_tick;
+      const a = document.createElement("a");
 
+      a.setAttribute("href", `https://itsm-fp.northwestern.edu/MRcgi/MRlogin.pl?DL=${spam_tick}DA1`)
+      a.setAttribute("target", "_blank");
+      a.textContent = spam_tick;
+
+      p.appendChild(a);
       spam_info.appendChild(p);
     }
   }
