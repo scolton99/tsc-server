@@ -12,6 +12,7 @@ const contactsRouter = require('./routes/contacts');
 const assignmentGroupRouter = require('./routes/assignment-group');
 const categorizationRouter = require('./routes/categorization');
 const spamRouter = require('./routes/spam');
+const directoryRouter = require('./routes/directory');
 
 const app = express();
 
@@ -53,6 +54,9 @@ app.use('/categorization', categorizationRouter);
 
 // Spam Handler
 app.use('/spam', spamRouter);
+
+// Directory Handler
+app.use('/directory', directoryRouter);
 
 // Catch any errors
 app.use((err, _req, res, _next) => {

@@ -1,0 +1,60 @@
+html
+  head
+    meta(charset='UTF-8')
+    link(rel="stylesheet" href="/css/fonts.css")
+    link(rel="stylesheet" href="/css/directory.css")
+    title Tier 1 Consultant Directory
+  body
+    header
+      img(src='/assets/conweb-logo.png')
+    main
+      h1.center Consultant Phone Directory
+      p.center
+        | Dial 
+        b 91 
+        | and then the number on the batphone to dial out. Last updated on #{date}.
+      section#numbers
+        table
+          - let i = 0
+          while i < 56
+            if records[i]
+              tr
+                td.bold= i + 1
+                td= records[i].name
+                td= records[i++].number
+            else
+              tr
+                td
+                td
+                td
+                - i++
+    footer
+      table
+        tr
+          td.bold Batphone
+          td 
+            | (847) 49
+            b 1-4061
+          td(rowspan='2').bold Lynne (Office)
+          td(rowspan='2') 
+            | (847) 49
+            b 1-4092
+        tr
+          td.bold Library Batphone
+          td 
+            | (847) 49
+            b 1-6627
+        tr
+          td.bold SOC
+          td 
+            | (847) 46
+            b 7-2222
+          td(rowspan='2').bold Lynne (Cell)
+          td(rowspan='2') (847) 298-6912
+        tr
+          td.bold Feinberg IT
+          td
+            | (312) 50
+            b 3-7648
+    script
+      | // window.print();
