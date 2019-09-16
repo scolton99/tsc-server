@@ -11,6 +11,7 @@ const refresh_tickets = async () => {
     const nuke = document.getElementById("background-nuke");
     const nova = document.getElementById("background-nova");
     const hole = document.getElementById("background-hole");
+    const confetti = document.getElementById("background-confetti");
 
     if (typeof (num_tickets) === "number" && num_tickets >= 100 && num_tickets < 150)
       fire.classList.add("active");
@@ -27,10 +28,15 @@ const refresh_tickets = async () => {
     else
       nova.classList.remove("active");
 
-    if (typeof (num_tickets) === "number" && num_tickets >= 250)
+    if (typeof (num_tickets) === "number" && num_tickets >= 250 && num_tickets < 500)
       hole.classList.add("active");
     else
       hole.classList.remove("active");
+
+    if (typeof (num_tickets) === "number" && num_tickets >= 500)
+      confetti.classList.add("active");
+    else
+      confetti.classList.remove("active")
 
     if (fire.paused)
       fire.play();
@@ -43,6 +49,9 @@ const refresh_tickets = async () => {
     
     if (hole.paused)
       hole.play();
+    
+    if (confetti.paused)
+      confetti.play();
   });
 };
 
