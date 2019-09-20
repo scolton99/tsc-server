@@ -32,6 +32,9 @@ router.get('/status', async (_req, res, next) => {
     const tickets = result["SOAP-ENV:Envelope"]["SOAP-ENV:Body"][0]["namesp1:MRWebServices__searchResponse"][0]["return"][0]["item"];
     const list_clean = [];
 
+    if (typeof(tickets) === "undefined")
+      return res.json(list_clean);
+    
     for (const ticket of tickets) {
       list_clean.push(parseInt(ticket.mrid[0]["_"]));
     }

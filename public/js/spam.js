@@ -5,7 +5,7 @@ const refresh_spam = async () => {
   const spam_info = document.getElementById("spam_info");
 
   if (spam.length === 0) {
-    spam_info.innerHTML = "No potential spam tickets.";
+    spam_info.innerHTML = "<p>No potential spam tickets.</p>";
   } else {
     spam_info.innerHTML = "";
 
