@@ -80,6 +80,8 @@ router.get('/status', async (_req, res, _next) => {
 
     global.stored_ticket_value = num_tickets;
 
+    res.set('Access-Control-Allow-Origin', 'https://kb.northwestern.edu');
+
     res.json({
       num_tickets: num_tickets,
       verb: verb,
@@ -88,6 +90,8 @@ router.get('/status', async (_req, res, _next) => {
     });
   } catch (e) {
     console.log(e.message);
+    
+    res.set('Access-Control-Allow-Origin', 'https://kb.northwestern.edu');
 
     res.json({
       num_tickets: 'an unknown amount of',
@@ -99,6 +103,8 @@ router.get('/status', async (_req, res, _next) => {
 });
 
 router.get('/quick', async (_req, res, _next) => {
+  res.set('Access-Control-Allow-Origin', 'https://kb.northwestern.edu');
+
   res.json({
     num_tickets: global.stored_ticket_value,
     verb: global.stored_ticket_value === 1 ? 'is' : 'are',
