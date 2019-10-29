@@ -5,6 +5,8 @@ const request = require('request-promise-native');
 const W2Wpwd = process.env.W2W_PWD;
 
 router.get('/get-sid', async (_req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "https://kb.northwestern.edu");
+    
     const req = await request.post(
         'https://www.whentowork.com/cgi-bin/w2w.dll/login',
         {
