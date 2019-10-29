@@ -13,6 +13,7 @@ const assignmentGroupRouter = require('./routes/assignment-group');
 const categorizationRouter = require('./routes/categorization');
 const spamRouter = require('./routes/spam');
 const directoryRouter = require('./routes/directory');
+const whenToWorkRouter = require('./routes/whentowork');
 
 const app = express();
 
@@ -57,6 +58,9 @@ app.use('/spam', spamRouter);
 
 // Directory Handler
 app.use('/directory', directoryRouter);
+
+// WhenToWork Handler
+app.use('/w2w', whenToWorkRouter);
 
 // Catch any errors
 app.use((err, _req, res, _next) => {
