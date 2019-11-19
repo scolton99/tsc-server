@@ -7,3 +7,4 @@ steps:
   args: ['cp', 'gs://tss-support-center.appspot.com/private/app.yaml', 'app.yaml']
 - name: 'gcr.io/cloud-builders/gcloud'
   args: ['app', 'deploy']
+timeout: "1600s"
