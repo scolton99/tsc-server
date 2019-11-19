@@ -3,5 +3,7 @@ steps:
   args: ['clone', 'https://github.com/nuit-tsc/tsc-server']
 - name: 'gcr.io/cloud-builders/npm'
   args: ['install']
+- name: 'gcr.io/cloud-builders/gsutil'
+  args: ['cp', 'gs://tss-support-center.appspot.com/private/app.yaml', 'app.yaml']
 - name: 'gcr.io/cloud-builders/gcloud'
-  args: ["app", "deploy"]
+  args: ["app", "deploy", "app.yaml"]
