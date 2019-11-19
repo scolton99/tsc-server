@@ -68,7 +68,8 @@ const get_num_tickets = async () => {
 };
 
 router.get('/', async (_req, res, _next) => {
-  res.sendFile('queue.html', { root: global.root_dir + '/public' });
+  res.render('queue');
+  // res.sendFile('queue.html', { root: global.root_dir + '/public' });
 });
 
 router.get('/status', async (_req, res, _next) => {

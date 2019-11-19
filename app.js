@@ -26,6 +26,10 @@ app.use(express.static('public'));
 app.use(parser.json());
 app.use(files());
 
+app.get("/", (_req, res) => {
+  res.redirect("/queue");
+});
+
 // TSC Kudos handler
 app.use('/kudos', kudosRouter);
 
@@ -74,4 +78,6 @@ app.use((_req, res, _next) => {
 });
 
 global.root_dir = __dirname;
+global.cdn_endpoint = "//storage.googleapis.com/tss-support-center.appspot.com/"
+global.cdn = x => `${global.cdn_endpoint}${x}`
 module.exports = app;

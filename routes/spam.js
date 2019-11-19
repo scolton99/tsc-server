@@ -8,7 +8,7 @@ const FP = require('../util/FP');
 const fp_request = fs.readFileSync(__dirname + '/../assets/spam_request.xml', { encoding: 'UTF-8' });
 
 router.get('/', (_req, res, _next) => {
-  res.sendFile('spam.html', { root: global.root_dir + '/public' });
+  res.render('spam');
 });
 
 router.get('/status', async (_req, res, next) => {

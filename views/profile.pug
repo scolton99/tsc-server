@@ -1,4 +1,5 @@
-html   
+doctype html
+html
   head
     title Profile
     meta(name="netid", content=user.NetID)
@@ -10,7 +11,7 @@ html
     script(src="/js/profile.js")
   body    
     header
-      img(src="/assets/conweb-logo.png")
+      img(src=global.cdn("images/conweb-logo.png"))
     main
       div.profile-header
         img(src=user.Photo[0].url)
@@ -44,4 +45,4 @@ html
           div.contact-record
             span.far.fa-envelope
             span
-              a(href="mailto:" + user.Exchange)= user["Exchange"].toLowerCase()
+              a(href="mailto:" + user.Exchange)= user["Exchange - Office365"].toLowerCase()

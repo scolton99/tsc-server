@@ -1,3 +1,4 @@
+doctype html
 html
   head
     title Compliments for #{name}
@@ -5,7 +6,7 @@ html
     link(rel="stylesheet" href="/css/kb_theme.css")
   body
     header
-      img(src="/assets/conweb-logo.png")
+      img(src=global.cdn("images/conweb-logo.png"))
     main
       h1 Compliments for #{name}
       p

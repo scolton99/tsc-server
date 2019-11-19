@@ -6,7 +6,7 @@ const request = require('request-promise-native');
 const fp_request = fs.readFileSync(__dirname + '/../assets/edit_ticket_request.xml', { encoding: 'UTF-8' });
 
 router.get("/", async (req, res, next) => {
-  res.sendFile('public/edit-ticket.html', { root: global.root_dir });
+  res.render('edit-ticket');
 });
 
 router.post("/", async (req, res, _next) => {
