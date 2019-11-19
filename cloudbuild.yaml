@@ -1,0 +1,5 @@
+steps:
+- name: 'gcr.io/cloud-builders/git'
+  args: ['clone', 'https://github.com/nuit-tsc/tsc-server']
+- name: 'gcr.io/cloud-builders/npm'
+  args: ['install']
