@@ -6,10 +6,11 @@
     "start": "node --tls-min-v1.0 ./bin/www"
   },
   "dependencies": {
-    "airtable": "^0.7.1",
+    "airtable": "^0.7.2",
     "body-parser": "^1.19.0",
     "express": "~4.16.0",
-    "express-fileupload": "^1.1.4",
+    "express-fileupload": "^1.1.6",
+    "googleapis": "^39.2.0",
     "pug": "^2.0.3",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
