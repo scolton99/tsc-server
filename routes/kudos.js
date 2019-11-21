@@ -281,7 +281,7 @@ router.post('/', async (req, res, next) => {
   };
   
   // This line is run asynchronously without await, so we can't modify the response with it.
-  // Errors that occur here can be found in Heroku logs.
+  // Errors that occur here can be found in logs.
   // This line sends the replacement message where Slack told us to through the end_response constiable.
   request({method: 'post', body: end_response, json: true, url: response_url}, err => {if (err) console.error(err)});
 });
