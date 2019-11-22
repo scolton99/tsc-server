@@ -7,7 +7,7 @@ const SCOPES = ['https://www.googleapis.com/auth/calendar.readonly', 'https://ww
 const TOKEN_PATH = 'token.json';
 
 function authorize(credentials) {
-  const {client_secret, client_id, redirect_uris} = credentials.installed;
+  const {client_secret, client_id, redirect_uris} = credentials.web;
   const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
 
   try {
