@@ -14,6 +14,7 @@ const categorizationRouter = require('./routes/categorization');
 const spamRouter = require('./routes/spam');
 const directoryRouter = require('./routes/directory');
 const whenToWorkRouter = require('./routes/whentowork');
+const scheduleRouter = require('./routes/schedule');
 
 const app = express();
 
@@ -65,6 +66,8 @@ app.use('/directory', directoryRouter);
 
 // WhenToWork Handler
 app.use('/w2w', whenToWorkRouter);
+
+app.use('/schedule', scheduleRouter);
 
 // Catch any errors
 app.use((err, _req, res, _next) => {
