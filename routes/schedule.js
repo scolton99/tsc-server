@@ -2,20 +2,18 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const { google } = require('googleapis');
+const { Storage } = require('@google-cloud/storage');
 
 const SCOPES = ['https://www.googleapis.com/auth/calendar.readonly', 'https://www.googleapis.com/auth/calendar.events.readonly'];
-const TOKEN_PATH = 'token.json';
 
-function authorize(credentials) {
+const authorize = async credentials => {
   const {client_secret, client_id, redirect_uris} = credentials.web;
   const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
 
-  try {
-    const token = fs.readFileSync(TOKEN_PATH);
+  const storage = new Storage();
+  const token = (await storage.bucket('tss-support-center.appspot.com').file('private/token').download())[0];
 
-    oAuth2Client.setCredentials(JSON.parse(token));
-    return oAuth2Client;
-  } catch (e) {
+  if (token === null || token === "" || (typeof(token) === "object" && token.length === 0)) {
     const auth_url = oAuth2Client.generateAuthUrl({
       access_type: 'offline',
       scope: SCOPES
@@ -23,40 +21,56 @@ function authorize(credentials) {
   
     console.error("Need to reauthorize TSC server to access Google Calendar");
     console.error(`Use this link: ${auth_url}`);
-    console.error("Reauthorize at /schedule/reauth");
   
     throw new Error("Unauthorized");
   }
+
+  oAuth2Client.setCredentials(JSON.parse(token));
+
+  return oAuth2Client;
 }
 
-router.get('/', (req, res) => {
-  let secret;
-  try {
-    secret = fs.readFileSync('credentials.json');
-  } catch (e) {
-    throw new Error("Missing credentials.json");
-  }
+router.get('/', async (req, res) => {
+  const { date: mrn } = req.query;
 
-  const auth = authorize(JSON.parse(secret));
+  const storage = new Storage();
+  const bucket = storage.bucket('tss-support-center.appspot.com');
+
+  const secret = await bucket.file('private/credentials.json').download();
+  const auth = await authorize(JSON.parse(secret));
 
   const calendar = google.calendar({version: 'v3', auth});
-  const d = (new Date()).toISOString();
+  const ds = mrn ? new Date(mrn) : new Date();
+  ds.setHours(0);
+  ds.setMinutes(0);
+
+  const de = mrn ? new Date(mrn) : new Date();
+  de.setHours(23);
+  de.setMinutes(59);
+
+  console.log(ds.toString());
+  console.log(de.toString());
 
   calendar.events.list({
     calendarId: process.env.CALENDAR_ID,
-    timeMin: d,
-    timeMax: d,
+    timeMin: ds.toISOString(),
+    timeMax: de.toISOString(),
     singleEvents: true
-  }, (err, res) => {
+  }, (err, results) => {
     if (err) {
       console.error("The API returned an error: ", err);
       throw err;
     }
 
-    const events = res.data.items;
+    const events = results.data.items;
     const people = {"1800 Consultant": [], "1800 Supervisor": [], "Library Consultant": []};
 
-    events.forEach(e => {
+    console.log(events);
+
+    events.filter(e => {
+      const rn = mrn ? new Date(mrn) : new Date();
+      return (new Date(e.start.dateTime) <= rn) && (new Date(e.end.dateTime) > rn);
+    }).forEach(e => {
       if (e.summary.includes("1800 Consultant")) {
         people["1800 Consultant"].push(/^(.*)1800 Consultant/.exec(e.summary)[1].trim());
       } else if (e.summary.includes("1800 Supervisor")) {
@@ -66,33 +80,29 @@ router.get('/', (req, res) => {
       }
     });
 
+    console.log(people);
+
     res.render('schedule', {people: people});
   });
 });
 
-router.get('/reauth', (_req, res) => {
-  res.render('token-reauth');
-});
+router.get('/reauth', async (req, res) => {
+  const code = req.query.code;
 
-router.post('/reauth', (req, res) => {
-  const code = req.body.code;
+  const storage = new Storage();
+  const bucket = storage.bucket('tss-support-center.appspot.com');
+  const credentials_raw = await bucket.file('private/credentials.json').download();
 
-  const credentials = JSON.parse(fs.readFileSync('credentials.json'));
-  const {client_secret, client_id, redirect_uris} = credentials.installed;
+  const credentials = JSON.parse(credentials_raw);
+  const {client_secret, client_id, redirect_uris} = credentials.web;
   const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
 
-  oAuth2Client.getToken(code, (err, token) => {
-    if (err) return console.error('Error retrieving access token', err);
-    oAuth2Client.setCredentials(token);
+  const { tokens: token } = await oAuth2Client.getToken(code);
+  
+  const file = storage.bucket('tss-support-center.appspot.com').file('private/token');
+  file.createWriteStream({ resumable: false }).end(JSON.stringify(token));
 
-    // Store the token to disk for later program executions
-    fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-      if (err) return console.error(err);
-      console.log('Token stored to', TOKEN_PATH);
-    });
-
-    res.render('token-success');
-  });
+  res.redirect('/schedule');
 });
 
 module.exports = router;

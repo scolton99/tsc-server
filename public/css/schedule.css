@@ -1,0 +1,45 @@
+body {
+    margin: 0;
+    background-color: #401F68;
+    color: #fff;
+    font-family: 'Raleway', sans-serif;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin: 1em;
+    color: #ccc;
+    font-size: 1.33em;
+}
+
+.container .top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.6em;
+}
+
+.container .bottom {
+    display: flex;
+    flex-direction: row;
+    justify-content: stretch;
+}
+
+.container .bottom .l, .container .bottom .r {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    flex-basis: 0;
+}
+
+.container .bottom .r {
+    text-align: right;
+}
+
+#supervisor, #i1800, #library {
+    font-size: 1.4em;
+    color: #fff;
+}
