@@ -46,7 +46,10 @@ router.post('/', (req, res) => {
 
     // Move the temporary file into our public photos directory so that Airtable can read it later
     req.files.photo.mv(global.root_dir + '/public/photos/' + netid + '.' + ext, err => {
-      if (err) return res.redirect(redirect + "#failure");
+      if (err) {
+        console.error(err);
+        return res.redirect(redirect + "#failure");
+      }
     });
 
     // Get the record ID for this con in Airtable
