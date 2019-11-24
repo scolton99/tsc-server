@@ -48,9 +48,6 @@ router.get('/', async (req, res) => {
   de.setHours(23);
   de.setMinutes(59);
 
-  console.log(ds.toString());
-  console.log(de.toString());
-
   calendar.events.list({
     calendarId: process.env.CALENDAR_ID,
     timeMin: ds.toISOString(),
@@ -65,8 +62,6 @@ router.get('/', async (req, res) => {
     const events = results.data.items;
     const people = {"1800 Consultant": [], "1800 Supervisor": [], "Library Consultant": []};
 
-    console.log(events);
-
     events.filter(e => {
       const rn = mrn ? new Date(mrn) : new Date();
       return (new Date(e.start.dateTime) <= rn) && (new Date(e.end.dateTime) > rn);
@@ -79,8 +74,6 @@ router.get('/', async (req, res) => {
         people["Library Consultant"].push(/^(.*)Library Consultant/.exec(e.summary)[1].trim());
       }
     });
-
-    console.log(people);
 
     res.render('schedule', {people: people});
   });
