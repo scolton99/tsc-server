@@ -10,7 +10,7 @@
             <param0 xsi:type="xsd:string">{{FP_USERNAME}}</param0>
             <param1 xsi:type="xsd:string">{{FP_PASSWORD}}</param1>
             <param2 xsi:type="xsd:string"></param2>
-            <param3 xsi:type="xsd:string">SELECT MASTER1.mrID FROM MASTER1 INNER JOIN MASTER1_ABDATA ON MASTER1_ABDATA.mrID = MASTER1.mrID WHERE MASTER1.mrASSIGNEES LIKE '%AA_SUPPORT__bCENTER%' AND MASTER1_ABDATA.Email__bAddress NOT LIKE '%northwestern.edu' AND MASTER1_ABDATA.Email__bAddress NOT LIKE '%nm.org' AND MASTER1_ABDATA.Email__bAddress NOT LIKE '%luriechildrens.org' AND MASTER1.mrSTATUS = 'Open' AND MASTER1.submission__btracking = 'Email' ORDER BY mrID ASC</param3>
+            <param3 xsi:type="xsd:string">SELECT MASTER1.mrID FROM MASTER1 INNER JOIN MASTER1_ABDATA ON MASTER1_ABDATA.mrID = MASTER1.mrID WHERE MASTER1.mrASSIGNEES LIKE '%AA_SUPPORT__bCENTER%' AND MASTER1_ABDATA.Email__bAddress NOT LIKE '%northwestern.edu' AND MASTER1_ABDATA.Email__bAddress NOT LIKE '%nm.org' AND MASTER1_ABDATA.Email__bAddress NOT LIKE '%luriechildrens.org' AND MASTER1_ABDATA.Email__bAddress NOT LIKE '%garrett.edu' AND MASTER1.mrSTATUS = 'Open' AND MASTER1.submission__btracking = 'Email' ORDER BY mrID ASC</param3>
         </ns1:MRWebServices__search>
     </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>
