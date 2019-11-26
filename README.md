@@ -50,7 +50,7 @@ Ticket Count | Background
 150 | ![Nuke](https://imgur.com/LitvtNz.png)
 200 | ![Nova](https://imgur.com/VQY7n1t.png)
 250 | ![Black Hole](https://imgur.com/PxbgHhv.png)
-500 | ![
+500 | ![Confetti](https://imgur.com/E1OkcHd.png)
     
 #### Schedule Page
 The `/schedule` page provides a nice view of who is currently scheduled to be on shift so that WhenToWork doesn't need to be consulted since that page is frequently out-of-date and is difficult to read.
