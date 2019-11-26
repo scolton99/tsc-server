@@ -116,7 +116,7 @@ Request | Description
 `/categorization/Identity__band__bAccess__bManagement/NetID__bServices/NUValidate` | Statistics for the top 15 assignment groups to complete tickets with the a categorization starting with **Identity and Access Management → NetID Services → NUValidate**. Further subcategorizations will also appear in this count (any Sub-Categories of this categorization are also counted).
 
 **`/categorization` Response**
-Field | Type/Values |Description
+Field | Type/Values | Description
 --- | --- | ---
 `result` | `"success"` or `"failure"` | Whether or not the request succeeded.
 `categorization` | `string` | A human-readable unfixed (see above) string describing the searched categorization.
@@ -125,7 +125,7 @@ Field | Type/Values |Description
 `stats[].count` | `integer` | The number of tickets of this type completed by the assignment group.
 
 **`/assignment-group` Response**
-Field | Type/Values |Description
+Field | Type/Values | Description
 --- | --- | ---
 `result` | `"success"` or `"failure"` | Whether or not the request succeeded.
 `group_name` | `string` | A human-readable unfixed (see above) string of the assignment group's name.
