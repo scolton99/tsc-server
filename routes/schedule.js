@@ -38,9 +38,6 @@ router.get('/', async (req, res) => {
     return res.status(403).sendFile('forbidden.html', { root: global.root_dir + '/public' });
   }
 
-  console.log(req.ip);
-  console.log(req.get("X-Forwarded-For"))
-
   const { date: mrn } = req.query;
 
   const storage = new Storage();
