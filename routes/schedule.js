@@ -39,6 +39,7 @@ router.get('/', async (req, res) => {
   }
 
   console.log(req.ip);
+  console.log(req.get("X-Forwarded-For"))
 
   const { date: mrn } = req.query;
 
