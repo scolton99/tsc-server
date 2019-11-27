@@ -3,6 +3,7 @@ const router = express.Router();
 const fs = require('fs');
 const { google } = require('googleapis');
 const { Storage } = require('@google-cloud/storage');
+const IP = require('../util/IP');
 
 const SCOPES = ['https://www.googleapis.com/auth/calendar.readonly', 'https://www.googleapis.com/auth/calendar.events.readonly'];
 
@@ -31,6 +32,12 @@ const authorize = async credentials => {
 }
 
 router.get('/', async (req, res) => {
+  if (!IP.isLocal(req.ip) && !IP.isNU(req.ip)) {
+    console.log(`Refused schedule access to outside address ${req.ip}`);
+    console.log(req.ips)
+    return res.status(403).sendFile('forbidden.html', { root: global.root_dir + '/public' });
+  }
+
   const { date: mrn } = req.query;
 
   const storage = new Storage();
