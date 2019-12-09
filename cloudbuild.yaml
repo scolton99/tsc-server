@@ -10,5 +10,5 @@ steps:
   args:
   - '-c'
   - |
-    [[ "$BRANCH_NAME" == "master" ]] && gcloud app deploy
+    [[ "$BRANCH_NAME" == "master" ]] && gcloud app deploy || echo "Skipping deploy, not master branch"
 timeout: "1600s"
