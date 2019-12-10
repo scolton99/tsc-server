@@ -15,6 +15,7 @@ const spamRouter = require('./routes/spam');
 const directoryRouter = require('./routes/directory');
 const whenToWorkRouter = require('./routes/whentowork');
 const scheduleRouter = require('./routes/schedule');
+const getNameRouter = require('./routes/name');
 
 const app = express();
 
@@ -70,6 +71,8 @@ app.use('/directory', directoryRouter);
 app.use('/w2w', whenToWorkRouter);
 
 app.use('/schedule', scheduleRouter);
+
+app.use('/get-name', getNameRouter);
 
 // Catch any errors
 app.use((err, _req, res, _next) => {
