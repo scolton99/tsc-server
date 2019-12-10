@@ -105,27 +105,56 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 section#numbers {
-  column-count: 2;
-  column-gap: 0;
-  column-fill: auto;
   height: 728px;
   overflow-y: hidden;
   overflow-x: hidden;
 }
 
-section#numbers > table {
-  width: 100%;
-  border-collapse: collapse;
+div.numbers-col > div.number-entry:nth-child(even) {
+  background-color: #B6ACD1;
 }
 
-section#numbers > table tr {
+div.numbers-container {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+  height: 100%;
+}
+
+div.numbers-col {
+  width: 50%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+div.number-entry {
+  width: 100%;
   height: 26px;
 }
 
-section#numbers > table tr > td {
+div.number-entry > div {
+  display: inline-block;
   padding: 5px;
 }
 
-section#numbers > table tr:nth-child(even) > td {
-  background-color: #B6ACD1;
+div.number-entry > div.index {
+  font-weight: bold;
+  width: 27px;
+}
+
+div.number-entry > div.name {
+  width: 192px;
+}
+
+div.number-entry > div.number {
+  width: 149px;
 }
