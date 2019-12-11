@@ -114,6 +114,9 @@ const refresh_schedule = async () => {
   for (let nn of res_json.now.sch["1800 Consultant"]) {
     const nd = document.createElement("span");
     nd.textContent = nn;
+    if (!res_json.next.sch["1800 Consultant"].includes(nn)) {
+      nd.classList.add("going");
+    }
     if (res_json.now.trades[nn]) {
       nd.classList.add("trade");
     }
@@ -124,6 +127,9 @@ const refresh_schedule = async () => {
   for (let nn of res_json.now.sch["Library Consultant"]) {
     const nd = document.createElement("span");
     nd.textContent = nn;
+    if (!res_json.next.sch["Library Consultant"].includes(nn)) {
+      nd.classList.add("going");
+    }
     if (res_json.now.trades[nn]) {
       nd.classList.add("trade");
     }
@@ -134,6 +140,9 @@ const refresh_schedule = async () => {
   for (let nn of res_json.now.sch["Consultant Supervisor"]) {
     const nd = document.createElement("span");
     nd.textContent = nn;
+    if (!res_json.next.sch["Consultant Supervisor"].includes(nn)) {
+      nd.classList.add("going");
+    }
     if (res_json.now.trades[nn]) {
       nd.classList.add("trade");
     }
