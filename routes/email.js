@@ -6,12 +6,11 @@ const airtable = require('airtable');
 const a_base = new airtable({apiKey: process.env.AIRTABLE_API_KEY || "null"}).base('appydp8wFv8Yd5nVE');
 
 router.post('/', (req, res, next) => {
-  const { name } = req.body;
-  const name_univ = name.toLowerCase();
+  const { names: names_mixedcase } = req.body;
+  const names = names_mixedcase.map(e => (e.toLowerCase()));
 
   a_base('Main').select({
-    filterByFormula: `OR(LOWER({Name}) = "${name_univ}", LOWER({HR First Name} & " " & {Last Name}) = "${name_univ}")`,
-    fields: ["Full @u"]
+    fields: ["Name", "Full @u", "HR First Name", "Last Name"]
   }).firstPage((err, records) => {
     // If Airtable returns an error, log it and return 500
     if (err) {
@@ -19,13 +18,23 @@ router.post('/', (req, res, next) => {
       return next(err);
     }
 
-    // If we can't find a record with that ID, return 404
-    if (records.length === 0) {
-      console.error("No record found with name " + name);
-      return next();
+    const ret_obj = {};
+
+    for (let i = 0; i < names.length; i++) {
+      const record = records.filter(e => {
+        const nickname = names[i] === e.get("Name").toLowerCase();
+        const fullname = nickname || names[i] === (e.get("HR First Name") + " " + e.get("Last Name")).toLowerCase();
+
+        return nickname || fullname;
+      });
+
+      if (record.length === 0)
+        ret_obj[names_mixedcase[i]] = "";
+      else
+        ret_obj[names_mixedcase[i]] = record[0].get("Full @u");
     }
 
-    res.json({ name: name, email: records[0].get("Full @u").toLowerCase() });
+    res.json(ret_obj);
   });
 });
 

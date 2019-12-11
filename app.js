@@ -74,7 +74,7 @@ app.use('/w2w', whenToWorkRouter);
 app.use('/schedule', scheduleRouter);
 
 app.use('/get-name', getNameRouter);
-app.use('/get-email', getEmailRouter);
+app.use('/get-emails', getEmailRouter);
 
 // Catch any errors
 app.use((err, _req, res, _next) => {
