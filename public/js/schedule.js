@@ -1,5 +1,7 @@
+const refresh_every = 15; // minutes
+
 const date = new Date();
-date.setMinutes(date.getMinutes() + (5 - date.getMinutes() % 5));
+date.setMinutes(date.getMinutes() + (15 - date.getMinutes() % 15));
 date.setSeconds(0);
 console.log(date.toString());
 
@@ -21,6 +23,8 @@ const refresh_schedule = async () => {
 
   const res_raw = await fetch(req_uri);
   const res_json = await res_raw.json();
+
+  document.body.classList.remove("loading");
 
   console.log(res_json);
 
@@ -127,6 +131,15 @@ const refresh_schedule = async () => {
     nd.addEventListener("click", st_func);
     n_sv_d.appendChild(nd);
   }
+
+  const n_date = new Date(res_json.next.date);
+
+  let n_hours, n_minutes, n_ampm;
+  n_ampm = n_date.getHours() >= 12 ? "PM" : "AM";
+  n_hours = n_date.getHours() == 0 ? 12 : n_date.getHours() >= 13 ? n_date.getHours() - 12 : n_date.getHours();
+  n_minutes = n_date.getMinutes() < 10 ? "0" + n_date.getMinutes() : "" + n_date.getMinutes();
+
+  document.getElementById("next-time").textContent = `${n_hours}:${n_minutes} ${n_ampm}`;
 };
 
 const refresh_interval = window.setTimeout(refresh_schedule, date.getTime() - (new Date()).getTime());
