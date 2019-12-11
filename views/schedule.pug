@@ -5,33 +5,30 @@ html
     link(rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:200|Roboto")
     link(rel="stylesheet" href="/css/fonts.css")
     link(rel="stylesheet" href="/css/schedule.css")
-    script(src="/js/schedule.js")
+    script(src="https://kit.fontawesome.com/7d40b20961.js" crossorigin="anonymous")
     title Tier 1 Schedule
   body
-    .container
-        .top
-            | Supervisor
-            span#supervisor
-                if people["Consultant Supervisor"].length === 0
-                    | -
-                else
-                    = people["Consultant Supervisor"][0]
-        .bottom
-            .l
-                | Sherman
-                span#i1800
-                    if people["1800 Consultant"].length === 0
-                        | -
-                    else
-                        for person in people["1800 Consultant"]
-                            = person
-                            br
-            .r
-                | Library
-                span#library
-                    if people["Library Consultant"].length === 0
-                        | -
-                    else
-                        for person in people["Library Consultant"]
-                            = person
-                            br
+    .outer-container
+        .container#now
+            .top
+                | Supervisor
+                span.supervisor
+            .bottom
+                .l
+                    | Sherman
+                    span.i1800
+                .r
+                    | Library
+                    span.library
+        .container#next
+            .top
+                | Supervisor
+                span.supervisor
+            .bottom
+                .l
+                    | Sherman
+                    span.i1800
+                .r
+                    | Library
+                    span.library
+    script(src="/js/schedule.js")

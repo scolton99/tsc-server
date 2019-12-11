@@ -40,7 +40,27 @@ body {
     text-align: right;
 }
 
-#supervisor, #i1800, #library {
+.supervisor, .i1800, .library {
     font-size: 1.4em;
     color: #fff;
+}
+
+.supervisor > span, .i1800 > span, .library > span {
+    display: block;
+    cursor: pointer;
+}
+
+.supervisor > span.trade:before,
+.library > span.trade:before,
+.i1800 > span.trade:after {
+    content: '\f021';
+    font-family: 'Font Awesome 5 Pro';
+    font-weight: 900;
+    margin: 0 10px;
+}
+
+.supervisor > span.st,
+.library > span.st,
+.i1800 > span.st {
+    text-decoration: line-through;
 }
