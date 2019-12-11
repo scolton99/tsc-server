@@ -3,6 +3,7 @@ body {
     background-color: #401F68;
     color: #fff;
     font-family: 'Raleway', sans-serif;
+    font-weight: 200;
     font-size: 1.35em;
 }
 
@@ -13,6 +14,7 @@ body {
     margin: 1em;
     color: #ccc;
     font-size: 1.33em;
+    position: relative;
 }
 
 .container .top {
@@ -40,7 +42,74 @@ body {
     text-align: right;
 }
 
-#supervisor, #i1800, #library {
+.supervisor, .i1800, .library {
     font-size: 1.4em;
     color: #fff;
+}
+
+.supervisor > span, .i1800 > span, .library > span {
+    display: block;
+    cursor: pointer;
+}
+
+.supervisor > span.trade:before,
+.library > span.trade:before,
+.i1800 > span.trade:after {
+    content: '\f021';
+    font-family: 'Font Awesome 5 Pro';
+    font-weight: 900;
+    margin: 0 10px;
+}
+
+.supervisor > span.st,
+.library > span.st,
+.i1800 > span.st {
+    text-decoration: line-through;
+}
+
+#next-time, #now-time {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 10px;
+    font-weight: bold;
+    background-color: #fff;
+    color: #ff3050;
+    text-transform: uppercase;
+}
+
+#next-time:empty {
+    display: none;
+}
+
+body.loading > .outer-container {
+    display: none;
+}
+
+body > .spin {
+    display: none;
+}
+
+body.loading > .spin {
+    font-size: 2.5em;
+    font-weight: 200;
+    text-align: center;
+    text-transform: lowercase;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+hr {
+    margin: 0 50px;
+    border: none;
+    border-top: 1px solid #fff;
+}
+
+h1.title {
+    text-align: center;
+    font-weight: 500;
+    margin-bottom: 70px;
 }
