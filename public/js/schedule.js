@@ -44,6 +44,49 @@ const refresh_schedule = async () => {
   const ex_c_1800_ppl = Array.from(c_1800_d.children);
   const ex_c_lib_ppl = Array.from(c_lib_d.children);
 
+  const st_func = e => {
+    e.currentTarget.classList.toggle("st");
+  };  
+
+  for (let nn of res_json.next.sch["1800 Consultant"]) {
+    const nd = document.createElement("span");
+    nd.textContent = nn;
+    if (!res_json.now.sch["1800 Consultant"].includes(nn)) {
+      nd.classList.add("coming");
+    }
+    if (res_json.next.trades[nn]) {
+      nd.classList.add("trade");
+    }
+    nd.addEventListener("click", st_func);
+    n_1800_d.appendChild(nd);
+  }
+
+  for (let nn of res_json.next.sch["Library Consultant"]) {
+    const nd = document.createElement("span");
+    nd.textContent = nn;
+    if (!res_json.now.sch["Library Consultant"].includes(nn)) {
+      nd.classList.add("coming");
+    }
+    if (res_json.next.trades[nn]) {
+      nd.classList.add("trade");
+    }
+    nd.addEventListener("click", st_func);
+    n_lib_d.appendChild(nd);
+  }
+
+  for (let nn of res_json.next.sch["Consultant Supervisor"]) {
+    const nd = document.createElement("span");
+    nd.textContent = nn;
+    if (!res_json.now.sch["Consultant Supervisor"].includes(nn)) {
+      nd.classList.add("coming");
+    }
+    if (res_json.next.trades[nn]) {
+      nd.classList.add("trade");
+    }
+    nd.addEventListener("click", st_func);
+    n_sv_d.appendChild(nd);
+  }
+
   for (let per of ex_c_1800_ppl) {
     if (!res_json.now.sch["1800 Consultant"].includes(per.textContent)) {
       per.parentElement.removeChild(per);
@@ -67,10 +110,6 @@ const refresh_schedule = async () => {
       res_json.now.sch["Consultant Supervisor"].splice(res_json.now.sch["Consultant Supervisor"].indexOf(per.textContent), 1);
     }
   }
-
-  const st_func = e => {
-    e.currentTarget.classList.toggle("st");
-  };
 
   for (let nn of res_json.now.sch["1800 Consultant"]) {
     const nd = document.createElement("span");
@@ -100,36 +139,6 @@ const refresh_schedule = async () => {
     }
     nd.addEventListener("click", st_func);
     c_sv_d.appendChild(nd);
-  }
-
-  for (let nn of res_json.next.sch["1800 Consultant"]) {
-    const nd = document.createElement("span");
-    nd.textContent = nn;
-    if (res_json.next.trades[nn]) {
-      nd.classList.add("trade");
-    }
-    nd.addEventListener("click", st_func);
-    n_1800_d.appendChild(nd);
-  }
-
-  for (let nn of res_json.next.sch["Library Consultant"]) {
-    const nd = document.createElement("span");
-    nd.textContent = nn;
-    if (res_json.next.trades[nn]) {
-      nd.classList.add("trade");
-    }
-    nd.addEventListener("click", st_func);
-    n_lib_d.appendChild(nd);
-  }
-
-  for (let nn of res_json.next.sch["Consultant Supervisor"]) {
-    const nd = document.createElement("span");
-    nd.textContent = nn;
-    if (res_json.next.trades[nn]) {
-      nd.classList.add("trade");
-    }
-    nd.addEventListener("click", st_func);
-    n_sv_d.appendChild(nd);
   }
 
   const n_date = new Date(res_json.next.date);
