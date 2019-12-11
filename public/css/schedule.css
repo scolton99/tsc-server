@@ -52,9 +52,33 @@ body {
     cursor: pointer;
 }
 
+.supervisor > span.coming:before,
+.library > span.coming:before,
+.i1800 > span.coming:after {
+    content: '\f12a';
+    font-family: 'Font Awesome 5 Pro';
+    font-weight: 900;
+    margin: 0 10px;
+}
+
+.supervisor > span.going:before,
+.library > span.going:before,
+.i1800 > span.going:after {
+    content: '\f25b';
+    font-family: 'Font Awesome 5 Pro';
+    font-weight: 900;
+    margin: 0 10px;
+}
+
 .supervisor > span.trade:before,
 .library > span.trade:before,
-.i1800 > span.trade:after {
+.i1800 > span.trade:after,
+.supervisor > span.trade.coming:before,
+.library > span.trade.coming:before,
+.i1800 > span.trade.coming:after,
+.supervisor > span.trade.going:before,
+.library > span.trade.going:before,
+.i1800 > span.trade.going:after {
     content: '\f021';
     font-family: 'Font Awesome 5 Pro';
     font-weight: 900;
