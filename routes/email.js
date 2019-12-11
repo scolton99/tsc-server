@@ -10,7 +10,7 @@ router.post('/', (req, res, next) => {
   const name_univ = name.toLowerCase();
 
   a_base('Main').select({
-    filterByFormula: `LOWER({Name}) = "${name_univ}"`,
+    filterByFormula: `OR(LOWER({Name}) = "${name_univ}", LOWER({HR First Name} & " " & {Last Name}) = "${name_univ}"`,
     fields: ["Full @u"]
   }).firstPage((err, records) => {
     // If Airtable returns an error, log it and return 500
