@@ -21,7 +21,7 @@ html
             while i < 28
               if records[i]
                 .number-entry
-                  .index= i + 1
+                  .index= records[i].speeddial
                   .name= records[i].name
                   .number= records[i++].number
               else
@@ -34,7 +34,7 @@ html
             while i < 56
               if records[i]
                 .number-entry
-                  .index= i + 1
+                  .index= records[i].speeddial
                   .name= records[i].name
                   .number= records[i++].number
               else
@@ -85,5 +85,6 @@ html
           td
             | (312) 50
             b 3-7648
-    script
-      | window.print();
+    if !noprint
+      script
+        | window.print();
