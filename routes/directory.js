@@ -5,7 +5,7 @@ const airtable = require('airtable');
 // Setup connection to Airtable
 const a_base = new airtable({apiKey: process.env.AIRTABLE_API_KEY || "null"}).base('appydp8wFv8Yd5nVE');
 
-router.get('/', async (_req, res, next) => {
+router.get('/', async (req, res, next) => {
   const records = [];
 
   a_base('Main').select({
@@ -35,7 +35,8 @@ router.get('/', async (_req, res, next) => {
 
     res.render('directory', {
       records: records_format,
-      date: (new Date()).toLocaleDateString('en-US', {dateStyle: 'long'})
+      date: (new Date()).toLocaleDateString('en-US', {dateStyle: 'long'}),
+      noprint: !!req.query.noprint
     });
   });
 });
