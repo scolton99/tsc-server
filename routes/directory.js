@@ -11,7 +11,8 @@ router.get('/', async (_req, res, next) => {
   a_base('Main').select({
     fields: [
       "Last, First",
-      "Phone Number"
+      "Phone Number",
+      "SpeedDial"
     ],
     filterByFormula: "{Current}",
     sort: [
@@ -19,7 +20,7 @@ router.get('/', async (_req, res, next) => {
     ]
   }).eachPage((at_records, fetchNext) => {
     at_records.forEach(record => {
-      records.push({name: record.get('Last, First'), number: record.get('Phone Number')});
+      records.push({name: record.get('Last, First'), number: record.get('Phone Number'), speeddial: record.get('SpeedDial')});
     });
 
     fetchNext();
