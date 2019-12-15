@@ -67,3 +67,5 @@ public/photos/*
 
 app.yaml
 .gcloudignore
+
+public/google*.html
