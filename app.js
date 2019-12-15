@@ -31,7 +31,7 @@ app.use(files());
 
 const fix_ip = (req, _res, next) => {
   req.ip = req.get('X-AppEngine-User-IP');
-  req.ips = req.get('X-Forwarded-For').split(",").map(trim);
+  req.ips = req.get('X-Forwarded-For').split(",").map(x => (x.trim()));
   next();
 };
 
