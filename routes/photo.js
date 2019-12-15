@@ -7,7 +7,7 @@ const {Storage} = require('@google-cloud/storage');
 // Setup connection to Airtable
 const a_base = new airtable({apiKey: process.env.AIRTABLE_API_KEY || "null"}).base('appydp8wFv8Yd5nVE');
 
-const BUCKET_NAME = process.env.GCS_BUCKET_NAME;
+const BUCKET_NAME = process.env.BUCKET_NAME;
 
 // POST /photo
 router.post('/', (req, res) => {
