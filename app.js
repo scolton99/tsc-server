@@ -33,6 +33,9 @@ app.use(files());
 
 const log_request = (req, res, next) => {
   console.log(`New request from ${req.ip}`);
+  console.log(`req.ip: ${req.ip}`);
+  console.log(`req.ips: ${req.ips}`);
+  console.log(`X-Forwarded-For: ${req.get('X-Forwarded-For')}`);
   next();
 };
 
