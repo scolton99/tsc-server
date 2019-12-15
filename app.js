@@ -1,6 +1,6 @@
 const express = require('express');
-const parser = require('body-parser');
 const files = require('express-fileupload');
+const Security = require('./util/security');
 
 const kudosRouter = require('./routes/kudos');
 const photoRouter = require('./routes/photo');
@@ -25,10 +25,18 @@ app.set('views', './views');
 app.set('trust proxy', true);
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false, verify: (req, _res, buf, encoding) => {
+  req.raw_body = buf.toString(encoding);
+}}));
 app.use(express.static('public'));
-app.use(parser.json());
 app.use(files());
+
+const log_request = (req, res, next) => {
+  console.log(`New request from ${req.ip}`);
+  next();
+};
+
+app.use(log_request);
 
 app.get("/", (_req, res) => {
   res.redirect("/queue");
@@ -38,39 +46,39 @@ app.get("/", (_req, res) => {
 app.use('/kudos', kudosRouter);
 
 // TSC Photo change handler
-app.use('/photo', photoRouter);
+app.use('/photo', Security.require_nu_referrer, photoRouter);
 
 // TSC Today's Birthdays JSON
-app.use('/birthdays', birthdayRouter);
+app.use('/birthdays', Security.require_nu_origin, birthdayRouter);
 
 // TSC Profile handler
-app.use('/profile', profileRouter);
+app.use('/profile', Security.require_nu_referrer, profileRouter);
 
 // FP Queue Handler
 app.use('/queue', queueRouter);
 
 // Ticket Editor Handler
-app.use('/edit-ticket', editTicketRouter);
+app.use('/edit-ticket', Security.require_tss, editTicketRouter);
 
 // Contact CSV Handler
-app.use('/contacts', contactsRouter);
+app.use('/contacts', Security.require_northwestern, contactsRouter);
 
 // Assignment Group Stats Handler
-app.use('/assignment-group', assignmentGroupRouter);
+app.use('/assignment-group', Security.require_nu_origin, assignmentGroupRouter);
 
 // Category Stats Handler
-app.use('/categorization', categorizationRouter);
+app.use('/categorization', Security.require_nu_origin, categorizationRouter);
 
 // Spam Handler
 app.use('/spam', spamRouter);
 
 // Directory Handler
-app.use('/directory', directoryRouter);
+app.use('/directory', Security.require_northwestern, directoryRouter);
 
 // WhenToWork Handler
-app.use('/w2w', whenToWorkRouter);
+app.use('/w2w', Security.require_nu_origin, whenToWorkRouter);
 
-app.use('/schedule', scheduleRouter);
+app.use('/schedule', Security.require_tss, scheduleRouter);
 
 app.use('/get-name', getNameRouter);
 

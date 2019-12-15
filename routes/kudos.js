@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const request = require('request-promise-native');
 const airtable = require('airtable');
+const Security = require('../util/security');
 
 // Setup connection to Airtable
 const a_base = new airtable({apiKey: process.env.AIRTABLE_API_KEY || "null"}).base('appydp8wFv8Yd5nVE');
@@ -64,7 +65,7 @@ const toDateString = (month_num, year) => {
   return month + " " + year;
 }
 
-router.get('/', (_req, res, next) => {
+router.get('/', Security.require_nu_origin, (_req, res, next) => {
   // Get from Feedback table
 	a_base('Feedback').select({
     fields: ['Con Name', 'Display Text'],
@@ -102,7 +103,7 @@ router.get('/', (_req, res, next) => {
 });
 
 // GET /kudos/:netid
-router.get('/:netid', (req, res, next) => {
+router.get('/:netid', Security.require_nu_referrer, (req, res, next) => {
   const { netid } = req.params;
   let name = null;
 
@@ -182,7 +183,7 @@ router.get('/:netid', (req, res, next) => {
 });
 
 // POST /kudos
-router.post('/', async (req, res, next) => {
+router.post('/', Security.require_slack_verified, async (req, res, next) => {
   // Fetch information from Slack's request
   // https://api.slack.com/actions#request_payload
   const {
