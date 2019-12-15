@@ -22,8 +22,6 @@ const app = express();
 app.set('view engine', 'pug');
 app.set('views', './views');
 
-app.set('trust proxy', true);
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: false, verify: (req, _res, buf, encoding) => {
   req.raw_body = buf.toString(encoding);
@@ -31,7 +29,15 @@ app.use(express.urlencoded({ extended: false, verify: (req, _res, buf, encoding)
 app.use(express.static('public'));
 app.use(files());
 
-const log_request = (req, res, next) => {
+const fix_ip = (req, _res, next) => {
+  req.ip = req.get('X-AppEngine-User-IP');
+  req.ips = req.get('X-Forwarded-For').split(",").map(trim);
+  next();
+};
+
+app.use(fix_ip);
+
+const log_request = (req, _res, next) => {
   console.log(`New request from ${req.ip}`);
   console.log(`req.ip: ${req.ip}`);
   console.log(`req.ips: ${req.ips}`);
