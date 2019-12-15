@@ -36,10 +36,12 @@ const log_request = (req, res, next) => {
   console.log(`req.ip: ${req.ip}`);
   console.log(`req.ips: ${req.ips}`);
   console.log(`X-Forwarded-For: ${req.get('X-Forwarded-For')}`);
+  console.log(`Request headers: ${req.headers}`);
   next();
 };
 
-app.use(log_request);
+if (process.env.GAE_VERSION !== "production")
+  app.use(log_request);
 
 app.get("/", (_req, res) => {
   res.redirect("/queue");
