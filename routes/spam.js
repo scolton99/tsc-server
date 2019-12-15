@@ -4,6 +4,7 @@ const fs = require('fs');
 const request = require('request-promise-native');
 const xml2js = require('xml2js');
 const FP = require('../util/FP');
+const Security = require('../util/security');
 
 const fp_request = fs.readFileSync(__dirname + '/../assets/spam_request.xml', { encoding: 'UTF-8' });
 

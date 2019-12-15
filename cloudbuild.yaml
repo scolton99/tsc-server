@@ -1,6 +1,4 @@
 steps:
-- name: 'gcr.io/cloud-builders/npm'
-  args: ['install']
 - name: 'gcr.io/cloud-builders/gsutil'
   args: ['cp', 'gs://tss-support-center.appspot.com/private/app.yaml', 'app.yaml']
 - name: 'gcr.io/cloud-builders/gsutil'

@@ -25,15 +25,23 @@ At any time during the development process, you may commit your changes to the r
 ## Features
 ### Main Pages
 #### Kudos Display
+**Security:** Requires `*.northwestern.edu` referrer
+
 Past Kudos that have been approved for display by the LC team are visible at `/kudos/[NetID]`. Anyone can access this page; no authentication is required. If a NetID is entered that has no approved Kudos or is not a **current** employee, a 404 error is returned.
 
 #### Contacts
+**Security:** Requires a Northwestern IPv4 address
+
 The page `/contacts` generates a CSV file (compatible with Google Contacts) of the contact information for all consultants.
 
 #### Directory
+**Security:** Requires a Northwestern IPv4 address
+
 The directory page (`/directory`) renders a printable directory of phone numbers for all consultants (and general phone numbers for Northwestern IT).
 
 #### Ticket Editor
+**Security:**  Requires a Northwestern IT TSS IPv4 address
+
 Support requests that were improperly saved with the wrong submission tracking type (i.e., Agent instead of Chat) can be edited at `/edit-ticket`. This is in place since this field cannot be edited via Footprints on the web after the first time the ticket is saved.
 
 #### Queue Status
@@ -53,7 +61,11 @@ Ticket Count | Background
 500 | ![Confetti](https://imgur.com/E1OkcHd.png)
     
 #### Schedule Page
+**Security:** Requires Northwestern IT TSS IPv4 address
+
 The `/schedule` page provides a nice view of who is currently scheduled to be on shift so that WhenToWork doesn't need to be consulted since that page is frequently out-of-date and is difficult to read.
+
+On the top half of the page, the current shift workers are shown and on the bottom half, the people who will be there at the next shift change.
 
 This page automatically reloads every fifteen minutes aligned with the hour (e.g., at :00, :15, :30, and :45).
 
@@ -62,6 +74,8 @@ At `/spam`, the application identifies support requests currently in Tier 1's qu
 
 ### JSON Endpoints
 #### Modify Kudos 
+**Security:** Requires verified Slack signature
+
 At the endpoint `/kudos`, `POST` requests can be made to update the TSC Kudos shown on [Conweb](https://kb.northwestern.edu/internal/conweb). The request structure should resemble the structure detailed by Slack in their [API documentation](https://api.slack.com/messaging/interactivity/enabling#understanding-payloads). After receiving the request, the server responds with the text "`Loading...`". During this time, it sends a request to Airtable updating a record in the `Feedback` table of the `Support Center Consultants` base with the requested text and sets whether or not the compliment will be shown on Conweb.
 
 Once this request has completed, the server sends a `POST` request to the URL identified by the `response_url` property of the original request object detailing a Slack message in JSON. This object should still be fairly comprehensible to other applications.
@@ -69,6 +83,8 @@ Once this request has completed, the server sends a `POST` request to the URL id
 Currently, this endpoint is not meant to be called manually. [Zapier](https://www.zapier.com) checks for new compliments in Airtable approximately every 15 minutes and then automatically sends a request to an incoming webhook for an app made for the NUIT LCs organization in Slack, and when a user clicks a button in the message that is subsequently created and sent to `#kudos`, Slack pings this application and makes a call as described above. No guarantees can be made about functionality when this endpoint is called manually.
 
 #### Get Kudos
+**Security:** Requires `*.northwestern.edu` origin
+
 All Kudos that have been approved by the LC team and were submitted within the last two weeks can be accessed in JSON form at `/kudos`. They will be grouped by the consultant that is being complimented and show up in descending order of time submitted.
 
 The response is an object of the following structure:
@@ -100,6 +116,8 @@ Field | Type/Values | Description
 The `/queue/status` endpoint is used internally by the `/queue` page.
 
 #### Assignment Group and Category Statistics
+**Security:** Requires `*.northwestern.edu` origin
+
 Statistics about assignment groups and categorizations of tickets can be found at the endpoints `/assignment-group` and `/categorization`, respectively. Requests should be made using the `GET` method and should take the following form:
 * `/assignment-group/[assignment-group]`
 * `/categorization/[service-family]/[service]/[category]/[sub-category]`
@@ -138,6 +156,8 @@ Field | Type/Values | Description
 Usage of the `/assignment-group` endpoint can be found [here](https://kb.northwestern.edu/internal/85097) and usage of the `/categorization` endpoint can be found [here](https://kb.northwestern.edu/internal/90183).
 
 #### Con Photos
+**Security:** Requires `*.northwestern.edu` referrer
+
 This server handles the back-end side of uploading consultant photos. 
 
 At the endpoint `/photo`, `POST` requests can be submitted with the following key-pair form values:
@@ -155,7 +175,11 @@ Photos are stored in Google Cloud Storage indefinitely, but a new upload for the
 An example of a form that works to fill this purpose can be found at https://kb.northwestern.edu/internal/62391.
 
 #### Birthdays
+**Security:** Requires `*.northwestern.edu` origin
+
 At the endpoint `/birthdays`, the application will return a JSON array of strings of the first and last names of everyone whose birthday it currently is. These appear on [Conweb](https://kb.northwestern.edu/internal/conweb).
 
 #### WhenToWork
+**Security:** Requires `*.northwestern.edu` origin
+
 The `/w2w/get-sid` endpoint provides a Session ID for the monitors WhenToWork account so that employee availability can be accessed through the internal KB. An implementation of this feature can be found at https://kb.northwestern.edu/internal/74946.
