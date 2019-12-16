@@ -65,10 +65,10 @@ const toDateString = (month_num, year) => {
   return month + " " + year;
 }
 
-router.get('/', Security.require_nu_origin, (_req, res, next) => {
+router.get('/', Security.require_nu_origin, Security.require_conweb_token, (_req, res, next) => {
   // Get from Feedback table
 	a_base('Feedback').select({
-    fields: ['Con Name', 'Display Text'],
+    fields: ['Con Name', 'Display Text', 'Con NetID'],
     filterByFormula: 'AND({Display}, {Type} = "Compliment", DATETIME_DIFF(NOW(), {Time Submitted}, "days") <= 14)',    // Show compliments that have been approved and are less than two weeks old
     sort: [
       {
@@ -91,11 +91,17 @@ router.get('/', Security.require_nu_origin, (_req, res, next) => {
     
     const feedback = {};
     names.forEach(name => {
+      // Get NetID
+	    const netid = records.filter(record => record["fields"]["Con Name"].includes(name)).map(record => record["fields"]["Con NetID"])[0];
+
       // Get the feedback applicable to this con as strings
       const con_feedback = records.filter(record => record["fields"]["Con Name"].includes(name)).map(record => record["fields"]["Display Text"]);
       
       // Store the feedback string in our feedback object
-      feedback[name] = con_feedback;
+      feedback[name] = { 
+        netid: netid,
+        feedback: con_feedback
+      };
     });
     
     res.json(feedback);

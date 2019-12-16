@@ -1,7 +1,7 @@
 const IP = require('./IP');
 const crypto = require('crypto');
 
-const { SLACK_SECRET } = process.env;
+const { SLACK_SECRET, CONWEB_TOKEN } = process.env;
 
 const exp = {};
 
@@ -16,6 +16,17 @@ const get_origin_hostname = origin => {
     const res = /^.*?:\/\/([a-z0-9\-\.]*?)(?:\:[0-9]{1,5})?$/i.exec(origin);
 
     return res === null ? null : res[1];
+};
+
+exp.require_conweb_token = (req, res, next) => {
+    let conweb_body_token;
+    if (req.body)
+        conweb_body_token = req.body.conweb_token;
+
+    if (req.get('X-Conweb-Token') !== CONWEB_TOKEN && conweb_body_token !== CONWEB_TOKEN)
+        forbidden(req, res, "Conweb token missing or wrong");
+    else
+        next();
 };
 
 exp.require_northwestern = (req, res, next) => {
