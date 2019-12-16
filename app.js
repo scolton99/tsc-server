@@ -38,10 +38,14 @@ const fix_ip = (req, _res, next) => {
 
 app.use(fix_ip);
 
-const add_cors = (_req, res, next) => {
+const add_cors = (req, res, next) => {
+  if (req.method !== "OPTIONS")
+    next();
+
   res.set('Access-Control-Allow-Origin', 'https://kb.northwestern.edu');
   res.set('Access-Control-Allow-Headers', 'X-Conweb-Token');
-  next();
+  res.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  return res.status(204).end();
 }
 
 app.use(add_cors);
