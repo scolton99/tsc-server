@@ -40,6 +40,7 @@ app.use(fix_ip);
 
 const add_cors = (_req, res, next) => {
   res.set('Access-Control-Allow-Origin', 'https://kb.northwestern.edu');
+  res.set('Access-Control-Allow-Headers', 'X-Conweb-Token');
   next();
 }
 
