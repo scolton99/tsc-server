@@ -38,6 +38,13 @@ const fix_ip = (req, _res, next) => {
 
 app.use(fix_ip);
 
+const add_cors = (_req, res, next) => {
+  res.set('Access-Control-Allow-Origin', 'https://kb.northwestern.edu');
+  next();
+}
+
+app.use(add_cors);
+
 const log_request = (req, _res, next) => {
   console.log(`New request from ${req.ip}`);
   console.log(`req.ip: ${req.ip}`);
