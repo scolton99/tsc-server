@@ -57,10 +57,10 @@ app.get("/", (_req, res) => {
 app.use('/kudos', kudosRouter);
 
 // TSC Photo change handler
-app.use('/photo', Security.require_nu_referrer, photoRouter);
+app.use('/photo', Security.require_nu_referrer, Security.require_conweb_token, photoRouter);
 
 // TSC Today's Birthdays JSON
-app.use('/birthdays', Security.require_nu_origin, birthdayRouter);
+app.use('/birthdays', Security.require_nu_origin, Security.require_conweb_token, birthdayRouter);
 
 // TSC Profile handler
 app.use('/profile', Security.require_nu_referrer, profileRouter);
@@ -75,10 +75,10 @@ app.use('/edit-ticket', Security.require_tss, editTicketRouter);
 app.use('/contacts', Security.require_northwestern, contactsRouter);
 
 // Assignment Group Stats Handler
-app.use('/assignment-group', Security.require_nu_origin, assignmentGroupRouter);
+app.use('/assignment-group', Security.require_nu_origin, Security.require_conweb_token, assignmentGroupRouter);
 
 // Category Stats Handler
-app.use('/categorization', Security.require_nu_origin, categorizationRouter);
+app.use('/categorization', Security.require_nu_origin, Security.require_conweb_token, categorizationRouter);
 
 // Spam Handler
 app.use('/spam', spamRouter);
@@ -87,7 +87,7 @@ app.use('/spam', spamRouter);
 app.use('/directory', Security.require_northwestern, directoryRouter);
 
 // WhenToWork Handler
-app.use('/w2w', Security.require_nu_origin, whenToWorkRouter);
+app.use('/w2w', Security.require_nu_origin, Security.require_conweb_token, whenToWorkRouter);
 
 app.use('/schedule', Security.require_tss, scheduleRouter);
 

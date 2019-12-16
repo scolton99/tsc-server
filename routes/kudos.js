@@ -65,7 +65,7 @@ const toDateString = (month_num, year) => {
   return month + " " + year;
 }
 
-router.get('/', Security.require_nu_origin, (_req, res, next) => {
+router.get('/', Security.require_nu_origin, Security.require_conweb_token, (_req, res, next) => {
   // Get from Feedback table
 	a_base('Feedback').select({
     fields: ['Con Name', 'Display Text'],
