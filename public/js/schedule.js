@@ -56,7 +56,7 @@ const refresh_schedule = async() => {
     mt.textContent = "-";
 
     if (res_json.next.sch[CONSULTANT].length === 0) {
-        n_1800_d.appendChild(mt.cloneNode());
+        n_1800_d.appendChild(mt.cloneNode(true));
     } else {
         for (let nn of res_json.next.sch[CONSULTANT]) {
             const nd = document.createElement("span");
@@ -73,7 +73,7 @@ const refresh_schedule = async() => {
     }
 
     if (res_json.next.sch[LIBRARY].length === 0) {
-        n_lib_d.appendChild(mt.cloneNode());
+        n_lib_d.appendChild(mt.cloneNode(true));
     } else {
         for (let nn of res_json.next.sch[LIBRARY]) {
             const nd = document.createElement("span");
@@ -90,7 +90,7 @@ const refresh_schedule = async() => {
     }   
 
     if (res_json.next.sch[SUPERVISOR].length === 0) {
-        n_sv_d.appendChild(mt.cloneNode());
+        n_sv_d.appendChild(mt.cloneNode(true));
     } else {
         for (let nn of res_json.next.sch[SUPERVISOR]) {
             const nd = document.createElement("span");
@@ -170,13 +170,13 @@ const refresh_schedule = async() => {
     }
 
     if (c_sv_d.childElementCount === 0)
-        c_sv_d.appendChild(mt.cloneNode());
+        c_sv_d.appendChild(mt.cloneNode(true));
 
     if (c_1800_d.childElementCount === 0)
-        c_1800_d.appendChild(mt.cloneNode());
+        c_1800_d.appendChild(mt.cloneNode(true));
 
     if (c_lib_d.childElementCount === 0)
-        c_lib_d.appendChild(mt.cloneNode());
+        c_lib_d.appendChild(mt.cloneNode(true));
 
     const n_date = new Date(res_json.next.date);
 
