@@ -13,6 +13,10 @@ const n_sv_d = document.querySelector("#next .supervisor");
 const n_1800_d = document.querySelector("#next .i1800");
 const n_lib_d = document.querySelector("#next .library");
 
+const SUPERVISOR = "1800 Supervisor";
+const LIBRARY = "Library Consultant";
+const CONSULTANT = "1800 Consultant";
+
 const refresh_schedule = async() => {
     const req_date = location.hash.substr(1);
     let req_uri;
@@ -48,10 +52,10 @@ const refresh_schedule = async() => {
         e.currentTarget.classList.toggle("st");
     };
 
-    for (let nn of res_json.next.sch["1800 Consultant"]) {
+    for (let nn of res_json.next.sch[CONSULTANT]) {
         const nd = document.createElement("span");
         nd.textContent = nn;
-        if (!res_json.now.sch["1800 Consultant"].includes(nn)) {
+        if (!res_json.now.sch[CONSULTANT].includes(nn)) {
             nd.classList.add("coming");
         }
         if (res_json.next.trades[nn]) {
@@ -61,10 +65,10 @@ const refresh_schedule = async() => {
         n_1800_d.appendChild(nd);
     }
 
-    for (let nn of res_json.next.sch["Library Consultant"]) {
+    for (let nn of res_json.next.sch[LIBRARY]) {
         const nd = document.createElement("span");
         nd.textContent = nn;
-        if (!res_json.now.sch["Library Consultant"].includes(nn)) {
+        if (!res_json.now.sch[LIBRARY].includes(nn)) {
             nd.classList.add("coming");
         }
         if (res_json.next.trades[nn]) {
@@ -74,10 +78,10 @@ const refresh_schedule = async() => {
         n_lib_d.appendChild(nd);
     }
 
-    for (let nn of res_json.next.sch["Consultant Supervisor"]) {
+    for (let nn of res_json.next.sch[SUPERVISOR]) {
         const nd = document.createElement("span");
         nd.textContent = nn;
-        if (!res_json.now.sch["Consultant Supervisor"].includes(nn)) {
+        if (!res_json.now.sch[SUPERVISOR].includes(nn)) {
             nd.classList.add("coming");
         }
         if (res_json.next.trades[nn]) {
@@ -88,33 +92,33 @@ const refresh_schedule = async() => {
     }
 
     for (let per of ex_c_1800_ppl) {
-        if (!res_json.now.sch["1800 Consultant"].includes(per.textContent)) {
+        if (!res_json.now.sch[CONSULTANT].includes(per.textContent)) {
             per.parentElement.removeChild(per);
         } else {
-            res_json.now.sch["1800 Consultant"].splice(res_json.now.sch["1800 Consultant"].indexOf(per.textContent), 1);
+            res_json.now.sch[CONSULTANT].splice(res_json.now.sch[CONSULTANT].indexOf(per.textContent), 1);
         }
     }
 
     for (let per of ex_c_lib_ppl) {
-        if (!res_json.now.sch["Library Consultant"].includes(per.textContent)) {
+        if (!res_json.now.sch[LIBRARY].includes(per.textContent)) {
             per.parentElement.removeChild(per);
         } else {
-            res_json.now.sch["Library Consultant"].splice(res_json.now.sch["Library Consultant"].indexOf(per.textContent), 1);
+            res_json.now.sch[LIBRARY].splice(res_json.now.sch[LIBRARY].indexOf(per.textContent), 1);
         }
     }
 
     for (let per of ex_c_sv_ppl) {
-        if (!res_json.now.sch["Consultant Supervisor"].includes(per.textContent)) {
+        if (!res_json.now.sch[SUPERVISOR].includes(per.textContent)) {
             per.parentElement.removeChild(per);
         } else {
-            res_json.now.sch["Consultant Supervisor"].splice(res_json.now.sch["Consultant Supervisor"].indexOf(per.textContent), 1);
+            res_json.now.sch[SUPERVISOR].splice(res_json.now.sch[SUPERVISOR].indexOf(per.textContent), 1);
         }
     }
 
-    for (let nn of res_json.now.sch["1800 Consultant"]) {
+    for (let nn of res_json.now.sch[CONSULTANT]) {
         const nd = document.createElement("span");
         nd.textContent = nn;
-        if (!res_json.next.sch["1800 Consultant"].includes(nn)) {
+        if (!res_json.next.sch[CONSULTANT].includes(nn)) {
             nd.classList.add("going");
         }
         if (res_json.now.trades[nn]) {
@@ -124,10 +128,10 @@ const refresh_schedule = async() => {
         c_1800_d.appendChild(nd);
     }
 
-    for (let nn of res_json.now.sch["Library Consultant"]) {
+    for (let nn of res_json.now.sch[LIBRARY]) {
         const nd = document.createElement("span");
         nd.textContent = nn;
-        if (!res_json.next.sch["Library Consultant"].includes(nn)) {
+        if (!res_json.next.sch[LIBRARY].includes(nn)) {
             nd.classList.add("going");
         }
         if (res_json.now.trades[nn]) {
@@ -137,10 +141,10 @@ const refresh_schedule = async() => {
         c_lib_d.appendChild(nd);
     }
 
-    for (let nn of res_json.now.sch["Consultant Supervisor"]) {
+    for (let nn of res_json.now.sch[SUPERVISOR]) {
         const nd = document.createElement("span");
         nd.textContent = nn;
-        if (!res_json.next.sch["Consultant Supervisor"].includes(nn)) {
+        if (!res_json.next.sch[SUPERVISOR].includes(nn)) {
             nd.classList.add("going");
         }
         if (res_json.now.trades[nn]) {
