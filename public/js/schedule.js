@@ -52,43 +52,58 @@ const refresh_schedule = async() => {
         e.currentTarget.classList.toggle("st");
     };
 
-    for (let nn of res_json.next.sch[CONSULTANT]) {
-        const nd = document.createElement("span");
-        nd.textContent = nn;
-        if (!res_json.now.sch[CONSULTANT].includes(nn)) {
-            nd.classList.add("coming");
+    const mt = document.createElement("p");
+    mt.textContent = "-";
+
+    if (res_json.next.sch[CONSULTANT].length === 0) {
+        n_1800_d.appendChild(mt.cloneNode());
+    } else {
+        for (let nn of res_json.next.sch[CONSULTANT]) {
+            const nd = document.createElement("span");
+            nd.textContent = nn;
+            if (!res_json.now.sch[CONSULTANT].includes(nn)) {
+                nd.classList.add("coming");
+            }
+            if (res_json.next.trades[nn]) {
+                nd.classList.add("trade");
+            }
+            nd.addEventListener("click", st_func);
+            n_1800_d.appendChild(nd);
         }
-        if (res_json.next.trades[nn]) {
-            nd.classList.add("trade");
-        }
-        nd.addEventListener("click", st_func);
-        n_1800_d.appendChild(nd);
     }
 
-    for (let nn of res_json.next.sch[LIBRARY]) {
-        const nd = document.createElement("span");
-        nd.textContent = nn;
-        if (!res_json.now.sch[LIBRARY].includes(nn)) {
-            nd.classList.add("coming");
+    if (res_json.next.sch[LIBRARY].length === 0) {
+        n_lib_d.appendChild(mt.cloneNode());
+    } else {
+        for (let nn of res_json.next.sch[LIBRARY]) {
+            const nd = document.createElement("span");
+            nd.textContent = nn;
+            if (!res_json.now.sch[LIBRARY].includes(nn)) {
+                nd.classList.add("coming");
+            }
+            if (res_json.next.trades[nn]) {
+                nd.classList.add("trade");
+            }
+            nd.addEventListener("click", st_func);
+            n_lib_d.appendChild(nd);
         }
-        if (res_json.next.trades[nn]) {
-            nd.classList.add("trade");
-        }
-        nd.addEventListener("click", st_func);
-        n_lib_d.appendChild(nd);
-    }
+    }   
 
-    for (let nn of res_json.next.sch[SUPERVISOR]) {
-        const nd = document.createElement("span");
-        nd.textContent = nn;
-        if (!res_json.now.sch[SUPERVISOR].includes(nn)) {
-            nd.classList.add("coming");
+    if (res_json.next.sch[SUPERVISOR].length === 0) {
+        n_sv_d.appendChild(mt.cloneNode());
+    } else {
+        for (let nn of res_json.next.sch[SUPERVISOR]) {
+            const nd = document.createElement("span");
+            nd.textContent = nn;
+            if (!res_json.now.sch[SUPERVISOR].includes(nn)) {
+                nd.classList.add("coming");
+            }
+            if (res_json.next.trades[nn]) {
+                nd.classList.add("trade");
+            }
+            nd.addEventListener("click", st_func);
+            n_sv_d.appendChild(nd);
         }
-        if (res_json.next.trades[nn]) {
-            nd.classList.add("trade");
-        }
-        nd.addEventListener("click", st_func);
-        n_sv_d.appendChild(nd);
     }
 
     for (let per of ex_c_1800_ppl) {
@@ -153,6 +168,15 @@ const refresh_schedule = async() => {
         nd.addEventListener("click", st_func);
         c_sv_d.appendChild(nd);
     }
+
+    if (c_sv_d.childElementCount === 0)
+        c_sv_d.appendChild(mt.cloneNode());
+
+    if (c_1800_d.childElementCount === 0)
+        c_1800_d.appendChild(mt.cloneNode());
+
+    if (c_lib_d.childElementCount === 0)
+        c_lib_d.appendChild(mt.cloneNode());
 
     const n_date = new Date(res_json.next.date);
 
