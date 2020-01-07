@@ -53,6 +53,7 @@ const refresh_schedule = async() => {
     };
 
     const mt = document.createElement("p");
+    mt.style.margin = 0;
     mt.textContent = "-";
 
     if (res_json.next.sch[CONSULTANT].length === 0) {
