@@ -119,4 +119,9 @@ app.use((_req, res, _next) => {
 global.root_dir = __dirname;
 global.cdn_endpoint = "//storage.googleapis.com/tss-support-center.appspot.com/"
 global.cdn = x => `${global.cdn_endpoint}${x}`
+
+global.POS_SUPERVISOR = "1800 Supervisor";
+global.POS_CONSULTANT = "1800 Consultant";
+global.POS_LIBRARY = "Library Consultant";
+
 module.exports = app;

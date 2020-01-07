@@ -93,17 +93,21 @@ const next_shift = date => {
 }
 
 const gen_res_obj = (events, date) => {
-    const people = {"1800 Consultant": [], "Consultant Supervisor": [], "Library Consultant": []};
+    const SUPERVISOR = global.POS_SUPERVISOR;
+    const LIBRARY = global.POS_LIBRARY;
+    const CONSULTANT = global.POS_CONSULTANT;
+
+    const people = {[CONSULTANT]: [], [SUPERVISOR]: [], [LIBRARY]: []};
 
     events.filter(e => {
         return (new Date(e.start.dateTime) <= date) && (new Date(e.end.dateTime) > date);
     }).forEach(e => {
-        if (e.summary.includes("1800 Consultant")) {
-            people["1800 Consultant"].push(/^(.*)1800 Consultant/.exec(e.summary)[1].trim());
-        } else if (e.summary.includes("Consultant Supervisor")) {
-            people["Consultant Supervisor"].push(/^(.*)Consultant Supervisor/.exec(e.summary)[1].trim());
-        } else if (e.summary.includes("Library Consultant")) {
-            people["Library Consultant"].push(/^(.*)Library Consultant/.exec(e.summary)[1].trim());
+        if (e.summary.includes(CONSULTANT)) {
+            people[CONSULTANT].push(new RegExp(`^(.*)${CONSULTANT}`).exec(e.summary)[1].trim());
+        } else if (e.summary.includes(SUPERVISOR)) {
+            people[SUPERVISOR].push(new RegExp(`^(.*)${SUPERVISOR}`).exec(e.summary)[1].trim());
+        } else if (e.summary.includes(LIBRARY)) {
+            people[LIBRARY].push(new RegExp(`^(.*)${LIBRARY}`).exec(e.summary)[1].trim());
         }
     });
 
@@ -116,6 +120,10 @@ router.get('/status', async(req, res) => {
         console.log(req.ips)
         return res.status(403).sendFile('forbidden.html', { root: global.root_dir + '/public' });
     }
+
+    const SUPERVISOR = global.POS_SUPERVISOR;
+    const LIBRARY = global.POS_LIBRARY;
+    const CONSULTANT = global.POS_CONSULTANT;
 
     let { date: mrn } = req.query;
 
@@ -155,15 +163,15 @@ router.get('/status', async(req, res) => {
         const ltr = gen_res_obj(events, ltr_date);
 
         const now_cons = [
-            ...now["1800 Consultant"],
-            ...now["Consultant Supervisor"],
-            ...now["Library Consultant"]
+            ...now[CONSULTANT],
+            ...now[SUPERVISOR],
+            ...now[LIBRARY]
         ];
 
         const ltr_cons = [
-            ...ltr["1800 Consultant"],
-            ...ltr["Consultant Supervisor"],
-            ...ltr["Library Consultant"]
+            ...ltr[CONSULTANT],
+            ...ltr[SUPERVISOR],
+            ...ltr[LIBRARY]
         ];
 
         const now_trades = await request({

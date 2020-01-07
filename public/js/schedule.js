@@ -13,6 +13,10 @@ const n_sv_d = document.querySelector("#next .supervisor");
 const n_1800_d = document.querySelector("#next .i1800");
 const n_lib_d = document.querySelector("#next .library");
 
+const SUPERVISOR = "1800 Supervisor";
+const LIBRARY = "Library Consultant";
+const CONSULTANT = "1800 Consultant";
+
 const refresh_schedule = async() => {
     const req_date = location.hash.substr(1);
     let req_uri;
@@ -48,73 +52,89 @@ const refresh_schedule = async() => {
         e.currentTarget.classList.toggle("st");
     };
 
-    for (let nn of res_json.next.sch["1800 Consultant"]) {
-        const nd = document.createElement("span");
-        nd.textContent = nn;
-        if (!res_json.now.sch["1800 Consultant"].includes(nn)) {
-            nd.classList.add("coming");
+    const mt = document.createElement("p");
+    mt.style.margin = 0;
+    mt.textContent = "-";
+
+    if (res_json.next.sch[CONSULTANT].length === 0) {
+        n_1800_d.appendChild(mt.cloneNode(true));
+    } else {
+        for (let nn of res_json.next.sch[CONSULTANT]) {
+            const nd = document.createElement("span");
+            nd.textContent = nn;
+            if (!res_json.now.sch[CONSULTANT].includes(nn)) {
+                nd.classList.add("coming");
+            }
+            if (res_json.next.trades[nn]) {
+                nd.classList.add("trade");
+            }
+            nd.addEventListener("click", st_func);
+            n_1800_d.appendChild(nd);
         }
-        if (res_json.next.trades[nn]) {
-            nd.classList.add("trade");
-        }
-        nd.addEventListener("click", st_func);
-        n_1800_d.appendChild(nd);
     }
 
-    for (let nn of res_json.next.sch["Library Consultant"]) {
-        const nd = document.createElement("span");
-        nd.textContent = nn;
-        if (!res_json.now.sch["Library Consultant"].includes(nn)) {
-            nd.classList.add("coming");
+    if (res_json.next.sch[LIBRARY].length === 0) {
+        n_lib_d.appendChild(mt.cloneNode(true));
+    } else {
+        for (let nn of res_json.next.sch[LIBRARY]) {
+            const nd = document.createElement("span");
+            nd.textContent = nn;
+            if (!res_json.now.sch[LIBRARY].includes(nn)) {
+                nd.classList.add("coming");
+            }
+            if (res_json.next.trades[nn]) {
+                nd.classList.add("trade");
+            }
+            nd.addEventListener("click", st_func);
+            n_lib_d.appendChild(nd);
         }
-        if (res_json.next.trades[nn]) {
-            nd.classList.add("trade");
-        }
-        nd.addEventListener("click", st_func);
-        n_lib_d.appendChild(nd);
-    }
+    }   
 
-    for (let nn of res_json.next.sch["Consultant Supervisor"]) {
-        const nd = document.createElement("span");
-        nd.textContent = nn;
-        if (!res_json.now.sch["Consultant Supervisor"].includes(nn)) {
-            nd.classList.add("coming");
+    if (res_json.next.sch[SUPERVISOR].length === 0) {
+        n_sv_d.appendChild(mt.cloneNode(true));
+    } else {
+        for (let nn of res_json.next.sch[SUPERVISOR]) {
+            const nd = document.createElement("span");
+            nd.textContent = nn;
+            if (!res_json.now.sch[SUPERVISOR].includes(nn)) {
+                nd.classList.add("coming");
+            }
+            if (res_json.next.trades[nn]) {
+                nd.classList.add("trade");
+            }
+            nd.addEventListener("click", st_func);
+            n_sv_d.appendChild(nd);
         }
-        if (res_json.next.trades[nn]) {
-            nd.classList.add("trade");
-        }
-        nd.addEventListener("click", st_func);
-        n_sv_d.appendChild(nd);
     }
 
     for (let per of ex_c_1800_ppl) {
-        if (!res_json.now.sch["1800 Consultant"].includes(per.textContent)) {
+        if (!res_json.now.sch[CONSULTANT].includes(per.textContent)) {
             per.parentElement.removeChild(per);
         } else {
-            res_json.now.sch["1800 Consultant"].splice(res_json.now.sch["1800 Consultant"].indexOf(per.textContent), 1);
+            res_json.now.sch[CONSULTANT].splice(res_json.now.sch[CONSULTANT].indexOf(per.textContent), 1);
         }
     }
 
     for (let per of ex_c_lib_ppl) {
-        if (!res_json.now.sch["Library Consultant"].includes(per.textContent)) {
+        if (!res_json.now.sch[LIBRARY].includes(per.textContent)) {
             per.parentElement.removeChild(per);
         } else {
-            res_json.now.sch["Library Consultant"].splice(res_json.now.sch["Library Consultant"].indexOf(per.textContent), 1);
+            res_json.now.sch[LIBRARY].splice(res_json.now.sch[LIBRARY].indexOf(per.textContent), 1);
         }
     }
 
     for (let per of ex_c_sv_ppl) {
-        if (!res_json.now.sch["Consultant Supervisor"].includes(per.textContent)) {
+        if (!res_json.now.sch[SUPERVISOR].includes(per.textContent)) {
             per.parentElement.removeChild(per);
         } else {
-            res_json.now.sch["Consultant Supervisor"].splice(res_json.now.sch["Consultant Supervisor"].indexOf(per.textContent), 1);
+            res_json.now.sch[SUPERVISOR].splice(res_json.now.sch[SUPERVISOR].indexOf(per.textContent), 1);
         }
     }
 
-    for (let nn of res_json.now.sch["1800 Consultant"]) {
+    for (let nn of res_json.now.sch[CONSULTANT]) {
         const nd = document.createElement("span");
         nd.textContent = nn;
-        if (!res_json.next.sch["1800 Consultant"].includes(nn)) {
+        if (!res_json.next.sch[CONSULTANT].includes(nn)) {
             nd.classList.add("going");
         }
         if (res_json.now.trades[nn]) {
@@ -124,10 +144,10 @@ const refresh_schedule = async() => {
         c_1800_d.appendChild(nd);
     }
 
-    for (let nn of res_json.now.sch["Library Consultant"]) {
+    for (let nn of res_json.now.sch[LIBRARY]) {
         const nd = document.createElement("span");
         nd.textContent = nn;
-        if (!res_json.next.sch["Library Consultant"].includes(nn)) {
+        if (!res_json.next.sch[LIBRARY].includes(nn)) {
             nd.classList.add("going");
         }
         if (res_json.now.trades[nn]) {
@@ -137,10 +157,10 @@ const refresh_schedule = async() => {
         c_lib_d.appendChild(nd);
     }
 
-    for (let nn of res_json.now.sch["Consultant Supervisor"]) {
+    for (let nn of res_json.now.sch[SUPERVISOR]) {
         const nd = document.createElement("span");
         nd.textContent = nn;
-        if (!res_json.next.sch["Consultant Supervisor"].includes(nn)) {
+        if (!res_json.next.sch[SUPERVISOR].includes(nn)) {
             nd.classList.add("going");
         }
         if (res_json.now.trades[nn]) {
@@ -149,6 +169,15 @@ const refresh_schedule = async() => {
         nd.addEventListener("click", st_func);
         c_sv_d.appendChild(nd);
     }
+
+    if (c_sv_d.childElementCount === 0)
+        c_sv_d.appendChild(mt.cloneNode(true));
+
+    if (c_1800_d.childElementCount === 0)
+        c_1800_d.appendChild(mt.cloneNode(true));
+
+    if (c_lib_d.childElementCount === 0)
+        c_lib_d.appendChild(mt.cloneNode(true));
 
     const n_date = new Date(res_json.next.date);
 
