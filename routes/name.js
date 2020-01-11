@@ -16,13 +16,19 @@ router.post('/', (req, res, next) => {
     // If Airtable returns an error, log it and return 500
     if (err) {
       console.error(err);
-      return next(err);
+      return res.status(404).json({
+        email: email,
+        name: '[[[ERROR]]]'
+      });
     }
 
     // If we can't find a record with that ID, return 404
     if (records.length === 0) {
       console.error("No record found with email " + email);
-      return next();
+      return res.status(404).json({
+        email: email,
+        name: '[[[UNKNOWN NAME]]]'
+      });
     }
 
     res.json({ email: email, name: records[0].get("Name") });
