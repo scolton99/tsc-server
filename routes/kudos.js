@@ -77,34 +77,53 @@ router.get('/', Security.require_nu_origin, Security.require_conweb_token, (_req
       }
     ]
   }).firstPage((err, records) => {
-    // Allow this to be loaded by the KB
-    res.header("Access-Control-Allow-Origin", "https://kb.northwestern.edu");
-    
-    // Display errors if they occur 
-    if (err) {
-      console.error(err);
-      return next(err);
-    }
-    
-    // Get consultant names and remove duplicates (using Set)
-    const names = new Set(records.map(record => record["fields"]["Con Name"]).reduce((prev, cur) => prev.concat(cur)));
-    
-    const feedback = {};
-    names.forEach(name => {
-      // Get NetID
-	    const netid = records.filter(record => record["fields"]["Con Name"].includes(name)).map(record => record["fields"]["Con NetID"])[0];
+    a_base('Main').select({
+      pageSize: 100,
+      fields: ['Name', 'NetID'],
+      filterByFormula: '{Current}'
+    }).firstPage((err2, name_netid) => {
+      // Allow this to be loaded by the KB
+      res.header("Access-Control-Allow-Origin", "https://kb.northwestern.edu");
+        
+      // Display errors if they occur 
+      if (err) {
+        console.error(err);
+        return next(err);
+      }
 
-      // Get the feedback applicable to this con as strings
-      const con_feedback = records.filter(record => record["fields"]["Con Name"].includes(name)).map(record => record["fields"]["Display Text"]);
+      if (err2) {
+        console.error(err2);
+        return next(err2);
+      }
+
+      const name_netid_map = {};
       
-      // Store the feedback string in our feedback object
-      feedback[name] = { 
-        netid: netid,
-        feedback: con_feedback
-      };
+      name_netid.map(record => [record.fields["Name"], record.fields["NetID"]]).forEach(
+        record => {
+          name_netid_map[record[0]] = record[1];
+        }
+      );
+
+      // Get consultant names and remove duplicates (using Set)
+      const names = new Set(records.map(record => record["fields"]["Con Name"]).reduce((prev, cur) => prev.concat(cur)));
+
+      const feedback = {};
+      names.forEach(name => {
+        // Get NetID
+        const netid = name_netid_map[name];
+
+        // Get the feedback applicable to this con as strings
+        const con_feedback = records.filter(record => record["fields"]["Con Name"].includes(name)).map(record => record["fields"]["Display Text"]);
+
+        // Store the feedback string in our feedback object
+        feedback[name] = { 
+          netid: netid,
+          feedback: con_feedback
+        };
+      });
+
+      res.json(feedback);
     });
-    
-    res.json(feedback);
   });
 });
 
