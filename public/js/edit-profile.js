@@ -1,9 +1,149 @@
-const init_edit_profile = () => {
-  const profile_photo_container = document.getElementById("photo-container");
+const NETID = document.querySelector("meta[name='netid']").getAttribute("content");
+const RECID = document.querySelector("meta[name='recid']").getAttribute("content");
 
-  profile_photo_container.addEventListener("click", () => {
-    window.open("https://kb.northwestern.edu/internal/62391", "_blank");
+const init = () => {
+  const button = document.getElementById("photo-upload-button");
+  button.addEventListener("click", start_photo_upload);
+  
+  const file_input = document.getElementById("photo-upload");
+  file_input.addEventListener("change", upload_photo);
+
+  load_num_tickets();
+
+  document.getElementById("save").addEventListener("click", save_record);
+};
+
+const start_photo_upload = () => {
+  const file_input = document.getElementById("photo-upload");
+  file_input.click();
+};
+
+const upload_photo = () => {
+  const file_input = document.getElementById("photo-upload");
+  const files = file_input.files;
+
+  if (files.length === 0) return;
+
+  const file = files[0];
+
+  const data = new FormData();
+  data.append("photo", file);
+  data.append("netid", NETID);
+  data.append("conweb_token", "OnqtpZTPV8qAkFhaJuYT0mmkhmx6BK3F1KYNkwr3wiLgtG9A6QnWmLReTl5rFeHV");
+
+  const x = new XMLHttpRequest();
+  x.open("POST", "/photo");
+  x.onreadystatechange = () => {
+    if (x.readyState === XMLHttpRequest.DONE) {
+      document.getElementById("photo-upload-button").classList.remove("uploading");
+
+      if (x.status < 400) {
+        console.log("Photo uploaded successfully!");
+
+        document.getElementById("profile-photo").setAttribute("src", x.responseText);
+      } else {
+        console.error("POST failed.");        
+      }
+    }
+  };
+  x.send(data);
+
+  document.getElementById("photo-upload-button").classList.add("uploading");
+};
+
+const load_num_tickets = () => {
+  const netid = document.querySelector("meta[name='netid']").getAttribute("content");
+
+  fetch("/profile/tickets/" + netid).then(res => res.json()).then(res => {
+    const num_tickets_span = document.getElementById("num_tickets");
+
+    num_tickets_span.innerHTML = res.num_tickets + " ";
   });
 };
 
-window.addEventListener("DOMContentLoaded", init_edit_profile);
+const format_phone = phone => {
+  if (!phone) return "";
+
+  const sanitized = phone.replace(/[^\d]/g, "");
+  if (sanitized.length !== 10) return "";
+
+  const area_code = sanitized.substr(0, 3);
+  const prefix = sanitized.substr(3, 3);
+  const number = sanitized.substr(6, 4);
+
+  return `(${area_code}) ${prefix}-${number}`;
+};
+
+const save_record = () => {
+  const first_name = document.getElementById("first-name").value;
+  const t_shirt_size = document.getElementById("shirt-size").value;
+  const dietary_restrictions = document.getElementById("dietary-restrictions").value;
+  const pronouns = Array.from(document.getElementsByName("Pronouns")).filter(e => e.checked).map(e => e.value);
+  const other_pronouns = document.getElementById("other-pronouns").value;
+  const wildcard_hid = document.getElementById("wildcard-hid").value;
+  const phone_number = format_phone(document.getElementById("phone-number").value);
+  const bio = document.getElementById("bio").value;
+  const record_id = RECID;
+
+  const data = new FormData();
+  data.append("first_name", first_name);
+  data.append("t_shirt_size", t_shirt_size);
+  data.append("dietary_restrictions", dietary_restrictions);
+  data.append("other_pronouns", other_pronouns);
+  data.append("wildcard_hid", wildcard_hid);
+  data.append("phone_number", phone_number);
+  data.append("bio", bio);
+  data.append("record_id", record_id);
+
+  pronouns.forEach(pronoun => {
+    data.append("pronouns", pronoun);
+  });
+
+  const x = new XMLHttpRequest();
+  x.open('POST', '');
+  x.onreadystatechange = () => {
+    if (x.readyState === XMLHttpRequest.DONE) {
+      if (x.status < 400) {
+        const res = JSON.parse(x.responseText);
+
+        document.getElementById("first-name").value = res["First Name"] || "";
+        document.getElementById("shirt-size").value = res["Shirt Size"];
+        document.getElementById("dietary-restrictions").value = res["Dietary Restrictions"] || "";
+        document.getElementById("other-pronouns").value = res["Other Pronouns"] || "";
+        document.getElementById("wildcard-hid").value = res["Wildcard HID"] || "";
+        document.getElementById("phone-number").value = res["Phone Number"] || "";
+        document.getElementById("bio").value = res["Bio"] || "";
+
+        Array.from(document.getElementsByName("Pronouns")).forEach(e => {
+          e.checked = false;
+        });
+
+        for (const pronoun of res.Pronouns) {
+          document.getElementById(pronoun.replace(/\//g, "-")).checked = true;
+        }
+
+        const save_btn = document.getElementById("save");
+
+        save_btn.classList.remove("fa-pulse");
+        save_btn.classList.remove("fa-spinner");
+        save_btn.classList.add("fa-save");
+      } else {
+        const save_btn = document.getElementById("save");
+
+        save_btn.classList.remove("fa-pulse");
+        save_btn.classList.remove("fa-spinner");
+        save_btn.classList.add("fa-exclamation");
+
+        console.error("Couldn't save profile")
+      }
+    }
+  };
+  x.send(data);
+
+  const save_btn = document.getElementById("save");
+  save_btn.classList.remove("fa-save");
+  save_btn.classList.add("fa-spinner");
+  save_btn.classList.add("fa-pulse");
+};
+
+window.addEventListener("DOMContentLoaded", init);

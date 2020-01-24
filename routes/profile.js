@@ -61,10 +61,12 @@ const get_user_tickets = async netid => {
   return num_tickets;
 }
 
-router.get("/edit/:record_id", async (req, res, next) => {
-  const { record_id } = req.params;
+router.get("/:netid/edit", async (req, res, next) => {
+  const { netid } = req.params;
 
-  a_base('Main').find("rec" + record_id, (err, record) => {
+  a_base('Main').select({
+    filterByFormula: `AND({NetID} = '${netid}', {Current})`
+  }).firstPage((err, records) => {
     // If Airtable returns an error, log it and return 500
     if (err) {
       console.error(err);
@@ -72,12 +74,117 @@ router.get("/edit/:record_id", async (req, res, next) => {
     }
 
     // If we can't find a record with that ID, return 404
-    if (record.length === 0) {
-      console.error("No record found with ID " + record_id);
+    if (records.length === 0) {
+      console.error("No record found with ID " + netid);
       return next();
     }
+    
+    const name = records[0].fields.Name;
+    const record_id = records[0].id;
 
-    res.render('edit-profile', { user: record.fields });
+    a_base('Feedback').select({
+      filterByFormula: `AND(NOT(FIND({Con}, '${name}') = 0), {Display})`,
+      sort: [{field: "Time Submitted", direction: "desc"}],
+      fields: ["Time Submitted", "Display Text"],
+      maxRecords: 3
+    }).firstPage((fb_err, kudos) => {
+      // If Airtable returns an error, log it and return 500
+      if (fb_err) {
+        console.error(fb_err);
+        return next(fb_err);
+      }
+
+      a_base('Performance Corrections').select({
+        filterByFormula: `{Con} = '${name}'`,
+        sort: [{field: "Timestamp", direction: "desc"}],
+        fields: ["Timestamp", "Type", "Description"]
+      }).firstPage((pc_err, pcs) => {
+        // If Airtable returns an error, log it and return 500
+        if (pc_err) {
+          console.error(pc_err);
+          return next(pc_err);
+        }
+
+        if (!records[0].fields.Photo) {
+          records[0].fields.Photo = [
+            {url: 'https://imgur.com/e5YUmjl.png'}
+          ]
+        }
+
+        records[0].fields.Status = !records[0].fields.Status ? [] : records[0].fields.Status;
+        records[0].fields.PillMap = {
+          "Pinch-hitting": "blue",
+          "Trainee": "seagreen",
+          "On leave": "green"
+        };
+
+        if (records[0].fields["Grad Year"])
+          records[0].fields.GradYearFixed = records[0].fields["Grad Year"].toString().substr(-2, 2);
+
+        records[0].fields.PronounsFixed = records[0].fields.Pronouns instanceof Array ? records[0].fields.Pronouns.join(", ") : records[0].fields.Pronouns;
+
+        if (records[0].fields["Phone Number"]) {
+          let phon = records[0].fields["Phone Number"].replace(/[^\d]/g, "");
+          records[0].fields.PhoneFixed = "(" + phon.substr(0,3) + ") " + phon.substr(3, 3) + "-" + phon.substr(6, 4);
+        }
+
+        if (records[0].fields["Exchange - Office365"])
+          records[0].fields.ExchangeFixed = records[0].fields["Exchange - Office365"].toLowerCase();
+
+        const ws = parseInt(records[0].fields.WS);
+        if (isNaN(ws))
+          records[0].fields.WSFixed = "-";
+        else
+          records[0].fields.WSFixed = `$${ws.toLocaleString()}`;
+
+        res.render('edit-profile', { 
+          user: records[0].fields, 
+          formatPhone: formatPhone, 
+          kudos: kudos.map(e => e.fields), 
+          PCs: pcs.map(e => e.fields),
+          record_id: record_id
+        });
+      });      
+    });
+  });
+});
+
+router.post("/:netid/edit", (req, res, next) => {
+  console.log(req.params);
+  console.log(req.body);
+
+  let {
+    record_id,
+    bio,
+    phone_number,
+    wildcard_hid,
+    other_pronouns,
+    dietary_restrictions,
+    t_shirt_size,
+    first_name,
+    pronouns
+  } = req.body;
+
+  if (typeof(pronouns) === "string") pronouns = [pronouns];
+  if (typeof(wildcard_hid) === "string") wildcard_hid = parseInt(wildcard_hid);
+  if (isNaN(wildcard_hid)) wildcard_hid = null;
+
+  a_base('Main').update(record_id, {
+    "First Name": first_name,
+    "Pronouns": pronouns,
+    "Wildcard HID": wildcard_hid,
+    "Shirt Size": t_shirt_size,
+    "Dietary Restrictions": dietary_restrictions,
+    "Other Pronouns": other_pronouns,
+    "Phone Number": phone_number,
+    "Bio": bio
+  }, (err, record) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).end();
+      }
+
+      res.json(record.fields);
   });
 });
 
@@ -106,28 +213,6 @@ router.get("/:netid", (req, res, next) => {
 router.get("/tickets/:netid", async (req, res, _next) => {
   let num_tickets = await get_user_tickets(req.params.netid);
   res.json({ num_tickets: num_tickets });
-});
-
-router.get("/:netid/edit", async (req, res, _next) => {
-  const { netid } = req.params;
-
-  a_base('Main').select({
-    filterByFormula: 'AND({NetID} = "' + netid + '", {Current})'
-  }).firstPage((err, records) => {
-    // If Airtable returns an error, log it and return 500
-    if (err) {
-      console.error(err);
-      return next(err);
-    }
-
-    // If we can't find a record with that ID, return 404
-    if (records.length === 0) {
-      console.error("No record found with ID " + record_id);
-      return next();
-    }
-
-    res.render('edit-profile', { user: records[0].fields, formatPhone: formatPhone });
-  });
 });
 
 module.exports = router;

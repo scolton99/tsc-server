@@ -3,6 +3,8 @@ html
   head
     title Edit Profile
     meta(name="netid", content=user.NetID)
+    meta(name="recid", content=record_id)
+    meta(name="viewport" content="width=device-width, initial-scale=1")
     link(rel="stylesheet" href="/css/fonts.css")
     link(rel="stylesheet" href="/css/kb_theme.css")
     link(rel="stylesheet" href="/css/loading.css")
@@ -13,38 +15,103 @@ html
   body    
     header
       img(src=global.cdn("images/conweb-logo.png"))
+      div.fa-2x
+        a(href=`/profile/${user.NetID}` target="_blank")
+          span.fas.fa-external-link-alt
+        span.fas.fa-save#save
     main
-      div.profile-header
-        div.profile-photo-container#photo-container
-          img(src=user.Photo[0].url)
-        div.profile-header-text
-          span.profile-header-name
-            | #{user.Name}
-            span.profile-header-pronouns= user.Pronouns
-          span.profile-header-position= user.Position
-          span.profile-header-start-date Joined us #{user["Start Date"]}
-          span.profile-header-num-tickets
-            | Completed 
-            span#num_tickets
-              div.lds-dual-ring
-            | tickets
-          span.profile-header-birthday
-            span.fas.fa-birthday-cake
-            span#birthday= user.Birthday
-      div.profile-row
-        section#bio
-          h3 Bio
-          p= user.Bio
-        section#contact-info
-          h3 Contact Info
-          div.contact-record
-            span.fas.fa-phone
-            span= formatPhone(user["Phone Number"])
-          div.contact-record
-            span.fas.fa-envelope
-            span
-              a(href="mailto:" + user.Email)= user.Email
-          div.contact-record
-            span.far.fa-envelope
-            span
-              a(href="mailto:" + user.Exchange)= user["Exchange - Office365"].toLowerCase()
+      .edit-profile.basic
+        .card-header Basic
+        .basic-content
+          .top-content
+            .profile-photo-container#photo-upload-button
+              img#profile-photo(src=user.Photo[0].url)
+              input#photo-upload(type="file")
+            .text-content
+              span.profile-header-name
+                span #{user.Name}
+                if user.GradYearFixed
+                  sup '#{user.GradYearFixed}
+                span.profile-header-pronouns= user.PronounsFixed
+              span.profile-header-position
+                span= user.Position
+                each x in user.Status
+                  span(class=`pill ${user.PillMap[x]}`)= x
+              if user.Position !== "Lead Consultant"
+                span.profile-header-LC LC: #{user.LC}
+              span.profile-header-start-date Started in #{user["Start Date"]}
+              span.profile-header-num-tickets
+                | Completed 
+                span#num_tickets
+                  div.lds-dual-ring
+                | tickets
+          .bio-content
+            label(for="bio") Bio
+            textarea#bio(name="bio")= user.Bio
+      .edit-profile.about
+        .card-header About
+        .about-content
+          label(for="first-name") Preferred Name
+          input#first-name(type="text" name="First Name" value=user["First Name"])
+          label Birthday
+          span= user["Long Birthday"]
+          label(for="shirt-size") T-Shirt Size
+          select#shirt-size(name="Shirt Size")
+            each size in ['S', 'M', 'L', 'XL']
+              option(value=size selected=(user["Shirt Size"] === size))= size
+          label(for="dietary-restrictions") Dietary Restrictions
+          input#dietary-restrictions(type="text" name="Dietary Restrictions" value=user["Dietary Restrictions"])
+          label(for="pronouns") Pronouns
+          .pronoun-opts
+            each pronoun_set in ['he/him/his', 'she/her/hers', 'they/them/theirs']
+              div
+                input(id=pronoun_set.replace(/\//g, '-') type="checkbox" name="Pronouns" value=pronoun_set checked=(user.Pronouns instanceof Array && user.Pronouns.includes(pronoun_set)))
+                label(for=pronoun_set.replace(/\//g, '-'))= pronoun_set
+          input#other-pronouns(type="text" name="Other Pronouns" value=user["Other Pronouns"] placeholder="Enter custom pronouns here")
+      .edit-profile.details
+        .card-header Details
+        .details-content
+          label NetID
+          span= user.NetID
+          label Work-Study Allotment
+          span= user.WSFixed
+          label(for="wildcard-hid") Wildcard HID
+          input#wildcard-hid(type="text" value=user["Wildcard HID"] name="Wildcard HID")
+          label Student ID
+          span= user.ID
+      .edit-profile.contact
+        .card-header Contact
+        .contact-content
+          label(for="phone-number") Phone Number
+          input#phone-number(type="text" value=user.PhoneFixed name="Phone Number")
+          label Student Email
+          span= user["Email"]
+          label Staff Email
+          span= user.ExchangeFixed
+      .edit-profile.kudos
+        .card-header 
+          | Kudos
+          if kudos.length !== 0
+            a(type="button" href=`/kudos/${user.NetID}`) See All
+        .kudos-content
+          each kudo in kudos
+            h4= new Date(kudo["Time Submitted"]).toLocaleDateString()
+            p= kudo["Display Text"]
+        if kudos.length === 0
+          | None yet.
+      .edit-profile.pcs
+        .card-header Performance Corrections
+        .pcs-content
+          each pc in PCs
+            .pc
+              p
+                strong Date: 
+                | 
+                = new Date(pc["Timestamp"]).toLocaleDateString()
+              p
+                strong Categories: 
+                | 
+                = pc.Type.join(", ")
+              p= pc.Description
+          if PCs.length === 0
+            | No Performance Corrections. Yay!

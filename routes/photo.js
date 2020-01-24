@@ -16,7 +16,7 @@ router.post('/', (req, res) => {
     return res.status(400).end();
   }
 
-  const { redirect, netid } = req.body;
+  const { netid } = req.body;
   const { name: filename, mimetype } = req.files.photo;
   
   // Get the file's extension
@@ -31,13 +31,13 @@ router.post('/', (req, res) => {
     // If there was an issue with the Airtable request, redirect to error page
     if (err) { 
       console.error(err);
-      return res.redirect(redirect + '#failure');
+      return res.status(500).end();
     }
 
     // If we couldn't find a user with that NetID, redirect to error page
     if (records.length === 0) {
       console.error("Couldn't find record with NetID " + netid);
-      return res.redirect(redirect + '#failure');
+      return res.status(500).end();
     }
 
     const storage = new Storage();
@@ -50,7 +50,7 @@ router.post('/', (req, res) => {
     stream.on('error', err => {
       errored = true;
       console.error(err);
-      return res.redirect(redirect + '#failure');
+      return res.status(500).end();
     });
     
     stream.end(req.files.photo.data, null, err => {
@@ -68,15 +68,18 @@ router.post('/', (req, res) => {
               filename: netid + '.' + mimeToExt(mimetype)
             }
           ]
-        }, err => {
+        }, (err, record) => {
           // If there was an error updating the record, log it and redirect to error page
           if (err) {
             console.error(err);
-            return res.redirect(redirect + "#failure");
+            return res.status(500).end();
           }
 
+          res.set('Content-Type', 'text/plain');
+          res.send(record.fields.Photo[0].url);
+
           // Everything worked! Refer them back.
-          res.redirect(redirect + "#success");
+          // res.redirect(redirect + "#success");
         });
       });
     });

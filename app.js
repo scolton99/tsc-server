@@ -22,7 +22,7 @@ const app = express();
 app.set('view engine', 'pug');
 app.set('views', './views');
 
-app.set('trust proxy', true);
+app.set('trust proxy', process.env.GAE_VERSION === "production");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false, verify: (req, _res, buf, encoding) => {
