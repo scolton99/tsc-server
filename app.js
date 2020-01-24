@@ -1,5 +1,6 @@
 const express = require('express');
 const files = require('express-fileupload');
+const basicAuth = require('express-basic-auth')
 const Security = require('./util/security');
 
 const kudosRouter = require('./routes/kudos');
@@ -30,6 +31,16 @@ app.use(express.urlencoded({ extended: false, verify: (req, _res, buf, encoding)
 }}));
 app.use(express.static('public'));
 app.use(files());
+
+if (process.env.GAE_VERSION !== "production") { 
+  app.use(basicAuth({
+    users: {
+      'lc': process.env.DEV_BASIC_AUTH_PWD
+    },
+    challenge: true,
+    realm: 'nuit'
+  }));
+}
 
 const fix_ip = (req, _res, next) => {
   req.headers["x-forwarded-for"] = req.get('X-AppEngine-User-IP') + ', ' + req.get('X-Forwarded-For');

@@ -18,8 +18,10 @@ const get_origin_hostname = origin => {
     return res === null ? null : res[1];
 };
 
+const is_development = () => process.env.GAE_VERSION !== "production";
+
 exp.require_conweb_token = (req, res, next) => {
-    if (IP.isLocal(req.ip))
+    if (is_development())
         return next();
 
     let conweb_body_token;
@@ -33,7 +35,7 @@ exp.require_conweb_token = (req, res, next) => {
 };
 
 exp.require_northwestern = (req, res, next) => {
-    if (IP.isLocal(req.ip))
+    if (is_development())
         return next();
 
     if (!IP.isNU(req.ip))
@@ -43,6 +45,9 @@ exp.require_northwestern = (req, res, next) => {
 };
 
 exp.require_local = (req, res, next) => {
+    if (is_development())
+        return next();
+
     if (!IP.isLocal(req.ip))
         forbidden(req, res, "Source not a local address");
     else
@@ -50,7 +55,7 @@ exp.require_local = (req, res, next) => {
 };
 
 exp.require_tss = (req, res, next) => {
-    if (IP.isLocal(req.ip))
+    if (is_development())
         return next();
 
     if (!IP.isTSS(req.ip))
@@ -64,7 +69,7 @@ exp.require_all_granted = (_req, _res, next) => {
 };
 
 exp.require_nu_origin = (req, res, next) => {
-    if (IP.isLocal(req.ip))
+    if (is_development())
         return next();
 
     if (typeof(req.get('Origin')) === 'undefined') return forbidden(req, res, "No origin header present");
@@ -78,7 +83,7 @@ exp.require_nu_origin = (req, res, next) => {
 };
 
 exp.require_nu_referrer = (req, res, next) => {
-    if (IP.isLocal(req.ip))
+    if (is_development())
         return next();
 
     if (typeof(req.get('Referrer')) === 'undefined') return forbidden(req, res, "No referrer header present");
@@ -98,7 +103,7 @@ exp.require_nu_referrer = (req, res, next) => {
 }
 
 exp.require_slack_verified = (req, res, next) => {
-    if (IP.isLocal(req.ip))
+    if (is_development())
         return next();
 
     const slack_timestamp = req.get('X-Slack-Request-Timestamp');
