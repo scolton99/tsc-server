@@ -3,11 +3,7 @@ const router = express.Router();
 const airtable = require('airtable');
 
 // Setup connection to Airtable
-<<<<<<< HEAD
-var a_base = new airtable({apiKey: process.env.AIRTABLE_API_KEY || "null"}).base('appydp8wFv8Yd5nVE');
-=======
 const a_base = new airtable({apiKey: process.env.AIRTABLE_API_KEY || "null"}).base('appydp8wFv8Yd5nVE');
->>>>>>> master
 
 router.get('/', (_req, res, next) => {
 	// Allow this to be loaded by the KB
@@ -25,17 +21,10 @@ router.get('/', (_req, res, next) => {
 			console.error(err);
 			return next(err);
 		}
-<<<<<<< HEAD
-
-        const birthdays = records.map(record => record.get("First Name"));
-
-        res.json(birthdays);
-=======
             
 		const birthdays = records.map(record => record.get("First Name"));
 		
 		res.json(birthdays);
->>>>>>> master
 	});
 });
 
