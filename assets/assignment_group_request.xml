@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+                   xmlns:ns1="MRWebServices"
+                   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+                   SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+  <SOAP-ENV:Body>
+    <ns1:MRWebServices__search>
+      <param0 xsi:type="xsd:string">{{FP_USERNAME}}</param0>
+      <param1 xsi:type="xsd:string">{{FP_PASSWORD}}</param1>
+      <param2 xsi:type="xsd:string"></param2>
+      <param3 xsi:type="xsd:string">SELECT COUNT(*) as COUNT,service__bfamily,service,category,sub__ucategory FROM MASTER1 WHERE mrASSIGNEES LIKE '%{{GROUP_NAME}}%' AND mrSTATUS='Closed' GROUP BY service__bfamily,service,category,sub__ucategory ORDER BY COUNT DESC FETCH NEXT 15 ROWS ONLY</param3>
+    </ns1:MRWebServices__search>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

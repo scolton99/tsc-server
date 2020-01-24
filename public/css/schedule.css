@@ -1,0 +1,139 @@
+body {
+    margin: 0;
+    background-color: #401F68;
+    color: #fff;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 200;
+    font-size: 1.35em;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin: 1em;
+    color: #ccc;
+    font-size: 1.33em;
+    position: relative;
+}
+
+.container .top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.6em;
+}
+
+.container .bottom {
+    display: flex;
+    flex-direction: row;
+    justify-content: stretch;
+}
+
+.container .bottom .l, .container .bottom .r {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    flex-basis: 0;
+}
+
+.container .bottom .r {
+    text-align: right;
+}
+
+.supervisor, .i1800, .library {
+    font-size: 1.4em;
+    color: #fff;
+}
+
+.supervisor > span, .i1800 > span, .library > span {
+    display: block;
+    cursor: pointer;
+}
+
+.supervisor > span.coming:before,
+.library > span.coming:before,
+.i1800 > span.coming:after {
+    content: '\f12a';
+    font-family: 'Font Awesome 5 Pro';
+    font-weight: 900;
+    margin: 0 10px;
+}
+
+.supervisor > span.going:before,
+.library > span.going:before,
+.i1800 > span.going:after {
+    content: '\f25b';
+    font-family: 'Font Awesome 5 Pro';
+    font-weight: 900;
+    margin: 0 10px;
+}
+
+.supervisor > span.trade:before,
+.library > span.trade:before,
+.i1800 > span.trade:after,
+.supervisor > span.trade.coming:before,
+.library > span.trade.coming:before,
+.i1800 > span.trade.coming:after,
+.supervisor > span.trade.going:before,
+.library > span.trade.going:before,
+.i1800 > span.trade.going:after {
+    content: '\f021';
+    font-family: 'Font Awesome 5 Pro';
+    font-weight: 900;
+    margin: 0 10px;
+}
+
+.supervisor > span.st,
+.library > span.st,
+.i1800 > span.st {
+    text-decoration: line-through;
+}
+
+#next-time, #now-time {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 10px;
+    font-weight: bold;
+    background-color: #fff;
+    color: #ff3050;
+    text-transform: uppercase;
+}
+
+#next-time:empty {
+    display: none;
+}
+
+body.loading > .outer-container {
+    display: none;
+}
+
+body > .spin {
+    display: none;
+}
+
+body.loading > .spin {
+    font-size: 2.5em;
+    font-weight: 200;
+    text-align: center;
+    text-transform: lowercase;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+hr {
+    margin: 0 50px;
+    border: none;
+    border-top: 1px solid #fff;
+}
+
+h1.title {
+    text-align: center;
+    font-weight: 500;
+    margin-bottom: 70px;
+}

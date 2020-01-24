@@ -1,10 +1,26 @@
+doctype html
 html
-    head
-        meta(charset="UTF-8")
-        title TSC Server
-        link(rel="stylesheet", href="/index.css")
-        link(href="https://fonts.googleapis.com/css?family=Raleway:200|Roboto", rel="stylesheet")
-        meta(name="viewport", content="width=device-width, initial-scale=1")
-    body
-        div(class="container")
-            h1(class="title") There #{verb} currently #{num_tickets} ticket#{plural} in the queue.
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    link(rel="stylesheet" href="/css/index.css")
+    link(rel="stylesheet" href="/css/queue.css")
+    link(rel="stylesheet" href="/css/loading.css")
+    link(rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:200|Roboto")
+    script(src="/js/queue.js")
+    title Tier 1 Queue
+  body
+    video#background-fire(autoplay muted loop)
+      source(type="video/mp4" src=global.cdn("video/fire.mp4"))
+    video#background-nuke(autoplay muted loop)
+      source(type="video/mp4" src=global.cdn("video/nuke.mp4"))
+    video#background-nova(autoplay muted loop)
+      source(type="video/mp4" src=global.cdn("video/nova.mp4"))
+    video#background-hole(autoplay muted loop)
+      source(type="video/mp4" src=global.cdn("video/hole.mp4"))
+    video#background-confetti(autoplay muted loop)
+      source(type="video/mp4" src=global.cdn("video/confetti.mp4"))
+    div.container#ticket_info
+      h1.title Loading...
+      div.lds-dual-ring
+

@@ -1,0 +1,12 @@
+steps:
+- name: 'gcr.io/cloud-builders/gsutil'
+  args: ['cp', 'gs://tss-support-center.appspot.com/private/app.yaml', 'app.yaml']
+- name: 'gcr.io/cloud-builders/gsutil'
+  args: ['cp', 'gs://tss-support-center.appspot.com/private/google52b66f9afb10d991.html', 'public/google52b66f9afb10d991.html']
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    gcloud app deploy --version=$([[ "$BRANCH_NAME" == "master" ]] && echo "production" || echo "$BRANCH_NAME --no-promote")
+timeout: "1600s"

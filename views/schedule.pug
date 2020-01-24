@@ -1,0 +1,44 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    link(rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:200,500,800|Roboto")
+    link(rel="stylesheet" href="/css/fonts.css")
+    link(rel="stylesheet" href="/css/schedule.css")
+    link(rel="stylesheet" href="/css/loading.css")
+    script(src="https://kit.fontawesome.com/7d40b20961.js" crossorigin="anonymous")
+    title Tier 1 Schedule
+  body.loading
+    .spin
+        | Loading...
+        br
+        br
+        .lds-dual-ring
+    .outer-container
+        h1.title TSC Daily Schedule
+        .container#now
+            #now-time Now
+            .top
+                | Supervisor
+                span.supervisor
+            .bottom
+                .l
+                    | Sherman
+                    span.i1800
+                .r
+                    | Library
+                    span.library
+        hr
+        .container#next
+            #next-time
+            .top
+                | Supervisor
+                span.supervisor
+            .bottom
+                .l
+                    | Sherman
+                    span.i1800
+                .r
+                    | Library
+                    span.library
+    script(src="/js/schedule.js")

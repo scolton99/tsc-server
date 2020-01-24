@@ -1,49 +1,50 @@
-html   
-    head
-        title Edit Profile
-        meta(name="netid", content=user.NetID)
-        link(rel="stylesheet", href="/fonts.css")
-        link(rel="stylesheet", href="/kb_theme.css")
-        link(rel="stylesheet", href="/loading.css")
-        link(rel="stylesheet", href="/profile.css")
-        link(rel="stylesheet", href="/edit-profile.css")
-        link(rel="stylesheet", href="https://use.fontawesome.com/releases/v5.8.1/css/all.css", integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf", crossorigin="anonymous")
-        script(src="/edit-profile.js")
-    body    
-        header
-            img(src="/conweb-logo.png")
-        main
-            div.profile-header
-                div.profile-photo-container#photo-container
-                    img(src=user.Photo[0].url)
-                div.profile-header-text
-                    span.profile-header-name
-                        | #{user.Name}
-                        span.profile-header-pronouns= user.Pronouns
-                    span.profile-header-position= user.Position
-                    span.profile-header-start-date Joined us #{user["Start Date"]}
-                    span.profile-header-num-tickets
-                        | Completed 
-                        span#num_tickets
-                            div.lds-dual-ring
-                        | tickets
-                    span.profile-header-birthday
-                        span.fas.fa-birthday-cake
-                        span#birthday= user.Birthday
-            div.profile-row
-                section#bio
-                    h3 Bio
-                    p= user.Bio
-                section#contact-info
-                    h3 Contact Info
-                    div.contact-record
-                        span.fas.fa-phone
-                        span= formatPhone(user["Phone Number"])
-                    div.contact-record
-                        span.fas.fa-envelope
-                        span
-                            a(href="mailto:" + user.Email)= user.Email
-                    div.contact-record
-                        span.far.fa-envelope
-                        span
-                            a(href="mailto:" + user.Exchange)= user["Exchange"].toLowerCase()
+doctype html
+html
+  head
+    title Edit Profile
+    meta(name="netid", content=user.NetID)
+    link(rel="stylesheet" href="/css/fonts.css")
+    link(rel="stylesheet" href="/css/kb_theme.css")
+    link(rel="stylesheet" href="/css/loading.css")
+    link(rel="stylesheet" href="/css/profile.css")
+    link(rel="stylesheet" href="/css/edit-profile.css")
+    link(rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous")
+    script(src="/js/edit-profile.js")
+  body    
+    header
+      img(src=global.cdn("images/conweb-logo.png"))
+    main
+      div.profile-header
+        div.profile-photo-container#photo-container
+          img(src=user.Photo[0].url)
+        div.profile-header-text
+          span.profile-header-name
+            | #{user.Name}
+            span.profile-header-pronouns= user.Pronouns
+          span.profile-header-position= user.Position
+          span.profile-header-start-date Joined us #{user["Start Date"]}
+          span.profile-header-num-tickets
+            | Completed 
+            span#num_tickets
+              div.lds-dual-ring
+            | tickets
+          span.profile-header-birthday
+            span.fas.fa-birthday-cake
+            span#birthday= user.Birthday
+      div.profile-row
+        section#bio
+          h3 Bio
+          p= user.Bio
+        section#contact-info
+          h3 Contact Info
+          div.contact-record
+            span.fas.fa-phone
+            span= formatPhone(user["Phone Number"])
+          div.contact-record
+            span.fas.fa-envelope
+            span
+              a(href="mailto:" + user.Email)= user.Email
+          div.contact-record
+            span.far.fa-envelope
+            span
+              a(href="mailto:" + user.Exchange)= user["Exchange - Office365"].toLowerCase()

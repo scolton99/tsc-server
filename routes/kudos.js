@@ -1,10 +1,11 @@
-var express = require('express');
-var router = express.Router();
-var request = require('request-promise-native');
-var airtable = require('airtable');
+const express = require('express');
+const router = express.Router();
+const request = require('request-promise-native');
+const airtable = require('airtable');
+const Security = require('../util/security');
 
 // Setup connection to Airtable
-var a_base = new airtable({apiKey: process.env.AIRTABLE_API_KEY || "null"}).base('appydp8wFv8Yd5nVE');
+const a_base = new airtable({apiKey: process.env.AIRTABLE_API_KEY || "null"}).base('appydp8wFv8Yd5nVE');
 
 // Convert a numerical month (1-indexed) and year to a human-readable string.
 const toDateString = (month_num, year) => {
@@ -64,10 +65,10 @@ const toDateString = (month_num, year) => {
   return month + " " + year;
 }
 
-router.get('/', (_req, res, next) => {
+router.get('/', Security.require_nu_origin, Security.require_conweb_token, (_req, res, next) => {
   // Get from Feedback table
 	a_base('Feedback').select({
-    fields: ['Con Name', 'Display Text'],
+    fields: ['Con Name', 'Display Text', 'Con NetID'],
     filterByFormula: 'AND({Display}, {Type} = "Compliment", DATETIME_DIFF(NOW(), {Time Submitted}, "days") <= 14)',    // Show compliments that have been approved and are less than two weeks old
     sort: [
       {
@@ -76,33 +77,58 @@ router.get('/', (_req, res, next) => {
       }
     ]
   }).firstPage((err, records) => {
-    // Allow this to be loaded by the KB
-    res.header("Access-Control-Allow-Origin", "https://kb.northwestern.edu");
-    
-    // Display errors if they occur 
-    if (err) {
-      console.error(err);
-      return next(err);
-    }
-    
-    // Get consultant names and remove duplicates (using Set)
-    const names = new Set(records.map(record => record["fields"]["Con Name"]).reduce((prev, cur) => prev.concat(cur)));
-    
-    const feedback = {};
-    names.forEach(name => {
-      // Get the feedback applicable to this con as strings
-      const con_feedback = records.filter(record => record["fields"]["Con Name"].includes(name)).map(record => record["fields"]["Display Text"]);
+    a_base('Main').select({
+      pageSize: 100,
+      fields: ['Name', 'NetID'],
+      filterByFormula: '{Current}'
+    }).firstPage((err2, name_netid) => {
+      // Allow this to be loaded by the KB
+      res.header("Access-Control-Allow-Origin", "https://kb.northwestern.edu");
+        
+      // Display errors if they occur 
+      if (err) {
+        console.error(err);
+        return next(err);
+      }
+
+      if (err2) {
+        console.error(err2);
+        return next(err2);
+      }
+
+      const name_netid_map = {};
       
-      // Store the feedback string in our feedback object
-      feedback[name] = con_feedback;
+      name_netid.map(record => [record.fields["Name"], record.fields["NetID"]]).forEach(
+        record => {
+          name_netid_map[record[0]] = record[1];
+        }
+      );
+
+      // Get consultant names and remove duplicates (using Set)
+      const names = new Set(records.map(record => record["fields"]["Con Name"]).reduce((prev, cur) => prev.concat(cur)));
+
+      const feedback = {};
+      names.forEach(name => {
+        // Get NetID
+        const netid = name_netid_map[name];
+
+        // Get the feedback applicable to this con as strings
+        const con_feedback = records.filter(record => record["fields"]["Con Name"].includes(name)).map(record => record["fields"]["Display Text"]);
+
+        // Store the feedback string in our feedback object
+        feedback[name] = { 
+          netid: netid,
+          feedback: con_feedback
+        };
+      });
+
+      res.json(feedback);
     });
-    
-    res.json(feedback);
   });
 });
 
 // GET /kudos/:netid
-router.get('/:netid', (req, res, next) => {
+router.get('/:netid', Security.require_nu_referrer, (req, res, next) => {
   const { netid } = req.params;
   let name = null;
 
@@ -133,7 +159,7 @@ router.get('/:netid', (req, res, next) => {
       ],
       fields: ['Con Name', 'Con NetID', 'Display Text', 'Time Submitted']
     }).eachPage((records, fetchNext) => {
-      // Keep fetching until there's no feedback left; store each in the feedback variable
+      // Keep fetching until there's no feedback left; store each in the feedback constiable
       feedbacks = feedbacks.concat(records);
 
       fetchNext();
@@ -182,7 +208,7 @@ router.get('/:netid', (req, res, next) => {
 });
 
 // POST /kudos
-router.post('/', async (req, res, next) => {
+router.post('/', Security.require_slack_verified, async (req, res, next) => {
   // Fetch information from Slack's request
   // https://api.slack.com/actions#request_payload
   const {
@@ -281,8 +307,8 @@ router.post('/', async (req, res, next) => {
   };
   
   // This line is run asynchronously without await, so we can't modify the response with it.
-  // Errors that occur here can be found in Heroku logs.
-  // This line sends the replacement message where Slack told us to through the end_response variable.
+  // Errors that occur here can be found in logs.
+  // This line sends the replacement message where Slack told us to through the end_response constiable.
   request({method: 'post', body: end_response, json: true, url: response_url}, err => {if (err) console.error(err)});
 });
 

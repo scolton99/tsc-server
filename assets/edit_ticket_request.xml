@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns1="MRWebServices" xmlns:ns2="http://xml.apache.org/xml-soap" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+  <SOAP-ENV:Body>
+    <ns1:MRWebServices__editIssue>
+      <param0 xsi:type="xsd:string">{{FP_USERNAME}}</param0>
+      <param1 xsi:type="xsd:string">{{FP_PASSWORD}}</param1>
+      <param2 xsi:type="xsd:string" />
+      <param3 xsi:type="ns2:Map">
+        <item>
+          <key xsi:type="xsd:string">projectID</key>
+          <value xsi:type="xsd:int">1</value>
+        </item>
+        <item>
+          <key xsi:type="xsd:string">mrID</key>
+          <value xsi:type="xsd:int">{{TICKET_ID}}</value>
+        </item>
+        <item>
+          <key xsi:type="xsd:string">mail</key>
+          <value xsi:type="ns2:Map">
+            <item>
+              <key xsi:type="xsd:string">assignees</key>
+              <value xsi:type="xsd:int">0</value>
+            </item>
+            <item>
+              <key xsi:type="xsd:string">contact</key>
+              <value xsi:type="xsd:int">0</value>
+            </item>
+            <item>
+              <key xsi:type="xsd:string">permanentCCs</key>
+              <value xsi:type="xsd:int">0</value>
+            </item>
+          </value>
+        </item>
+        <item>
+          <key xsi:type="xsd:string">projfields</key>
+          <value xsi:type="ns2:Map">
+            <item>
+              <key xsi:type="xsd:string">Submission__bTracking</key>
+              <value xsi:type="xsd:string">{{SUBMISSION_TRACKING}}</value>
+            </item>
+          </value>
+        </item>
+        <item>
+          <key xsi:type="xsd:string">submitter</key>
+          <value xsi:type="xsd:string">{{SUBMITTER_NETID}}</value>
+        </item>
+      </param3>
+    </ns1:MRWebServices__editIssue>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

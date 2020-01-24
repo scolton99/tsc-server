@@ -3,14 +3,14 @@ body {
 }
 
 a[href] {
-	color: #FFEBEE;
+  color: #FFEBEE;
 }
 
 a[href]:visited {
-	color: #FFEBEE;
+  color: #FFEBEE;
 }
 
 a[href]:hover {
-	text-decoration: none;
-	color: #FFCDD2;
+  text-decoration: none;
+  color: #FFCDD2;
 }

@@ -2,9 +2,12 @@ const express = require('express');
 const router = express.Router();
 const airtable = require('airtable');
 const fs = require('fs');
+const {Storage} = require('@google-cloud/storage');
 
 // Setup connection to Airtable
 const a_base = new airtable({apiKey: process.env.AIRTABLE_API_KEY || "null"}).base('appydp8wFv8Yd5nVE');
+
+const BUCKET_NAME = process.env.BUCKET_NAME;
 
 // POST /photo
 router.post('/', (req, res) => {
@@ -37,44 +40,51 @@ router.post('/', (req, res) => {
       return res.redirect(redirect + '#failure');
     }
 
-    // Get all OLD photos for this NetID and delete them
-    const photos = fs.readdirSync(global.root_dir + '/public/photos');
-    photos.forEach(photo => {
-      if (!photo.startsWith(netid)) return;
-      fs.unlinkSync(global.root_dir + '/public/photos/' + photo);
+    const storage = new Storage();
+    const bucket = storage.bucket(BUCKET_NAME);
+    const file = bucket.file(`photos/${netid}.${ext}`);
+    
+    let errored = false;
+
+    const stream = file.createWriteStream({ resumable: false, contentType: mimetype });
+    stream.on('error', err => {
+      errored = true;
+      console.error(err);
+      return res.redirect(redirect + '#failure');
     });
+    
+    stream.end(req.files.photo.data, null, err => {
+      if (errored || err) return;
 
-    // Move the temporary file into our public photos directory so that Airtable can read it later
-    req.files.photo.mv(global.root_dir + '/public/photos/' + netid + '.' + ext, err => {
-      if (err) return res.redirect(redirect + "#failure");
-    });
+      file.makePublic().then(() => {
+        // Get the record ID for this con in Airtable
+        const rec_id = records[0].id;
+        a_base('Main').update(rec_id, {
+          "Photo": [
+            {
+              // Refer to this server; file only needs to be available for a few seconds according to http://bit.ly/2UI9yQE
+              url: 'https://storage.googleapis.com/' + BUCKET_NAME + '/photos/' + netid + '.' + ext + '?' + Date.now(),
+              // Add filename to fix previews
+              filename: netid + '.' + mimeToExt(mimetype)
+            }
+          ]
+        }, err => {
+          // If there was an error updating the record, log it and redirect to error page
+          if (err) {
+            console.error(err);
+            return res.redirect(redirect + "#failure");
+          }
 
-    // Get the record ID for this con in Airtable
-    const rec_id = records[0].id;
-    a_base('Main').update(rec_id, {
-      "Photo": [
-        {
-          // Refer to this server; file only needs to be available for a few seconds according to http://bit.ly/2UI9yQE
-          url: 'https://tsc-server.herokuapp.com/photo/' + netid + '?' + Date.now(),
-          // Add filename to fix previews
-          filename: netid + '.' + mimeToExt(mimetype)
-        }
-      ]
-    }, err => {
-      // If there was an error updating the record, log it and redirect to error page
-      if (err) {
-        console.error(err);
-        return res.redirect(redirect + "#failure");
-      }
-
-      // Everything worked! Refer them back.
-      res.redirect(redirect + "#success");
+          // Everything worked! Refer them back.
+          res.redirect(redirect + "#success");
+        });
+      });
     });
   });
 });
 
 // Convert a MIME type to an extension
-function mimeToExt(mime) {
+const mimeToExt = mime => {
   switch (mime) {
     case "image/jpeg": {
       return "jpg";
@@ -95,23 +105,6 @@ function mimeToExt(mime) {
       return null;
     }
   }
-}
-
-// GET /photo/:netid
-router.get('/:netid', (req, res, next) => {
-  const photos = fs.readdirSync(global.root_dir + '/public/photos');
-  let { netid } = req.params;
-  netid = netid.toLowerCase();
-  const con_photos = photos.filter(photo => photo.startsWith(netid.toLowerCase()));
-  
-  // If we can't find a photo for this con, return 404
-  if (con_photos.length === 0) {
-    return next();
-  }
-
-  const con_photo = con_photos[0];
-
-  res.sendFile(con_photo, {root: global.root_dir + '/public/photos'});
-});
+};
 
 module.exports = router;

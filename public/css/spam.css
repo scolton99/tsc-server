@@ -1,0 +1,27 @@
+p,
+h1 {
+    font-family: 'Raleway', sans-serif;
+    font-size: 2em;
+    margin: 0;
+}
+
+#spam_info h1 {
+    margin-bottom: 1em;
+}
+
+.container {
+    display: block;
+    text-align: center;
+    margin: 30px 0 30px;
+    height: auto;
+}
+
+html,
+body {
+    height: auto;
+}
+
+span.remove {
+    margin-left: 15px;
+    cursor: pointer;
+}
