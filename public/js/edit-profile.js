@@ -11,6 +11,24 @@ const init = () => {
   load_num_tickets();
 
   document.getElementById("save").addEventListener("click", save_record);
+
+  Array.from(document.getElementsByTagName("input")).forEach(e => {
+    e.addEventListener("input", show_save_button);
+    e.addEventListener("change", show_save_button);
+  });
+  
+  Array.from(document.getElementsByTagName("select")).forEach(e => {
+    e.addEventListener("change", show_save_button);
+  });
+
+  Array.from(document.getElementsByTagName("textarea")).forEach(e => {
+    e.addEventListener("input", show_save_button);
+    e.addEventListener("change", show_save_button);
+  });
+};
+
+const show_save_button = () => {
+  document.getElementById("save").parentElement.classList.add("active");
 };
 
 const start_photo_upload = () => {
@@ -83,6 +101,8 @@ const save_record = () => {
   const wildcard_hid = document.getElementById("wildcard-hid").value;
   const phone_number = format_phone(document.getElementById("phone-number").value);
   const bio = document.getElementById("bio").value;
+  const grad_year = document.getElementById("grad-year").value;
+  const grad_month = document.getElementById("grad-month").value;
   const record_id = RECID;
 
   const data = new FormData();
@@ -93,6 +113,8 @@ const save_record = () => {
   data.append("wildcard_hid", wildcard_hid);
   data.append("phone_number", phone_number);
   data.append("bio", bio);
+  data.append("grad_year", grad_year);
+  data.append("grad_month", grad_month);
   data.append("record_id", record_id);
 
   pronouns.forEach(pronoun => {
@@ -113,20 +135,31 @@ const save_record = () => {
         document.getElementById("wildcard-hid").value = res["Wildcard HID"] || "";
         document.getElementById("phone-number").value = res["Phone Number"] || "";
         document.getElementById("bio").value = res["Bio"] || "";
+        document.getElementById("grad-year").value = res["Grad Year"] || "";
+        document.getElementById("grad-month").value = res["Grad Month"] || "";
+
+        document.getElementById("first-name-disp").textContent = res["First Name"] || "";
+        document.getElementById("grad-disp").textContent = res["Grad Display"] || "";
 
         Array.from(document.getElementsByName("Pronouns")).forEach(e => {
           e.checked = false;
         });
 
-        for (const pronoun of res.Pronouns) {
-          document.getElementById(pronoun.replace(/\//g, "-")).checked = true;
-        }
+        if (res.Pronouns)
+          for (const pronoun of res.Pronouns)
+            document.getElementById(pronoun.replace(/\//g, "-")).checked = true;
 
         const save_btn = document.getElementById("save");
 
-        save_btn.classList.remove("fa-pulse");
-        save_btn.classList.remove("fa-spinner");
-        save_btn.classList.add("fa-save");
+        document.getElementById("pronouns-disp").textContent = res["Pronouns Display"] || "";
+
+        const save_span = save_btn.children[0];
+
+        save_span.classList.remove("fa-pulse");
+        save_span.classList.remove("fa-spinner");
+        save_span.classList.add("fa-save");
+
+        save_btn.parentElement.classList.remove("active");
       } else {
         const save_btn = document.getElementById("save");
 
@@ -141,9 +174,10 @@ const save_record = () => {
   x.send(data);
 
   const save_btn = document.getElementById("save");
-  save_btn.classList.remove("fa-save");
-  save_btn.classList.add("fa-spinner");
-  save_btn.classList.add("fa-pulse");
+  const save_span = save_btn.children[0];
+  save_span.classList.remove("fa-save");
+  save_span.classList.add("fa-spinner");
+  save_span.classList.add("fa-pulse");
 };
 
 window.addEventListener("DOMContentLoaded", init);

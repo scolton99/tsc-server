@@ -9,9 +9,8 @@ const xml2js = require('xml2js');
 const a_base = new airtable({ apiKey: process.env.AIRTABLE_API_KEY || "null" }).base('appydp8wFv8Yd5nVE');
 
 const formatPhone = number => {
-  const all = number.split("-");
-
-  return "(" + all[0] + ") " + all[1] + "-" + all[2];
+  let phon = ("" + number).replace(/[^\d]/g, "");
+  return "(" + phon.substr(0,3) + ") " + phon.substr(3, 3) + "-" + phon.substr(6, 4);
 }
 
 const fp_request = fs.readFileSync(__dirname + '/../assets/fp_request.xml', { encoding: 'UTF-8' });
@@ -121,11 +120,8 @@ router.get("/:netid/edit", async (req, res, next) => {
         if (records[0].fields["Grad Year"])
           records[0].fields.GradYearFixed = records[0].fields["Grad Year"].toString().substr(-2, 2);
 
-        records[0].fields.PronounsFixed = records[0].fields.Pronouns instanceof Array ? records[0].fields.Pronouns.join(", ") : records[0].fields.Pronouns;
-
         if (records[0].fields["Phone Number"]) {
-          let phon = records[0].fields["Phone Number"].replace(/[^\d]/g, "");
-          records[0].fields.PhoneFixed = "(" + phon.substr(0,3) + ") " + phon.substr(3, 3) + "-" + phon.substr(6, 4);
+          records[0].fields.PhoneFixed = formatPhone(records[0].fields["Phone Number"]);
         }
 
         if (records[0].fields["Exchange - Office365"])
@@ -137,12 +133,19 @@ router.get("/:netid/edit", async (req, res, next) => {
         else
           records[0].fields.WSFixed = `$${ws.toLocaleString()}`;
 
+        const year = new Date().getFullYear();
+        const years = [];
+        
+        for (let cy = year - 2; cy < year + 6; cy++)
+          years.push(cy);
+
         res.render('edit-profile', { 
           user: records[0].fields, 
           formatPhone: formatPhone, 
           kudos: kudos.map(e => e.fields), 
           PCs: pcs.map(e => e.fields),
-          record_id: record_id
+          record_id: record_id,
+          years: years
         });
       });      
     });
@@ -162,12 +165,17 @@ router.post("/:netid/edit", (req, res, next) => {
     dietary_restrictions,
     t_shirt_size,
     first_name,
-    pronouns
+    pronouns,
+    grad_month,
+    grad_year
   } = req.body;
 
   if (typeof(pronouns) === "string") pronouns = [pronouns];
+  if (typeof(pronouns) === "undefined") pronouns = [];
   if (typeof(wildcard_hid) === "string") wildcard_hid = parseInt(wildcard_hid);
   if (isNaN(wildcard_hid)) wildcard_hid = null;
+  if (typeof(grad_year) === "string") grad_year = parseInt(grad_year);
+  if (isNaN(grad_year)) grad_year = null;
 
   a_base('Main').update(record_id, {
     "First Name": first_name,
@@ -177,7 +185,9 @@ router.post("/:netid/edit", (req, res, next) => {
     "Dietary Restrictions": dietary_restrictions,
     "Other Pronouns": other_pronouns,
     "Phone Number": phone_number,
-    "Bio": bio
+    "Bio": bio,
+    "Grad Month": grad_month,
+    "Grad Year": grad_year
   }, (err, record) => {
       if (err) {
         console.error(err);
@@ -202,7 +212,7 @@ router.get("/:netid", (req, res, next) => {
 
     // If we can't find a record with that ID, return 404
     if (records.length === 0) {
-      console.error("No record found with ID " + record_id);
+      console.error("No record found with ID " + netid);
       return next();
     }
 

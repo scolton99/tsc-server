@@ -18,8 +18,10 @@ html
       div.fa-2x
         a(href=`/profile/${user.NetID}` target="_blank")
           span.fas.fa-external-link-alt
-        span.fas.fa-save#save
     main
+      .save-fab-container 
+        button#save(type="button").save-fab
+          span.fas.fa-save
       .edit-profile.basic
         .card-header Basic
         .basic-content
@@ -29,10 +31,11 @@ html
               input#photo-upload(type="file")
             .text-content
               span.profile-header-name
-                span #{user.Name}
-                if user.GradYearFixed
-                  sup '#{user.GradYearFixed}
-                span.profile-header-pronouns= user.PronounsFixed
+                span 
+                  span#first-name-disp= user["First Name"]
+                  | 
+                  | #{user["Last Name"]}
+                span.profile-header-pronouns#pronouns-disp= user["Pronouns Display"]
               span.profile-header-position
                 span= user.Position
                 each x in user.Status
@@ -40,6 +43,10 @@ html
               if user.Position !== "Lead Consultant"
                 span.profile-header-LC LC: #{user.LC}
               span.profile-header-start-date Started in #{user["Start Date"]}
+              span.profile-header-graduation 
+                | Graduating in
+                | 
+                span#grad-disp= user["Grad Display"]
               span.profile-header-num-tickets
                 | Completed 
                 span#num_tickets
@@ -61,6 +68,14 @@ html
               option(value=size selected=(user["Shirt Size"] === size))= size
           label(for="dietary-restrictions") Dietary Restrictions
           input#dietary-restrictions(type="text" name="Dietary Restrictions" value=user["Dietary Restrictions"])
+          label(for="grad-year") Expected Graduation
+          .grad-input-group
+            select#grad-month(name="Grad Month")
+              each month in ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+                option(value=month selected=(user["Grad Month"] === month))= month
+            select#grad-year(name="Grad Year")
+              each year in years
+                option(value=year selected=(user["Grad Year"] === year))= year
           label(for="pronouns") Pronouns
           .pronoun-opts
             each pronoun_set in ['he/him/his', 'she/her/hers', 'they/them/theirs']

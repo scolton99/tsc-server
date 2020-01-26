@@ -105,7 +105,7 @@ main > div.edit-profile {
 }
 
 .edit-profile.basic > .basic-content > .top-content > .text-content {
-  flex-shrink: 0;
+  flex-shrink: 1;
   margin-left: 8px;
   display: flex;
   flex-direction: column;
@@ -123,6 +123,14 @@ span.profile-header-name {
   font-weight: bold;
   font-size: 1.45em;
   margin-bottom: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: -4px;
+}
+
+span.profile-header-name > * {
+  margin-top: 4px;
 }
 
 span.profile-header-pronouns {
@@ -130,6 +138,7 @@ span.profile-header-pronouns {
   font-style: italic;
   font-size: 0.64em;
   color: #666;
+  margin-left: 5px;
 }
 
 span.profile-header-pronouns::before {
@@ -257,7 +266,7 @@ select {
 }
 
 .bio-content textarea {
-  height: 100px;
+  height: 150px;
   border-radius: 5px;
   padding: 5px;
   font-family: "Akkurat Pro Regular", sans-serif;
@@ -293,7 +302,7 @@ body > header {
   justify-content: space-between;
 }
 
-body > header > div {
+body > header > div > a, body > header > div {
   color: #fff;
 }
 
@@ -307,6 +316,61 @@ body > header > div > a:visited {
 
 #save {
   cursor: pointer;
+}
+
+.profile-header-pronouns:empty {
+  display: none;
+}
+
+.save-fab-container {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  pointer-events: none;
+}
+
+.save-fab-container > button.save-fab {
+  background: none;
+  background-color: #4e2a84;
+  border: 0px;
+  width: 2em;
+  height: 2em;
+  border-radius: 5em;
+  outline: none;
+  color: #fff;
+  font-size: 2.2em;
+  box-shadow: 3px 3px 20px -3px #000;
+  padding: 0;
+  transition: opacity 0.3s;
+  opacity: 0.0;
+  cursor: pointer;
+}
+
+.save-fab-container.active {
+  pointer-events: unset;
+}
+
+.save-fab-container.active > button.save-fab {
+  opacity: 1.0;
+}
+
+.profile-header-graduation {
+  margin-bottom: 1em;
+}
+
+.grad-input-group {
+  display: flex;
+  justify-content: stretch;
+}
+
+.grad-input-group > * {
+  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.grad-input-group > *:not(:first-child) {
+  margin-left: 10px;
 }
 
 @media screen and (max-width: 900px) {
