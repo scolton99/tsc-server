@@ -121,7 +121,8 @@ exp.require_slack_verified = (req, res, next) => {
 
 exp.require_logged_in = (req, res, next) => {
     if (!req.session.netid) {
-        req.session.last = req.path;
+        req.session.last = req.baseUrl;
+        console.log("Setting last to " + req.baseUrl);
         return res.redirect("/profile/login");
     }
 
