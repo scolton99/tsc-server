@@ -106,7 +106,7 @@ app.use('/profile/login', loginRouter);
 app.use('/profile/logout', logoutRouter);
 
 // TSC Profile handler
-app.use('/profile', Security.require_logged_in, Security.require_nu_referrer, profileRouter);
+app.use('/profile', Security.require_logged_in, profileRouter);
 
 // FP Queue Handler
 app.use('/queue', queueRouter);
