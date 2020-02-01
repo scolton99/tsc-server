@@ -119,4 +119,13 @@ exp.require_slack_verified = (req, res, next) => {
         next();
 };
 
+exp.require_logged_in = (req, res, next) => {
+    if (!req.session.netid) {
+        req.session.last = req.path;
+        return res.redirect("/profile/login");
+    }
+
+    next();
+};
+
 module.exports = exp;

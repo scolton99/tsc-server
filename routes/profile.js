@@ -60,8 +60,8 @@ const get_user_tickets = async netid => {
   return num_tickets;
 }
 
-router.get("/:netid/edit", async (req, res, next) => {
-  const { netid } = req.params;
+router.get("/edit", async (req, res, next) => {
+  const { netid } = req.session;
 
   a_base('Main').select({
     filterByFormula: `AND({NetID} = '${netid}', {Current})`
@@ -197,6 +197,12 @@ router.post("/:netid/edit", (req, res, next) => {
       res.json(record.fields);
   });
 });
+
+router.get('/', (req, res, _next) => {
+  console.log(`Redirecting to /profile/${req.session.netid}`);
+
+  res.redirect(`/profile/${req.session.netid}`);
+})
 
 router.get("/:netid", (req, res, next) => {
   const { netid } = req.params;

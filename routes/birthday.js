@@ -12,7 +12,7 @@ router.get('/', (_req, res, next) => {
 	const bday_date = (new Date()).toLocaleDateString("en-US", {month: 'short', day: 'numeric'});
 	a_base('Main').select({
 		fields: ['First Name', 'Birthday', 'Name'],
-		filterByFormula: '{Birthday} = \'' + bday_date + '\''
+		filterByFormula: 'AND({Current}, {Birthday} = \'' + bday_date + '\')'
 	}).firstPage((err, records) => {
 		// There should never be more than one page. Not going to have more than 100 birthdays.
 
