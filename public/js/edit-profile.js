@@ -117,7 +117,7 @@ const save_record = () => {
   });
 
   const x = new XMLHttpRequest();
-  x.open('POST', '.');
+  x.open('POST', '');
   x.onreadystatechange = () => {
     if (x.readyState === XMLHttpRequest.DONE) {
       if (x.status < 400) {

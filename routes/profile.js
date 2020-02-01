@@ -152,7 +152,7 @@ router.get("/edit", async (req, res, next) => {
   });
 });
 
-router.post("/:netid/edit", (req, res, next) => {
+router.post("/edit", (req, res, _next) => {
   let {
     record_id,
     bio,
