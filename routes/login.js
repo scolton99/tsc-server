@@ -44,6 +44,39 @@ router.get("/", (req, res, next) => {
 });
 
 router.get("/oidc", async (req, res, next) => {
+  if (req.query.error) {
+    console.error(req.query.error + "\n"+ req.query.error_description);
+
+    switch (req.query.error) {
+      case "interaction_required":
+      case "login_required":
+      case "account_selection_reqired":
+      case "consent_required": {
+        return res.status(403).sendFile('forbidden.html', { root: global.root_dir + '/public' });
+      }
+      
+      case "invalid_request_object":
+      case "request_not_supported":
+      case "invalid_request_uri":
+      case "request_uri_not_supported":
+      case "registration_not_supported":
+      case "invalid_request":
+      case "unauthorized_client":
+      case "access_denied":
+      case "invalid_scope":
+      case "unsupported_response_type":
+      case "server_error":
+      case "temporarily_unavailable": {
+        return next(req.query.error);
+      }
+
+      default: {
+        return next(req.query.error);
+      }
+    }
+
+  }
+
   const {code} = req.query;
 
   const token_res_raw = await request({
