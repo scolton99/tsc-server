@@ -96,7 +96,7 @@ exp.require_nu_referrer = (req, res, next) => {
 
     const match = match_res[1].toLowerCase();
 
-    if (match !== "kb.northwestern.edu")
+    if (match !== "kb.northwestern.edu" && match !== "tss-support-center.appspot.com")
         forbidden(req, res, `Invalid referrer header value (${req.get('Referrer')})`);
     else
         next();
