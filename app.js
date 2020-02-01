@@ -19,6 +19,7 @@ const whenToWorkRouter = require('./routes/whentowork');
 const scheduleRouter = require('./routes/schedule');
 const getNameRouter = require('./routes/name');
 const loginRouter = require('./routes/login');
+const logoutRouter = require('./routes/logout');
 
 const app = express();
 
@@ -32,7 +33,10 @@ app.set('trust proxy', process.env.GAE_VERSION === "production");
 app.use(session({
   secret: COOKIE_SECRET,
   resave: true,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.GAE_VERSION === "production"
+  }
 }));
 
 app.use(express.json());
@@ -97,6 +101,9 @@ app.use('/birthdays', Security.require_nu_origin, Security.require_conweb_token,
 
 // Login Handler
 app.use('/profile/login', loginRouter);
+
+// Logout Handler
+app.use('/profile/logout', logoutRouter);
 
 // TSC Profile handler
 app.use('/profile', Security.require_logged_in, Security.require_nu_referrer, profileRouter);
