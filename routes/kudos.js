@@ -166,7 +166,7 @@ router.get('/:netid', Security.require_nu_referrer, (req, res, next) => {
     }, err => {
       // 500 error if Airtable returns an error
       if (err) {
-        console.log(err);
+        console.error(err);
         return next(err);
       }
 

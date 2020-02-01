@@ -3,7 +3,6 @@ const refresh_every = 15; // minutes
 const date = new Date();
 date.setMinutes(date.getMinutes() + (15 - date.getMinutes() % 15));
 date.setSeconds(0);
-console.log(date.toString());
 
 const c_sv_d = document.querySelector("#now .supervisor");
 const c_1800_d = document.querySelector("#now .i1800");
@@ -29,8 +28,6 @@ const refresh_schedule = async() => {
     const res_json = await res_raw.json();
 
     document.body.classList.remove("loading");
-
-    console.log(res_json);
 
     while (n_sv_d.firstElementChild) {
         n_sv_d.removeChild(n_sv_d.firstElementChild);
@@ -191,7 +188,6 @@ const refresh_schedule = async() => {
     const date = new Date();
     date.setMinutes(date.getMinutes() + (15 - date.getMinutes() % 15));
     date.setSeconds(0);
-    console.log(date.toString());
 
     refresh_interval = window.setTimeout(refresh_schedule, date.getTime() - (new Date()).getTime());
 };

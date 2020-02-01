@@ -5,21 +5,21 @@ const jwt = require('jsonwebtoken');
 const request = require('request-promise-native');
 const session = require('express-session');
 
-const OIDC_CLIENT_ID = process.env.OIDC_CLIENT_ID;
-const OIDC_CLIENT_SECRET = process.env.OIDC_CLIENT_SECRET;
-
-const OIDC_AUTH_ENDPOINT = process.env.OIDC_AUTH_ENDPOINT;
-const OIDC_TOKEN_ENDPOINT = process.env.OIDC_TOKEN_ENDPOINT;
+const {
+  OIDC_CLIENT_ID,
+  OIDC_CLIENT_SECRET,
+  OIDC_AUTH_ENDPOINT,
+  OIDC_TOKEN_ENDPOINT,
+  OIDC_REDIRECT_URI,
+  GAE_VERSION,
+  AIRTABLE_API_KEY
+} = process.env;
 
 const SCOPES = [
-  "openid",
-  "profile",
-  "email"
+  "openid"
 ];
 
-const OIDC_REDIRECT_URI = process.env.OIDC_REDIRECT_URI;
-
-const a_base = new airtable({apiKey: process.env.AIRTABLE_API_KEY || "null"}).base('appydp8wFv8Yd5nVE');
+const a_base = new airtable({apiKey: AIRTABLE_API_KEY || "null"}).base('appydp8wFv8Yd5nVE');
 
 const get_valid_netids = async () => {
   try {
@@ -36,11 +36,14 @@ const get_valid_netids = async () => {
   }
 };
 
-router.get("/", (req, res, next) => {
+router.get("/", (_req, res, _next) => {
+  if (GAE_VERSION !== "production")
+    return res.redirect("/profile");
+
   const scopes_str = encodeURIComponent(SCOPES.join(" "));
   const redirect_uri = encodeURIComponent(OIDC_REDIRECT_URI);
 
-  return res.redirect(`${OIDC_AUTH_ENDPOINT}?client_id=${OIDC_CLIENT_ID}&scope=${scopes_str}&response_type=code&redirect_uri=${redirect_uri}`);
+  return res.redirect(`${OIDC_AUTH_ENDPOINT}?client_id=${OIDC_CLIENT_ID}&scope=${scopes_str}&response_type=code%20id_token&redirect_uri=${redirect_uri}`);
 });
 
 router.get("/oidc", async (req, res, next) => {

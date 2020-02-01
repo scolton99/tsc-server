@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { google } = require('googleapis');
 const { Storage } = require('@google-cloud/storage');
-const IP = require('../util/IP');
 const request = require('request-promise-native');
 
 const SCOPES = ['https://www.googleapis.com/auth/calendar.readonly', 'https://www.googleapis.com/auth/calendar.events.readonly'];
@@ -115,12 +114,6 @@ const gen_res_obj = (events, date) => {
 };
 
 router.get('/status', async(req, res) => {
-    if (!IP.isLocal(req.ip) && !IP.isNU(req.ip)) {
-        console.log(`Refused schedule access to outside address ${req.ip}`);
-        console.log(req.ips)
-        return res.status(403).sendFile('forbidden.html', { root: global.root_dir + '/public' });
-    }
-
     const SUPERVISOR = global.POS_SUPERVISOR;
     const LIBRARY = global.POS_LIBRARY;
     const CONSULTANT = global.POS_CONSULTANT;
@@ -232,12 +225,6 @@ router.get('/reauth', async(req, res) => {
 });
 
 router.get('/', (req, res) => {
-    if (!IP.isLocal(req.ip) && !IP.isNU(req.ip)) {
-        console.log(`Refused schedule access to outside address ${req.ip}`);
-        console.log(req.ips)
-        return res.status(403).sendFile('forbidden.html', { root: global.root_dir + '/public' });
-    }
-
     res.render('schedule');
 });
 

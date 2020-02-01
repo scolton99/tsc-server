@@ -1,6 +1,5 @@
 const express = require('express');
 const files = require('express-fileupload');
-const basicAuth = require('express-basic-auth')
 const Security = require('./util/security');
 const session = require('express-session');
 
@@ -23,46 +22,44 @@ const logoutRouter = require('./routes/logout');
 
 const app = express();
 
-const COOKIE_SECRET = process.env.COOKIE_SECRET;
+const {COOKIE_SECRET, GAE_VERSION, DEV_BASIC_AUTH_PWD} = process.env;
 
 app.set('view engine', 'pug');
 app.set('views', './views');
 
-app.set('trust proxy', process.env.GAE_VERSION === "production");
+app.set('trust proxy', GAE_VERSION === "production");
 
 app.use(session({
   secret: COOKIE_SECRET,
   resave: true,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.GAE_VERSION === "production"
+    secure: GAE_VERSION === "production"
   }
 }));
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: false, verify: (req, _res, buf, encoding) => {
+
+// For Slack signature verification
+const inject_raw_body = (req, _res, buf, encoding) => {
   req.raw_body = buf.toString(encoding);
-}}));
+};
+
+app.use(express.urlencoded({ 
+  extended: false, 
+  verify: inject_raw_body
+}));
+
 app.use(express.static('public'));
 app.use(files());
 
-if (process.env.GAE_VERSION !== "production") { 
-  app.use(basicAuth({
-    users: {
-      'lc': process.env.DEV_BASIC_AUTH_PWD
-    },
-    challenge: true,
-    realm: 'nuit'
-  }));
-}
+if (GAE_VERSION !== "production")
+  app.use(Security.basic_auth_wrapper);
 
-const fix_ip = (req, _res, next) => {
-  req.headers["x-forwarded-for"] = req.get('X-AppEngine-User-IP') + ', ' + req.get('X-Forwarded-For');
-  next();
-};
+if (GAE_VERSION === "production")
+  app.use(Security.gae_fix_ip);
 
-app.use(fix_ip);
-
+// CORS Preflight -- https://developer.mozilla.org/en-US/docs/Glossary/Preflight_request
 const add_cors = (req, res, next) => {
   if (req.method !== "OPTIONS")
     return next();
@@ -74,17 +71,6 @@ const add_cors = (req, res, next) => {
 }
 
 app.use(add_cors);
-
-const log_request = (req, _res, next) => {
-  console.log(`New request from ${req.ip}`);
-  console.log(`req.ip: ${req.ip}`);
-  console.log(`req.ips: ${req.ips}`);
-  console.log(`X-Forwarded-For: ${req.get('X-Forwarded-For')}`);
-  next();
-};
-
-if (process.env.GAE_VERSION !== "production")
-  app.use(log_request);
 
 app.get("/", (_req, res) => {
   res.redirect("/queue");

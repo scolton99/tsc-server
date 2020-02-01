@@ -90,7 +90,7 @@ router.get('/status', async (_req, res, _next) => {
       background_color: background_color
     });
   } catch (e) {
-    console.log(e.message);
+    console.error(e.message);
     
     res.set('Access-Control-Allow-Origin', 'https://kb.northwestern.edu');
 

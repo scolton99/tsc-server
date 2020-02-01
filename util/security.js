@@ -1,7 +1,8 @@
 const IP = require('./IP');
 const crypto = require('crypto');
+const basic_auth = require('express-basic-auth');
 
-const { SLACK_SECRET, CONWEB_TOKEN } = process.env;
+const { SLACK_SECRET, CONWEB_TOKEN, DEV_BASIC_AUTH_PWD, GAE_VERSION } = process.env;
 
 const exp = {};
 
@@ -18,7 +19,7 @@ const get_origin_hostname = origin => {
     return res === null ? null : res[1];
 };
 
-const is_development = () => process.env.GAE_VERSION !== "production";
+const is_development = () => GAE_VERSION !== "production";
 
 exp.require_conweb_token = (req, res, next) => {
     if (is_development())
@@ -121,12 +122,47 @@ exp.require_slack_verified = (req, res, next) => {
 
 exp.require_logged_in = (req, res, next) => {
     if (!req.session.netid) {
-        req.session.last = req.baseUrl;
-        console.log("Setting last to " + req.baseUrl);
-        return res.redirect("/profile/login");
+        if (GAE_VERSION === "production") {
+            req.session.last = req.baseUrl;
+            return res.redirect("/profile/login");
+        } else {
+            return basic_auth_wrapper_int(req, res, next);
+        }
     }
 
     next();
 };
+
+const basic_auth_authorizer = (req, username, password) => {
+    if (password !== DEV_BASIC_AUTH_PWD)
+        return false;
+
+    req.session.netid = username;
+    return true;
+};
+
+const basic_auth_wrapper = (req, res, next) => {
+    if (IP.isLocal(req.ip))
+        return next();
+
+    return basic_auth_wrapper_int(req, res, next);
+};
+
+const basic_auth_wrapper_int = (req, res, next) => {
+    const basic_auth_test = basic_auth({
+        authorizer: basic_auth_authorizer.bind(null, req),
+        challenge: true,
+        realm: 'nuit'
+    });
+
+    return basic_auth_test(req, res, next);
+}
+
+exp.basic_auth_wrapper = basic_auth_wrapper;
+
+exp.gae_fix_ip = (req, _res, next) => {
+    req.headers["x-forwarded-for"] = req.get('X-AppEngine-User-IP') + ', ' + req.get('X-Forwarded-For');
+    next();
+}
 
 module.exports = exp;

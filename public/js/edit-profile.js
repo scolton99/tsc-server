@@ -56,8 +56,6 @@ const upload_photo = () => {
       document.getElementById("photo-upload-button").classList.remove("uploading");
 
       if (x.status < 400) {
-        console.log("Photo uploaded successfully!");
-
         document.getElementById("profile-photo").setAttribute("src", x.responseText);
       } else {
         console.error("POST failed.");        

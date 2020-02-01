@@ -8,8 +8,6 @@ router.get('/', (req, res, _next) => {
   req.session.destroy(err => {
     if (err) return next(err);
 
-    console.log("Logging out");
-
     const next = encodeURIComponent(OIDC_LOGOUT_REDIRECT_URI);
     res.redirect(`${OIDC_LOGOUT_ENDPOINT}${next}`);
   });

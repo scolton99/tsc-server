@@ -153,9 +153,6 @@ router.get("/edit", async (req, res, next) => {
 });
 
 router.post("/:netid/edit", (req, res, next) => {
-  console.log(req.params);
-  console.log(req.body);
-
   let {
     record_id,
     bio,
@@ -198,11 +195,10 @@ router.post("/:netid/edit", (req, res, next) => {
   });
 });
 
+// NetID should be set here due to Security on this route in app.js
 router.get('/', (req, res, _next) => {
-  console.log(`Redirecting to /profile/${req.session.netid}`);
-
   res.redirect(`/profile/${req.session.netid}`);
-})
+});
 
 router.get("/:netid", (req, res, next) => {
   const { netid } = req.params;
