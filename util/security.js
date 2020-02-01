@@ -18,7 +18,12 @@ const get_origin_hostname = origin => {
     return res === null ? null : res[1];
 };
 
+const is_development = () => process.env.GAE_VERSION !== "production";
+
 exp.require_conweb_token = (req, res, next) => {
+    if (is_development())
+        return next();
+
     let conweb_body_token;
     if (req.body)
         conweb_body_token = req.body.conweb_token;
@@ -30,6 +35,9 @@ exp.require_conweb_token = (req, res, next) => {
 };
 
 exp.require_northwestern = (req, res, next) => {
+    if (is_development())
+        return next();
+
     if (!IP.isNU(req.ip))
         forbidden(req, res, "Source not a Northwestern IP address");
     else
@@ -37,6 +45,9 @@ exp.require_northwestern = (req, res, next) => {
 };
 
 exp.require_local = (req, res, next) => {
+    if (is_development())
+        return next();
+
     if (!IP.isLocal(req.ip))
         forbidden(req, res, "Source not a local address");
     else
@@ -44,6 +55,9 @@ exp.require_local = (req, res, next) => {
 };
 
 exp.require_tss = (req, res, next) => {
+    if (is_development())
+        return next();
+
     if (!IP.isTSS(req.ip))
         forbidden(req, res, "Source not a TSS IP address");
     else
@@ -55,6 +69,9 @@ exp.require_all_granted = (_req, _res, next) => {
 };
 
 exp.require_nu_origin = (req, res, next) => {
+    if (is_development())
+        return next();
+
     if (typeof(req.get('Origin')) === 'undefined') return forbidden(req, res, "No origin header present");
 
     const origin_regex = /^(?:.+\.)?northwestern\.edu$/;
@@ -66,6 +83,9 @@ exp.require_nu_origin = (req, res, next) => {
 };
 
 exp.require_nu_referrer = (req, res, next) => {
+    if (is_development())
+        return next();
+
     if (typeof(req.get('Referrer')) === 'undefined') return forbidden(req, res, "No referrer header present");
 
     const referrer_regex = /^https?:\/\/([a-z0-9\-\.]*?)(?:\/.*)?$/i;
@@ -83,6 +103,9 @@ exp.require_nu_referrer = (req, res, next) => {
 }
 
 exp.require_slack_verified = (req, res, next) => {
+    if (is_development())
+        return next();
+
     const slack_timestamp = req.get('X-Slack-Request-Timestamp');
     const { raw_body: body } = req;
     const slack_signature = req.get('X-Slack-Signature');
@@ -94,6 +117,15 @@ exp.require_slack_verified = (req, res, next) => {
         forbidden(req, res, "Slack API signature nonexistent or did not match calculated signature");
     else
         next();
+};
+
+exp.require_logged_in = (req, res, next) => {
+    if (!req.session.netid) {
+        req.session.last = req.path;
+        return res.redirect("/profile/login");
+    }
+
+    next();
 };
 
 module.exports = exp;

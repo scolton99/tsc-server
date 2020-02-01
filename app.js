@@ -1,6 +1,7 @@
 const express = require('express');
 const files = require('express-fileupload');
 const Security = require('./util/security');
+const session = require('express-session');
 
 const kudosRouter = require('./routes/kudos');
 const photoRouter = require('./routes/photo');
@@ -16,13 +17,22 @@ const directoryRouter = require('./routes/directory');
 const whenToWorkRouter = require('./routes/whentowork');
 const scheduleRouter = require('./routes/schedule');
 const getNameRouter = require('./routes/name');
+const loginRouter = require('./routes/login');
 
 const app = express();
+
+const COOKIE_SECRET = process.env.COOKIE_SECRET;
 
 app.set('view engine', 'pug');
 app.set('views', './views');
 
 app.set('trust proxy', true);
+
+app.use(session({
+  secret: COOKIE_SECRET,
+  resave: true,
+  saveUninitialized: false
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false, verify: (req, _res, buf, encoding) => {
@@ -74,8 +84,11 @@ app.use('/photo', Security.require_nu_referrer, Security.require_conweb_token, p
 // TSC Today's Birthdays JSON
 app.use('/birthdays', Security.require_nu_origin, Security.require_conweb_token, birthdayRouter);
 
+// Login Handler
+app.use('/profile/login', loginRouter);
+
 // TSC Profile handler
-app.use('/profile', Security.require_nu_referrer, profileRouter);
+app.use('/profile', Security.require_logged_in, Security.require_nu_referrer, profileRouter);
 
 // FP Queue Handler
 app.use('/queue', queueRouter);
