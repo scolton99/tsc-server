@@ -22,7 +22,7 @@ const logoutRouter = require('./routes/logout');
 
 const app = express();
 
-const {COOKIE_SECRET, GAE_VERSION, DEV_BASIC_AUTH_PWD} = process.env;
+const { COOKIE_SECRET, GAE_VERSION } = process.env;
 
 app.set('view engine', 'pug');
 app.set('views', './views');
@@ -54,7 +54,7 @@ app.use(express.static('public'));
 app.use(files());
 
 if (GAE_VERSION !== "production")
-  app.use(Security.basic_auth_wrapper);
+  app.use(Security.dev_credentials);
 
 if (GAE_VERSION === "production")
   app.use(Security.gae_fix_ip);
@@ -72,6 +72,7 @@ const add_cors = (req, res, next) => {
 
 app.use(add_cors);
 
+// Homepage -> Queue
 app.get("/", (_req, res) => {
   res.redirect("/queue");
 });
@@ -80,7 +81,7 @@ app.get("/", (_req, res) => {
 app.use('/kudos', kudosRouter);
 
 // TSC Photo change handler
-app.use('/photo', Security.require_nu_referrer, Security.require_conweb_token, photoRouter);
+app.use('/photo', Security.require_logged_in, photoRouter);
 
 // TSC Today's Birthdays JSON
 app.use('/birthdays', Security.require_nu_origin, Security.require_conweb_token, birthdayRouter);
@@ -98,10 +99,10 @@ app.use('/profile', Security.require_logged_in, profileRouter);
 app.use('/queue', queueRouter);
 
 // Ticket Editor Handler
-app.use('/edit-ticket', Security.require_tss, editTicketRouter);
+app.use('/edit-ticket', Security.require_logged_in, editTicketRouter);
 
 // Contact CSV Handler
-app.use('/contacts', Security.require_northwestern, contactsRouter);
+app.use('/contacts', Security.require_logged_in, contactsRouter);
 
 // Assignment Group Stats Handler
 app.use('/assignment-group', Security.require_nu_origin, Security.require_conweb_token, assignmentGroupRouter);
@@ -118,8 +119,10 @@ app.use('/directory', Security.require_northwestern, directoryRouter);
 // WhenToWork Handler
 app.use('/w2w', Security.require_nu_origin, Security.require_conweb_token, whenToWorkRouter);
 
+// Schedule Handler
 app.use('/schedule', Security.require_tss, scheduleRouter);
 
+// Name Information Handler
 app.use('/get-name', getNameRouter);
 
 // Catch any errors

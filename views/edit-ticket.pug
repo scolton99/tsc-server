@@ -13,25 +13,20 @@ html
   body
     span#test-span
     .container
-      form(method="POST")
-        #netid-entry 
-          | My NetID is
+      #ticket-details
+        | Make ticket number
+        | 
+        input#ticket-id-field(type="text" placeholder="888888" oninput="calcWidth(this)")
+        | 
+        | submitted via
+        | 
+        #submission-tracking-display(onclick="toggleMenu()")
+          span#submission-tracking-display-text Chat
           | 
-          input#netid-field(oninput="calcWidth(this)" type="text" name="netid" placeholder="abc1234")
-        #ticket-details
-          | Make ticket number
-          | 
-          input#ticket-id-field(type="text" placeholder="888888" oninput="calcWidth(this)")
-          | 
-          | submitted via
-          | 
-          #submission-tracking-display(onclick="toggleMenu()")
-            span#submission-tracking-display-text Chat
-            | 
-            span.fas.fa-caret-down#submission-tracking-display-arrow
-            #submission-tracking-options
-              span#st-email(onclick="makeSelection(this)") Walk-In
-              span#st-email(onclick="makeSelection(this)") Chat
-              span#st-email(onclick="makeSelection(this)") Agent
-        #submit-button-container
-          button#submit-button(type="button" disabled onclick="submitEdit()") Go
+          span.fas.fa-caret-down#submission-tracking-display-arrow
+          #submission-tracking-options
+            span#st-email(onclick="makeSelection(this)") Walk-In
+            span#st-email(onclick="makeSelection(this)") Chat
+            span#st-email(onclick="makeSelection(this)") Agent
+      #submit-button-container
+        button#submit-button(type="button" disabled onclick="submitEdit()") Go

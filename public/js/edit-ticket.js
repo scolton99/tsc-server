@@ -6,24 +6,14 @@ window.calcWidth = el => {
   test.textContent = el.value;
 
   if (el.value === "") {
-    switch (el.id) {
-      case "netid-field": {
-        el.style.width = "200px";
-        break;
-      }
-      case "ticket-id-field": {
-        el.style.width = "194px";
-        break;
-      }
-    }
+    el.style.width = "194px";
   } else {
     el.style.width = test.offsetWidth + "px";
   }
 
-  const nf = document.getElementById("netid-field");
   const tif = document.getElementById("ticket-id-field");
 
-  if (nf.value !== "" && tif.value !== "")
+  if (tif.value !== "")
     document.getElementById("submit-button").removeAttribute("disabled");
   else
     document.getElementById("submit-button").setAttribute("disabled", "disabled");
@@ -41,15 +31,13 @@ window.submitEdit = () => {
   if (window.submitting)
     return;
 
-  const netid = document.getElementById("netid-field").value;
   const ticket_id = document.getElementById("ticket-id-field").value;
   const submission_tracking = document.getElementById("submission-tracking-display-text").textContent;
 
-  if (netid === "" || ticket_id === "" || submission_tracking === "")
+  if (ticket_id === "" || submission_tracking === "")
     return;
 
   const data = new URLSearchParams();
-  data.append("netid", netid);
   data.append("submission_tracking", submission_tracking);
   data.append("ticket_id", ticket_id);
 
@@ -57,7 +45,7 @@ window.submitEdit = () => {
   request.open("POST", "/edit-ticket", true);
   request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   request.onreadystatechange = () => {
-    if (request.readyState === 4) {
+    if (request.readyState === XMLHttpRequest.DONE) {
       const response = JSON.parse(request.responseText);
 
       window.submitting = false;

@@ -14,10 +14,13 @@ html
     script(src="/js/edit-profile.js")
   body    
     header
-      img(src=global.cdn("images/conweb-logo.png"))
-      //- div.fa-2x
-        a(href=`/profile/${user.NetID}` target="_blank")
+      a(href="https://kb.northwestern.edu/internal/conweb")
+        img(src=global.cdn("images/conweb-logo.png"))
+      div.fa-2x
+        //- a(href='/profile' target="_blank")
           span.fas.fa-external-link-alt
+        a(href='/profile/logout')
+          span.fas.fa-sign-out-alt
     main
       .save-fab-container 
         button#save(type="button").save-fab

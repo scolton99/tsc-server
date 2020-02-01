@@ -11,7 +11,8 @@ const {
   OIDC_TOKEN_ENDPOINT,
   OIDC_REDIRECT_URI,
   GAE_VERSION,
-  AIRTABLE_API_KEY
+  AIRTABLE_API_KEY,
+  DEV_BASIC_AUTH_PWD
 } = process.env;
 
 const SCOPES = [
@@ -35,14 +36,37 @@ const get_valid_netids = async () => {
   }
 };
 
-router.get("/", (_req, res, _next) => {
-  if (GAE_VERSION !== "production")
+router.get("/", (req, res, _next) => {
+  if (req.session.netid)
     return res.redirect("/profile");
+
+  if (GAE_VERSION !== "production") {
+    const { flash } = req.session;
+    req.session.flash = null;
+    return res.render("login", { flash: flash });
+  }
 
   const scopes_str = encodeURIComponent(SCOPES.join(" "));
   const redirect_uri = encodeURIComponent(OIDC_REDIRECT_URI);
 
   return res.redirect(`${OIDC_AUTH_ENDPOINT}?client_id=${OIDC_CLIENT_ID}&scope=${scopes_str}&response_type=code&redirect_uri=${redirect_uri}`);
+});
+
+router.post("/", (req, res, _next) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    req.session.flash = "Both username and password are required.";
+    return res.redirect("/profile/login");
+  }
+  
+  if (password !== DEV_BASIC_AUTH_PWD) {
+    req.session.flash = "Incorrect password.";
+    return res.redirect("/profile/login");
+  }
+
+  req.session.netid = username;
+  res.redirect(req.session.last || "/profile");
 });
 
 router.get("/oidc", async (req, res, next) => {

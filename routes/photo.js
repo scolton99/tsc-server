@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const airtable = require('airtable');
-const fs = require('fs');
 const {Storage} = require('@google-cloud/storage');
 
 // Setup connection to Airtable
@@ -16,7 +15,7 @@ router.post('/', (req, res) => {
     return res.status(400).end();
   }
 
-  const { netid } = req.body;
+  const { netid } = req.session;
   const { name: filename, mimetype } = req.files.photo;
   
   // Get the file's extension

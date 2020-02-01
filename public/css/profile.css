@@ -89,3 +89,20 @@ div.contact-record>span.fas, div.contact-record>span.far {
   margin: 0;
   border-color: #4e2a84 #4e2a84 #4e2a84 transparent;
 }
+
+body > header {
+  display: flex;
+  justify-content: space-between;
+}
+
+body > header > div > a, body > header > div {
+  color: #fff;
+}
+
+body > header > div > * {
+  margin: 0 10px;
+}
+
+body > header > div > a:visited {
+  color: #fff;
+}

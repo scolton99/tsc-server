@@ -197,7 +197,10 @@ router.post("/:netid/edit", (req, res, next) => {
 
 // NetID should be set here due to Security on this route in app.js
 router.get('/', (req, res, _next) => {
-  res.redirect(`/profile/${req.session.netid}`);
+  // For now, only allowing editing (no public profile)
+  res.redirect('/profile/edit');
+
+  // res.redirect(`/profile/${req.session.netid}`);
 });
 
 router.get("/:netid", (req, res, next) => {

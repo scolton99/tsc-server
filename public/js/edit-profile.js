@@ -1,4 +1,3 @@
-const NETID = document.querySelector("meta[name='netid']").getAttribute("content");
 const RECID = document.querySelector("meta[name='recid']").getAttribute("content");
 
 const init = () => {
@@ -12,7 +11,7 @@ const init = () => {
 
   document.getElementById("save").addEventListener("click", save_record);
 
-  Array.from(document.getElementsByTagName("input")).forEach(e => {
+  Array.from(document.querySelectorAll("input:not([type='file'])")).forEach(e => {
     e.addEventListener("input", show_save_button);
     e.addEventListener("change", show_save_button);
   });
@@ -46,8 +45,6 @@ const upload_photo = () => {
 
   const data = new FormData();
   data.append("photo", file);
-  data.append("netid", NETID);
-  data.append("conweb_token", "OnqtpZTPV8qAkFhaJuYT0mmkhmx6BK3F1KYNkwr3wiLgtG9A6QnWmLReTl5rFeHV");
 
   const x = new XMLHttpRequest();
   x.open("POST", "/photo");

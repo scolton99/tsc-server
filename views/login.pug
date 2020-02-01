@@ -1,0 +1,15 @@
+doctype html
+html
+  head
+    link(rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:200,400,600,700,900|Roboto")
+    link(rel="stylesheet" href="/css/login.css")
+    title Login
+  body
+    form(method="POST")
+      h1 Login
+      p This is not a standard NetID and NetID password login.
+      if flash
+        p#message= flash
+      input(type="text" name="username" placeholder="NetID")
+      input(type="password" name="password" placeholder="Administrative password")
+      button(type="submit" role="button") Login
