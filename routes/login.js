@@ -3,7 +3,6 @@ const router = express.Router();
 const airtable = require('airtable');
 const jwt = require('jsonwebtoken');
 const request = require('request-promise-native');
-const session = require('express-session');
 
 const {
   OIDC_CLIENT_ID,
@@ -43,7 +42,7 @@ router.get("/", (_req, res, _next) => {
   const scopes_str = encodeURIComponent(SCOPES.join(" "));
   const redirect_uri = encodeURIComponent(OIDC_REDIRECT_URI);
 
-  return res.redirect(`${OIDC_AUTH_ENDPOINT}?client_id=${OIDC_CLIENT_ID}&scope=${scopes_str}&response_type=code%20id_token&redirect_uri=${redirect_uri}`);
+  return res.redirect(`${OIDC_AUTH_ENDPOINT}?client_id=${OIDC_CLIENT_ID}&scope=${scopes_str}&response_type=code&redirect_uri=${redirect_uri}`);
 });
 
 router.get("/oidc", async (req, res, next) => {
