@@ -51,7 +51,8 @@ router.get("/oidc", async (req, res, next) => {
       case "interaction_required":
       case "login_required":
       case "account_selection_reqired":
-      case "consent_required": {
+      case "consent_required":
+      case "access_denied": {
         return res.status(403).sendFile('forbidden.html', { root: global.root_dir + '/public' });
       }
       
@@ -62,7 +63,6 @@ router.get("/oidc", async (req, res, next) => {
       case "registration_not_supported":
       case "invalid_request":
       case "unauthorized_client":
-      case "access_denied":
       case "invalid_scope":
       case "unsupported_response_type":
       case "server_error":
