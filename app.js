@@ -19,6 +19,7 @@ const scheduleRouter = require('./routes/schedule');
 const getNameRouter = require('./routes/name');
 const loginRouter = require('./routes/login');
 const logoutRouter = require('./routes/logout');
+const ticketStatsRouter = require('./routes/ticket-stats');
 
 const app = express();
 
@@ -124,6 +125,9 @@ app.use('/schedule', Security.require_tss, scheduleRouter);
 
 // Name Information Handler
 app.use('/get-name', getNameRouter);
+
+// Ticket Statistics Router
+app.use('/ticket-stats', Security.require_logged_in, ticketStatsRouter);
 
 // Catch any errors
 app.use((err, _req, res, _next) => {

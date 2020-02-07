@@ -17,7 +17,7 @@
     "pug": "^2.0.3",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
-    "xml2js": "^0.4.19"
+    "xml2js": "^0.4.23"
   },
   "devDependencies": {
     "mocha": "^6.2.2"

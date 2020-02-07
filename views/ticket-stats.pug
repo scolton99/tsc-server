@@ -1,0 +1,33 @@
+doctype html
+html 
+  head
+    meta(charset="UTF-8")
+    script(src="/js/ticket-stats.js")
+    link(rel="stylesheet" href="/css/index.css")
+    link(rel="stylesheet" href="/css/fonts.css")
+    link(rel="stylesheet" href="/css/ticket-stats.css")
+    link(rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:200|Roboto")
+    title Ticket Statistics
+  body
+    h1 Who's being reviewed?
+    form(method="POST")
+      section#netids
+        each empl in empls
+          label
+            input(type="checkbox" name="netids" value=empl.get("NetID") checked=true) 
+            | #{empl.get("First Name")} #{empl.get("Last Name")}
+      section#dates
+        each name in ["start", "end"]
+          label
+            span Review period #{name} date
+            div.input-group
+              select(name=`${name}-month` id=`${name}-month`)
+                each i in [...Array.from(Array(12).keys()).map(x => x + 1)]
+                  option(value=`${i}` selected=(months[i - 1] === cur_month))= months[i - 1]
+              select(name=`${name}-date` id=`${name}-date`)
+                each date in [...Array.from(Array(days).keys()).map(x => x + 1)]
+                  option(value=`${date}` selected=(date === cur_date))= date
+              select(name=`${name}-year` id=`${name}-year`)
+                each year in years
+                  option(value=`${year}` selected=(year === cur_year))= year
+      button(type="submit") Get Stats

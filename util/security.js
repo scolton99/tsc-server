@@ -64,10 +64,6 @@ exp.require_tss = (req, res, next) => {
         next();
 };
 
-exp.require_all_granted = (_req, _res, next) => {
-    next();
-};
-
 exp.require_nu_origin = (req, res, next) => {
     if (is_development())
         return next();
@@ -134,8 +130,13 @@ exp.gae_fix_ip = (req, _res, next) => {
 };
 
 exp.dev_credentials = (req, res, next) => {
-    if (!req.session.netid && req.path !== "/profile/login")
+    if (IP.isLocal(req.ip))
+        return next();
+
+    if (!req.session.netid && req.path !== "/profile/login") {
+        req.session.last = req.baseUrl;
         return res.redirect("/profile/login");
+    }
 
     next();
 };
