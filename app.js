@@ -21,15 +21,22 @@ const loginRouter = require('./routes/login');
 const logoutRouter = require('./routes/logout');
 const ticketStatsRouter = require('./routes/ticket-stats');
 
+let last;
+
 const app = express();
+console.info("Loaded Express");
 
 const { COOKIE_SECRET, GAE_VERSION } = process.env;
 
+last = process.hrtime.bigint();
 app.set('view engine', 'pug');
 app.set('views', './views');
+console.info("Setup Pug view engine (%dms)", Number(process.hrtime.bigint() - last) / 1000000);
 
 app.set('trust proxy', GAE_VERSION === "production");
+console.info(`Trust proxy ${GAE_VERSION === "production" ? "enabled" : "disabled"}`)
 
+last = process.hrtime.bigint();
 app.use(session({
   secret: COOKIE_SECRET,
   resave: true,
@@ -38,21 +45,28 @@ app.use(session({
     secure: GAE_VERSION === "production"
   }
 }));
+console.info("Initialized session system (%dms)", Number(process.hrtime.bigint() - last) / 1000000);
 
+last = process.hrtime.bigint();
 app.use(express.json());
+console.info("Loaded JSON module (%dms)", Number(process.hrtime.bigint() - last) / 1000000);
 
 // For Slack signature verification
 const inject_raw_body = (req, _res, buf, encoding) => {
   req.raw_body = buf.toString(encoding);
 };
 
+last = process.hrtime.bigint();
 app.use(express.urlencoded({ 
   extended: false, 
   verify: inject_raw_body
 }));
+console.info("Loaded POST body module (%dms)", Number(process.hrtime.bigint() - last) / 1000000);
 
+last = process.hrtime.bigint();
 app.use(express.static('public'));
 app.use(files());
+console.info("Setup static file server (%dms)", Number(process.hrtime.bigint() - last) / 1000000);
 
 if (GAE_VERSION !== "production")
   app.use(Security.dev_credentials);
@@ -71,8 +85,12 @@ const add_cors = (req, res, next) => {
   return res.status(204).end();
 }
 
+last = process.hrtime.bigint();
 app.use(add_cors);
+console.info("Enabled CORS (%dms)", Number(process.hrtime.bigint() - last) / 1000000);
 
+last = process.hrtime.bigint();
+console.info("Setting up route handlers...");
 // Homepage -> Queue
 app.get("/", (_req, res) => {
   res.redirect("/queue");
@@ -128,17 +146,22 @@ app.use('/get-name', getNameRouter);
 
 // Ticket Statistics Router
 app.use('/ticket-stats', Security.require_logged_in, ticketStatsRouter);
+console.info("Done (%dms)", Number(process.hrtime.bigint() - last) / 1000000);
 
+last = process.hrtime.bigint();
 // Catch any errors
 app.use((err, _req, res, _next) => {
   console.error(err.stack);
   res.status(500).sendFile('/public/error.html', {root: __dirname});
 });
+console.info("Setup error handler (%dms)", Number(process.hrtime.bigint() - last) / 1000000);
 
+last = process.hrtime.bigint();
 // Otherwise, it's a 404
 app.use((_req, res, _next) => {
   res.sendFile('public/not_found.html', {root: __dirname});
 });
+console.info("Setup 404 handler (%dms)", Number(process.hrtime.bigint() - last) / 1000000);
 
 global.root_dir = __dirname;
 global.cdn_endpoint = "//storage.googleapis.com/tss-support-center.appspot.com/"
