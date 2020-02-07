@@ -148,6 +148,11 @@ router.post('/', async (req, res, next) => {
       js_obj[netid][submission_tracking] = number;
   }
 
+  for (const netid of req.body.netids) {
+    if (!js_obj[netid])
+      js_obj[netid] = {"Agent": 0, "Walk-In": 0, "Chat": 0, "Email": 0};
+  }
+
   let info = {};
   a_base('Main').select({
     filterByFormula: '{Current}',
@@ -163,7 +168,10 @@ router.post('/', async (req, res, next) => {
     });
 
     const lines = ['"First Name","Last Name",NetID,Phone,Chat,Walk-In,Email'];
-    for (const netid of Object.keys(js_obj)) {
+    const netids_sorted = Object.keys(js_obj).sort((a, b) => {
+      return info[a][1] < info[b][1] ? -1 : info[a][1] > info[b][1] ? 1 : 0;
+    });
+    for (const netid of netids_sorted) {
       const name = info[netid];
 
       const line = [
