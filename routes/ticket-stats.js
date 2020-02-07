@@ -170,7 +170,7 @@ router.post('/', async (req, res, next) => {
         `"${name[0]}"`,
         `"${name[1]}"`,
         netid,
-        js_obj[netid]["Phone"] || "0",
+        js_obj[netid]["Agent"] || "0",
         js_obj[netid]["Chat"] || "0",
         js_obj[netid]["Walk-In"] || "0",
         js_obj[netid]["Email"] || "0"
