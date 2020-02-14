@@ -137,6 +137,11 @@ exp.require_lc = (req, res, next) => {
 };
 
 exp.gae_fix_ip = (req, _res, next) => {
+    if (typeof(req.get('X-AppEngine-User-IP')) === 'undefined' && typeof(req.get('X-Forwarded-For')) === 'undefined') {
+        req.headers["x-forwarded-for"] = req.connection.remoteaddress;
+        return next();
+    }
+
     req.headers["x-forwarded-for"] = req.get('X-AppEngine-User-IP') + ', ' + req.get('X-Forwarded-For');
     next();
 };

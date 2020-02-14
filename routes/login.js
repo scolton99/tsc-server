@@ -123,10 +123,17 @@ router.get("/oidc", async (req, res, next) => {
       redirect_uri: OIDC_REDIRECT_URI,
       client_id: OIDC_CLIENT_ID,
       client_secret: OIDC_CLIENT_SECRET
-    }
+    },
+    simple: false
   });
-
+  
   const token_res = JSON.parse(token_res_raw);
+
+  if (token_res.error) {
+    console.error(token_res.error + "\n" + token_res.error_description);
+    return next(token_res.error_description);
+  }
+
   const tokens = jwt.decode(token_res.id_token);
 
   const valid = await get_valid_netids();

@@ -2,6 +2,7 @@ const express = require('express');
 const files = require('express-fileupload');
 const Security = require('./util/security');
 const session = require('express-session');
+const Debug = require('./util/debug');
 
 const kudosRouter = require('./routes/kudos');
 const photoRouter = require('./routes/photo');
@@ -27,6 +28,7 @@ const app = express();
 console.info("Loaded Express");
 
 const { COOKIE_SECRET, GAE_VERSION } = process.env;
+const HTTPS = process.env.TSC_HTTPS ? process.env.TSC_HTTPS.toLowerCase() === "on" : true;
 
 last = process.hrtime.bigint();
 app.set('view engine', 'pug');
@@ -42,7 +44,7 @@ app.use(session({
   resave: true,
   saveUninitialized: false,
   cookie: {
-    secure: GAE_VERSION === "production"
+    secure: GAE_VERSION === "production" && HTTPS
   }
 }));
 console.info("Initialized session system (%dms)", Number(process.hrtime.bigint() - last) / 1000000);
@@ -73,6 +75,10 @@ if (GAE_VERSION !== "production")
 
 if (GAE_VERSION === "production")
   app.use(Security.gae_fix_ip);
+
+// app.use(Debug.log_request);
+// app.use(Debug.show_redirects);
+// app.use(Debug.show_session);
 
 // CORS Preflight -- https://developer.mozilla.org/en-US/docs/Glossary/Preflight_request
 const add_cors = (req, res, next) => {
