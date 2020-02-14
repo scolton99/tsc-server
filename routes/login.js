@@ -48,7 +48,7 @@ router.get("/", (req, res, _next) => {
   if (req.session.netid)
     return res.redirect("/profile");
 
-  if (GAE_VERSION !== "production") {
+  if (GAE_VERSION !== "production" && !GAE_VERSION.endsWith("-force-websso")) {
     const { flash } = req.session;
     req.session.flash = null;
     return res.render("login", { flash: flash });
@@ -126,7 +126,7 @@ router.get("/oidc", async (req, res, next) => {
     },
     simple: false
   });
-  
+
   const token_res = JSON.parse(token_res_raw);
 
   if (token_res.error) {
