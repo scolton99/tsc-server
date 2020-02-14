@@ -124,6 +124,18 @@ exp.require_logged_in = (req, res, next) => {
     next();
 };
 
+exp.require_lc = (req, res, next) => {
+    if (!req.session.netid) {
+        req.session.last = req.baseUrl;
+        return res.redirect("/profile/login");
+    }
+
+    if (!req.session.lc) 
+        return res.redirect("/");
+
+    next();
+};
+
 exp.gae_fix_ip = (req, _res, next) => {
     req.headers["x-forwarded-for"] = req.get('X-AppEngine-User-IP') + ', ' + req.get('X-Forwarded-For');
     next();

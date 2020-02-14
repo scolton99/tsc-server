@@ -25,10 +25,18 @@ const get_valid_netids = async () => {
   try {
     const recs = await a_base('Main').select({
       filterByFormula: '{Current}',
-      fields: ['NetID']
+      fields: ['NetID', 'Position']
     }).firstPage();
 
-    const x = recs.map(r => r.get('NetID').toLowerCase());
+    const x = {
+      all: recs.map(r => r.get('NetID').toLowerCase()),
+      lcs: recs.filter(r => r.get('Position') === "Lead Consultant").map(r => r.get('NetID').toLowerCase())
+    };
+
+    // Whoops, Lynne needs to be able to log in as well.
+    x.lcs.push("lynne");
+    x.all.push("lynne");
+
     return x;
   } catch (e) {
     console.error(e);
@@ -66,6 +74,7 @@ router.post("/", (req, res, _next) => {
   }
 
   req.session.netid = username;
+  req.session.lc = true;
   res.redirect(req.session.last || "/profile");
 });
 
@@ -125,8 +134,9 @@ router.get("/oidc", async (req, res, next) => {
   if (valid === null)
     return next('Failed to load valid NetIDs');
 
-  if (valid.includes(tokens.sub.toLowerCase())) {
+  if (valid.all.includes(tokens.sub.toLowerCase())) {
     req.session.netid = tokens.sub;
+    req.session.lc = valid.lcs.includes(tokens.sub.toLowerCase());
 
     res.redirect(req.session.last || `/profile/${req.session.netid}`);
   } else {

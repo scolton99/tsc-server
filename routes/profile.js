@@ -69,7 +69,7 @@ router.get("/edit", async (req, res, next) => {
     // If Airtable returns an error, log it and return 500
     if (err) {
       console.error(err);
-      return next(err);
+      return next();
     }
 
     // If we can't find a record with that ID, return 404

@@ -145,7 +145,7 @@ app.use('/schedule', Security.require_tss, scheduleRouter);
 app.use('/get-name', getNameRouter);
 
 // Ticket Statistics Router
-app.use('/ticket-stats', Security.require_logged_in, ticketStatsRouter);
+app.use('/ticket-stats', Security.require_lc, ticketStatsRouter);
 console.info("Done (%dms)", Number(process.hrtime.bigint() - last) / 1000000);
 
 last = process.hrtime.bigint();
