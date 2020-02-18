@@ -1,5 +1,6 @@
 # TSC Server
 This server exists to provide extra functionality to the resources that Northwestern IT Tier 1 uses.
+![TSC Server Integration Map](https://imgur.com/rwTBHI6.jpg)
 
 ## Running locally
 **Users who are not part of the organization should not use these steps. Fork the repository instead. Unless you have received special permission from the owners of the organization, do not expect any of your pull requests to be approved.**
