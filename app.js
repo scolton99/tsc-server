@@ -2,7 +2,6 @@ const express = require('express');
 const files = require('express-fileupload');
 const Security = require('./util/security');
 const session = require('express-session');
-const Debug = require('./util/debug');
 
 const kudosRouter = require('./routes/kudos');
 const photoRouter = require('./routes/photo');
@@ -21,6 +20,7 @@ const getNameRouter = require('./routes/name');
 const loginRouter = require('./routes/login');
 const logoutRouter = require('./routes/logout');
 const ticketStatsRouter = require('./routes/ticket-stats');
+const ootoRouter = require('./routes/ooto');
 
 let last;
 
@@ -149,6 +149,9 @@ app.use('/schedule', Security.require_tss, scheduleRouter);
 
 // Name Information Handler
 app.use('/get-name', getNameRouter);
+
+// OOTO Handler
+app.use('/ooto', ootoRouter);
 
 // Ticket Statistics Router
 app.use('/ticket-stats', Security.require_lc, ticketStatsRouter);
