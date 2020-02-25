@@ -151,7 +151,7 @@ app.use('/schedule', Security.require_tss, scheduleRouter);
 app.use('/get-name', getNameRouter);
 
 // OOTO Handler
-app.use('/ooto', ootoRouter);
+app.use('/ooto', Security.require_nu_origin, ootoRouter);
 
 // Ticket Statistics Router
 app.use('/ticket-stats', Security.require_lc, ticketStatsRouter);
