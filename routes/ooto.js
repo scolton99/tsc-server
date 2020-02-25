@@ -6,6 +6,8 @@ const airtable = require('airtable');
 const a_base = new airtable({ apiKey: process.env.AIRTABLE_API_KEY || "null" }).base('appydp8wFv8Yd5nVE');
 
 router.get("/", async (_req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://kb.northwestern.edu");
+
   a_base('OOTO').select({}).firstPage((err, records) => {
     if (err) {
       console.error(err);
