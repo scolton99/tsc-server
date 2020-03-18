@@ -13,7 +13,8 @@ const refresh_tickets = async () => {
     const hole = document.getElementById("background-hole");
     const confetti = document.getElementById("background-confetti");
 
-    if (typeof (num_tickets) === "number" && num_tickets >= 100 && num_tickets < 150)
+    // Per Blake Late Feb '20 -- remove animations on display
+    /* if (typeof (num_tickets) === "number" && num_tickets >= 100 && num_tickets < 150)
       fire.classList.add("active");
     else
       fire.classList.remove("active");
@@ -51,7 +52,7 @@ const refresh_tickets = async () => {
       hole.play();
     
     if (confetti.paused)
-      confetti.play();
+      confetti.play(); */
   });
 };
 
