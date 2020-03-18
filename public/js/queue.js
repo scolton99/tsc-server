@@ -7,11 +7,11 @@ const refresh_tickets = async () => {
     const ticket_info = document.getElementById("ticket_info");
     ticket_info.innerHTML = `<h1 class="title">There ${verb} ${num_tickets} ${noun} in the queue.</h1>`;
 
-    const fire = document.getElementById("background-fire");
-    const nuke = document.getElementById("background-nuke");
-    const nova = document.getElementById("background-nova");
-    const hole = document.getElementById("background-hole");
-    const confetti = document.getElementById("background-confetti");
+    // const fire = document.getElementById("background-fire");
+    // const nuke = document.getElementById("background-nuke");
+    // const nova = document.getElementById("background-nova");
+    // const hole = document.getElementById("background-hole");
+    // const confetti = document.getElementById("background-confetti");
 
     // Per Blake Late Feb '20 -- remove animations on display
     /* if (typeof (num_tickets) === "number" && num_tickets >= 100 && num_tickets < 150)
