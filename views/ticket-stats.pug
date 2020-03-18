@@ -14,7 +14,7 @@ html
       section#netids
         each empl in empls
           label
-            input(type="checkbox" name="netids" value=empl.get("NetID") checked=true) 
+            input(type="checkbox" name="netids" value=empl.get("NetID") checked=(empl.get("Position") !== "Lead Consultant")) 
             | #{empl.get("First Name")} #{empl.get("Last Name")}
       section#dates
         each name in ["start", "end"]

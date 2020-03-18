@@ -60,8 +60,8 @@ const num_days = (month, year) => {
 
 router.get('/', (_req, res, _next) => {
   a_base('Main').select({
-    filterByFormula: 'AND({Current}, {Position} != "Lead Consultant")',
-    fields: ['First Name', 'Last Name', 'NetID'],
+    filterByFormula: '{Current}',
+    fields: ['First Name', 'Last Name', 'NetID', 'Position'],
     sort: [{field: 'Last Name', direction: 'asc'}]
   }).firstPage((err, netids) => {
     if (err) {
