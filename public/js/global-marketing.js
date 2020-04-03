@@ -29,6 +29,11 @@ window.submitRequest = () => {
 
     const response = JSON.parse(x.responseText);
 
+    if (response.error) {
+      responseText.textContent = "Something went wrong.";
+      return;
+    }
+
     if (response.supported === true) {
       responseText.textContent = `Yes, ${response.domain} seems to be supported by Global Marketing.`
     } else if (response.supported == false) {
