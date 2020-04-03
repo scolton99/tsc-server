@@ -21,6 +21,7 @@ const loginRouter = require('./routes/login');
 const logoutRouter = require('./routes/logout');
 const ticketStatsRouter = require('./routes/ticket-stats');
 const ootoRouter = require('./routes/ooto');
+const globalMarketingRouter = require('./routes/global-marketing');
 
 let last;
 
@@ -152,6 +153,9 @@ app.use('/get-name', getNameRouter);
 
 // OOTO Handler
 app.use('/ooto', Security.require_nu_origin, ootoRouter);
+
+// OOTO Handler
+app.use('/global-marketing', globalMarketingRouter);
 
 // Ticket Statistics Router
 app.use('/ticket-stats', Security.require_lc, ticketStatsRouter);

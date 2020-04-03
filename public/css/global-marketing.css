@@ -1,0 +1,64 @@
+html, body {
+  height: 100%;
+}
+
+#entry, #response {
+  height: 50%;
+}
+
+.container {
+  font-family: 'Raleway', sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+div#entry, div#response {
+  font-size: 3.5em;
+  text-transform: lowercase;
+  display: flex;
+  align-items: center;
+  max-width: 75%;
+  text-align: center;
+}
+
+input[type="text"], input[type="number"] {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-family: inherit;
+  padding: 0 3px;
+  font-size: 1em;
+  border-bottom: 1px solid white;
+}
+
+input#domain-field {
+  width: 583px;
+  /* margin: 0 11px; */
+}
+
+#test-span {
+  font-size: 3.5em;
+  font-family: 'Raleway', sans-serif;
+  opacity: 0.0;
+  z-index: -2;
+  pointer-events: none;
+  position: fixed;
+  bottom: 100%;
+  right: 100%;
+}
+
+#loading {
+  display: none;
+}
+
+#entry button {
+  padding: 20px;
+  background: white;
+  border: none;
+  border-radius: 10em;
+  font-size: 0.7em;
+  font-family: 'Raleway', sans-serif;
+  cursor: pointer;
+  margin-top: 15px;
+}

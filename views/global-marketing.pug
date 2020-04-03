@@ -1,0 +1,23 @@
+doctype html
+html
+  head
+    link(rel="stylesheet" href="/css/index.css")
+    link(rel="stylesheet" href="/css/loading.css")
+    link(rel="stylesheet" href="/css/global-marketing.css")
+    link(rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:200|Roboto")
+    script(src="/js/global-marketing.js")
+  body
+    span#test-span
+    .container
+      #entry
+        div
+          | Is
+          |
+          input#domain-field(type="text" placeholder="www.northwestern.edu" oninput="calcWidth(this)" spellcheck="false")
+          | 
+          | supported by Global Marketing?
+          br
+          button(onclick="submitRequest()") search
+      #response
+        span.lds-dual-ring#loading
+        span#response-text
