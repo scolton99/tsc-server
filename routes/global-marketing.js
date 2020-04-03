@@ -10,7 +10,7 @@ router.post('/', async (req, res, _next) => {
   let { domain } = req.body;
 
   domain = domain.replace(/.*:\/\//, "").replace(/^(.*?)\/.*$/, "$1").toLowerCase();
-  const dns_response = await request(`https://dns.google.com/resolve?name=${domain}&type=A`);
+  const dns_response = await request(`https://dns.google/resolve?name=${domain}&type=A`);
 
   try {
     const { Answer: answer } = JSON.parse(dns_response);
