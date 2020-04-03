@@ -8,11 +8,11 @@ router.get('/', (_req, res, _next) => {
 
 router.post('/', async (req, res, _next) => {
   let { domain } = req.body;
-
   domain = domain.replace(/.*:\/\//, "").replace(/^(.*?)\/.*$/, "$1").toLowerCase();
-  const dns_response = await request(`https://dns.google/resolve?name=${domain}&type=A`);
 
   try {
+    const dns_response = await request(`https://dns.google/resolve?name=${domain}&type=A`);
+
     const { Answer: answer } = JSON.parse(dns_response);
 
     for (const item of answer) {
