@@ -59,24 +59,26 @@ const next_shift = date => {
         case 12:
         case 13:
         case 14:
-        case 15: {
-            if (mins < 30) {
-                next.setMinutes(30); 
-            } else {
+        case 15:
+        case 16: {
+            // if (mins < 30) {
+            //    next.setMinutes(30); 
+            // } else {
                 next.setHours(hrs + 1);
                 next.setMinutes(0);
-            }
+            //}
 
             break;
         }
-        case 16: {
-            if (mins < 30) {
-                next.setMinutes(30);
-            } else {
+        // case 16: {
+        case 17: {
+            // if (mins < 30) {
+            //    next.setMinutes(30);
+            // } else {
                 next.setHours(7);
                 next.setMinutes(45);
                 next.setDate(next.getDate() + 1);
-            }
+            // }
 
             break;
         }
@@ -96,19 +98,23 @@ const gen_res_obj = (events, date) => {
     const LIBRARY = global.POS_LIBRARY;
     const CONSULTANT = global.POS_CONSULTANT;
 
-    const people = {[CONSULTANT]: [], [SUPERVISOR]: [], [LIBRARY]: []};
+    const people = {[CONSULTANT]: new Set(), [SUPERVISOR]: new Set(), [LIBRARY]: new Set()};
 
     events.filter(e => {
         return (new Date(e.start.dateTime) <= date) && (new Date(e.end.dateTime) > date);
     }).forEach(e => {
         if (e.summary.includes(CONSULTANT)) {
-            people[CONSULTANT].push(new RegExp(`^(.*)${CONSULTANT}`).exec(e.summary)[1].trim());
+            people[CONSULTANT].add(new RegExp(`^(.*)${CONSULTANT}`).exec(e.summary)[1].trim());
         } else if (e.summary.includes(SUPERVISOR)) {
-            people[SUPERVISOR].push(new RegExp(`^(.*)${SUPERVISOR}`).exec(e.summary)[1].trim());
+            people[SUPERVISOR].add(new RegExp(`^(.*)${SUPERVISOR}`).exec(e.summary)[1].trim());
         } else if (e.summary.includes(LIBRARY)) {
-            people[LIBRARY].push(new RegExp(`^(.*)${LIBRARY}`).exec(e.summary)[1].trim());
+            people[LIBRARY].add(new RegExp(`^(.*)${LIBRARY}`).exec(e.summary)[1].trim());
         }
     });
+
+    people[CONSULTANT] = Array.from(people[CONSULTANT]);
+    people[SUPERVISOR] = Array.from(people[SUPERVISOR]);
+    people[LIBRARY] = Array.from(people[LIBRARY]);
 
     return people;
 };
@@ -224,7 +230,7 @@ router.get('/reauth', async(req, res) => {
     res.redirect('/schedule');
 });
 
-router.get('/', (req, res) => {
+router.get('/', (_req, res) => {
     res.render('schedule');
 });
 

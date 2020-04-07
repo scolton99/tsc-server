@@ -158,4 +158,51 @@ exp.dev_credentials = (req, res, next) => {
     next();
 };
 
+const mock_request = req => {
+    return {
+        headers: [],
+        ...req,
+        get: function (x) {
+            return this.headers[x.toLowerCase()];
+        }
+    }
+};
+
+const mock_response = res => {
+    return {
+        ...res,
+        status: function () {return this},
+        sendFile: () => {},
+        redirect: () => {}
+    }
+};
+
+exp.or = (act, ...secs) => {
+  return (req, res, next) => {
+    const s = new Array(secs.length);
+    s.fill(false);
+
+    const m = n => (s[n] = true);
+
+    const f_res = mock_response(JSON.parse(JSON.stringify(res)));
+    const f_req = mock_request(JSON.parse(JSON.stringify(req)));
+
+    f_res.redirect = () => {};
+    f_res.status = () => (f_res);
+    f_res.sendFile = () => {};
+
+    f_req.get = header => (f_req.headers[header.toLowerCase()]);
+
+    secs.forEach((sec, i) => {
+        sec(f_req, f_res, m.bind(null, i));
+    });
+
+    if (s.some(x => x)) {
+        next();
+    } else {
+        act(req, res, next);
+    }
+  };
+};
+
 module.exports = exp;

@@ -12,9 +12,9 @@ const n_sv_d = document.querySelector("#next .supervisor");
 const n_1800_d = document.querySelector("#next .i1800");
 const n_lib_d = document.querySelector("#next .library");
 
-const SUPERVISOR = "1800 Supervisor";
-const LIBRARY = "Library Consultant";
-const CONSULTANT = "1800 Consultant";
+const SUPERVISOR = "null";
+const LIBRARY = "Remote Ticket Work";
+const CONSULTANT = "Remote ACD Calls";
 
 const refresh_schedule = async() => {
     const req_date = location.hash.substr(1);

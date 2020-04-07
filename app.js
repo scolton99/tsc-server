@@ -146,7 +146,7 @@ app.use('/directory', Security.require_northwestern, directoryRouter);
 app.use('/w2w', Security.require_nu_origin, Security.require_conweb_token, whenToWorkRouter);
 
 // Schedule Handler
-app.use('/schedule', Security.require_tss, scheduleRouter);
+app.use('/schedule', Security.or(Security.require_logged_in, Security.require_logged_in, Security.require_tss, Security.require_conweb_token), scheduleRouter);
 
 // Name Information Handler
 app.use('/get-name', getNameRouter);
@@ -180,8 +180,8 @@ global.root_dir = __dirname;
 global.cdn_endpoint = "//storage.googleapis.com/tss-support-center.appspot.com/"
 global.cdn = x => `${global.cdn_endpoint}${x}`
 
-global.POS_SUPERVISOR = "1800 Supervisor";
-global.POS_CONSULTANT = "1800 Consultant";
-global.POS_LIBRARY = "Library Consultant";
+global.POS_SUPERVISOR = "null";
+global.POS_CONSULTANT = "Remote ACD Calls";
+global.POS_LIBRARY = "Remote Ticket Work";
 
 module.exports = app;
