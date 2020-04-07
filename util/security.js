@@ -184,8 +184,23 @@ exp.or = (act, ...secs) => {
 
     const m = n => (s[n] = true);
 
-    const f_res = mock_response(JSON.parse(JSON.stringify(res)));
-    const f_req = mock_request(JSON.parse(JSON.stringify(req)));
+    let cache = [];
+    const replacer = (_key, value) => {
+        if (typeof value === 'object' && value !== null) {
+            if (cache.indexOf(value) !== -1) {
+                // Duplicate reference found, discard key
+                return;
+            }
+            // Store value in our collection
+            cache.push(value);
+        }
+        return value;
+    }
+
+    const f_res = mock_response(JSON.parse(JSON.stringify(res, replacer)));
+    cache = [];
+    const f_req = mock_request(JSON.parse(JSON.stringify(req, replacer)));
+    cache = [];
 
     f_res.redirect = () => {};
     f_res.status = () => (f_res);
