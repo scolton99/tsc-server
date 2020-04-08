@@ -120,6 +120,8 @@ const gen_res_obj = (events, date) => {
 };
 
 router.get('/status', async(req, res) => {
+    res.header("Access-Control-Allow-Origin", "https://kb.northwestern.edu");
+
     const SUPERVISOR = global.POS_SUPERVISOR;
     const LIBRARY = global.POS_LIBRARY;
     const CONSULTANT = global.POS_CONSULTANT;
