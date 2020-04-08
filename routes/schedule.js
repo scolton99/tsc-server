@@ -47,11 +47,7 @@ const next_shift = date => {
     const mins = date.getMinutes();
 
     switch (hrs) {
-        case 7: {
-            next.setHours(9);
-            next.setMinutes(0);
-            break;
-        }
+        case 7:
         case 8:
         case 9:
         case 10:
@@ -75,16 +71,16 @@ const next_shift = date => {
             // if (mins < 30) {
             //    next.setMinutes(30);
             // } else {
-                next.setHours(7);
-                next.setMinutes(45);
+                next.setHours(8);
+                next.setMinutes(00);
                 next.setDate(next.getDate() + 1);
             // }
 
             break;
         }
         default: {
-            next.setHours(7);
-            next.setMinutes(45);
+            next.setHours(8);
+            next.setMinutes(00);
             if (hrs >= 18)
                 next.setDate(next.getDate() + 1);
         }
