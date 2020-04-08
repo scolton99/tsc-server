@@ -94,7 +94,7 @@ router.post('/', async (req, res, next) => {
   const start = `${req.body['start-year']}-${req.body['start-month']}-${req.body['start-date']}`;
   const end = `${req.body['end-year']}-${req.body['end-month']}-${req.body['end-date']}`;
 
-  const query = `SELECT COUNT(*), submission__btracking, mrUSERID FROM (SELECT DISTINCT MASTER1.mrID, MASTER1.submission__btracking, MASTER1_FIELDHISTORY.mrUSERID FROM MASTER1 INNER JOIN MASTER1_FIELDHISTORY on MASTER1_FIELDHISTORY.mrID = MASTER1.mrID WHERE MASTER1_FIELDHISTORY.mrUSERID IN (${netids}) AND MASTER1.mrSUBMITDATE &gt; TO_DATE('${start}', 'YYYY-MM-DD') AND MASTER1.mrSUBMITDATE &lt; TO_DATE('${end}', 'YYYY-MM-DD')) GROUP BY mrUSERID, submission__btracking`;
+  const query = `SELECT COUNT(*), submission__btracking, mrUSERID FROM (SELECT DISTINCT MASTER1.mrID, MASTER1.submission__btracking, MASTER1_FIELDHISTORY.mrUSERID FROM MASTER1 INNER JOIN MASTER1_FIELDHISTORY on MASTER1_FIELDHISTORY.mrID = MASTER1.mrID WHERE MASTER1_FIELDHISTORY.mrUSERID IN (${netids}) AND MASTER1.mrSUBMITDATE >= TO_DATE('${start}', 'YYYY-MM-DD') AND MASTER1.mrSUBMITDATE <= TO_DATE('${end}', 'YYYY-MM-DD')) GROUP BY mrUSERID, submission__btracking`;
   const query_auth = fp_request.replace("{{FP_USERNAME}}", FP_USERNAME).replace("{{FP_PASSWORD}}", FP_PASSWORD).replace("{{FP_QUERY}}", query);
   
   const fp_res = await request({
