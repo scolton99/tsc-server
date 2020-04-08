@@ -207,6 +207,7 @@ exp.or = (act, ...secs) => {
     f_res.sendFile = () => {};
 
     f_req.get = header => (f_req.headers[header.toLowerCase()]);
+    f_req.ip = req.ip;
 
     secs.forEach((sec, i) => {
         sec(f_req, f_res, m.bind(null, i));

@@ -68,3 +68,5 @@ public/photos/*
 app.yaml
 
 public/google*.html
+
+.vscode/
