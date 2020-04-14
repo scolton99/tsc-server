@@ -117,35 +117,37 @@ router.post('/', async (req, res, next) => {
 
   const js_obj = {};
 
-  for (const item of container[0]["item"]) {
-    let netid, number, submission_tracking;
-
-    for (const inner_item of item["item"]) {
-      switch(inner_item.key[0]["_"]) {
-        case "count(*)": {
-          number = parseInt(inner_item.value[0]["_"]);
-          break;
-        }
-        case "mruserid": {
-          netid = inner_item.value[0]["_"];
-          break;
-        }
-        case "submission__btracking": {
-          submission_tracking = FP.unfix(inner_item.value[0]["_"]);
+  if (container[0]["item"]) {
+    for (const item of container[0]["item"]) {
+      let netid, number, submission_tracking;
+  
+      for (const inner_item of item["item"]) {
+        switch(inner_item.key[0]["_"]) {
+          case "count(*)": {
+            number = parseInt(inner_item.value[0]["_"]);
+            break;
+          }
+          case "mruserid": {
+            netid = inner_item.value[0]["_"];
+            break;
+          }
+          case "submission__btracking": {
+            submission_tracking = FP.unfix(inner_item.value[0]["_"]);
+          }
         }
       }
+  
+      submission_tracking = fix_submission_tracking(submission_tracking);
+      if (!submission_tracking) continue;
+  
+      if (!js_obj[netid])
+        js_obj[netid] = {};
+  
+      if (js_obj[netid][submission_tracking])
+        js_obj[netid][submission_tracking] += number;
+      else
+        js_obj[netid][submission_tracking] = number;
     }
-
-    submission_tracking = fix_submission_tracking(submission_tracking);
-    if (!submission_tracking) continue;
-
-    if (!js_obj[netid])
-      js_obj[netid] = {};
-
-    if (js_obj[netid][submission_tracking])
-      js_obj[netid][submission_tracking] += number;
-    else
-      js_obj[netid][submission_tracking] = number;
   }
 
   for (const netid of req.body.netids) {
