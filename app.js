@@ -22,6 +22,7 @@ const logoutRouter = require('./routes/logout');
 const ticketStatsRouter = require('./routes/ticket-stats');
 const ootoRouter = require('./routes/ooto');
 const globalMarketingRouter = require('./routes/global-marketing');
+const noLocationRouter = require('./routes/no-location');
 
 let last;
 
@@ -160,6 +161,9 @@ app.use('/global-marketing', globalMarketingRouter);
 // Ticket Statistics Router
 app.use('/ticket-stats', Security.require_lc, ticketStatsRouter);
 console.info("Done (%dms)", Number(process.hrtime.bigint() - last) / 1000000);
+
+// No-Location Router
+app.use('/no-location', Security.require_lc, noLocationRouter);
 
 last = process.hrtime.bigint();
 // Catch any errors

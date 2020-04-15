@@ -1,0 +1,18 @@
+doctype html
+html
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    link(rel="stylesheet" href="/css/index.css")
+    link(rel="stylesheet" href="/css/no-location.css")
+    link(rel="stylesheet" href="/css/loading.css")
+    link(rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:200|Roboto")
+    title Tickets with No Location
+  body
+    h1 Tickets With No Location
+    h4 Last Two Weeks
+    .container
+      each ticket in tickets
+        p
+          a(href=`https://itsm-fp.northwestern.edu/MRcgi/MRlogin.pl?DL=${ticket.ticket}DA1` target='_blank')= ticket.ticket
+          span= ` (${ticket.name})`
