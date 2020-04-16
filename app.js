@@ -163,7 +163,7 @@ app.use('/ticket-stats', Security.require_lc, ticketStatsRouter);
 console.info("Done (%dms)", Number(process.hrtime.bigint() - last) / 1000000);
 
 // No-Location Router
-app.use('/no-location', Security.require_lc, noLocationRouter);
+app.use('/no-location', Security.require_logged_in, noLocationRouter);
 
 last = process.hrtime.bigint();
 // Catch any errors
