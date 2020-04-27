@@ -159,7 +159,7 @@ app.use('/ooto', Security.require_nu_origin, ootoRouter);
 app.use('/global-marketing', globalMarketingRouter);
 
 // Ticket Statistics Router
-app.use('/ticket-stats', Security.require_lc, ticketStatsRouter);
+app.use('/ticket-stats', Security.require_logged_in, ticketStatsRouter);
 console.info("Done (%dms)", Number(process.hrtime.bigint() - last) / 1000000);
 
 // No-Location Router
