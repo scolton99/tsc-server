@@ -77,6 +77,14 @@ router.get('/', Security.require_nu_origin, Security.require_conweb_token, (_req
       }
     ]
   }).firstPage((err, records) => {
+    if (err) {
+      console.error(err);
+      return next(err);
+    }
+
+    if (records.length === 0)
+      return res.json({});
+
     a_base('Main').select({
       pageSize: 100,
       fields: ['Name', 'NetID'],
@@ -86,11 +94,6 @@ router.get('/', Security.require_nu_origin, Security.require_conweb_token, (_req
       res.header("Access-Control-Allow-Origin", "https://kb.northwestern.edu");
         
       // Display errors if they occur 
-      if (err) {
-        console.error(err);
-        return next(err);
-      }
-
       if (err2) {
         console.error(err2);
         return next(err2);
