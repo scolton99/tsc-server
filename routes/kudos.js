@@ -77,6 +77,9 @@ router.get('/', Security.require_nu_origin, Security.require_conweb_token, (_req
       }
     ]
   }).firstPage((err, records) => {
+    // Allow this to be loaded by the KB
+    res.header("Access-Control-Allow-Origin", "https://kb.northwestern.edu");
+    
     if (err) {
       console.error(err);
       return next(err);
@@ -90,8 +93,6 @@ router.get('/', Security.require_nu_origin, Security.require_conweb_token, (_req
       fields: ['Name', 'NetID'],
       filterByFormula: '{Current}'
     }).firstPage((err2, name_netid) => {
-      // Allow this to be loaded by the KB
-      res.header("Access-Control-Allow-Origin", "https://kb.northwestern.edu");
         
       // Display errors if they occur 
       if (err2) {
