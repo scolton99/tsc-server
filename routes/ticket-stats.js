@@ -71,7 +71,7 @@ router.get('/', (_req, res, _next) => {
 
     const cur_date = new Date();
     const year = cur_date.getFullYear();
-    const years = [year - 1, year, year + 1];
+    const years = [year - 4, year - 3, year - 2, year - 1, year, year + 1];
     
     res.render('ticket-stats', { 
       empls: netids, 
