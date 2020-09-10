@@ -22,11 +22,11 @@ const get_background_color = num_tickets => {
   }
 }
 
-const get_num_tickets = async () => {
+const get_num_tickets = async queue => {
   const fp_username = process.env.FP_USERNAME;
   const fp_password = process.env.FP_PASSWORD;
 
-  const query = "SELECT COUNT(*) from MASTER1 WHERE (mrSTATUS IN ('Customer__bResponded', 'In__bProgress', 'Open', 'Request') AND mrASSIGNEES LIKE '%AA_SUPPORT__bCENTER%')";
+  const query = `SELECT COUNT(*) from MASTER1 WHERE (mrSTATUS IN ('Customer__bResponded', 'In__bProgress', 'Open', 'Request') AND mrASSIGNEES LIKE '%${queue}%')`;
 
   const queue_request_auth = fp_request.replace('{{FP_USERNAME}}', fp_username).replace('{{FP_PASSWORD}}', fp_password).replace("{{FP_QUERY}}", query);
 
@@ -67,40 +67,52 @@ const get_num_tickets = async () => {
   return num_tickets;
 };
 
-router.get('/', async (_req, res, _next) => {
+router.get('/', async (_req, res) => {
   res.render('queue');
   // res.sendFile('queue.html', { root: global.root_dir + '/public' });
 });
 
-router.get('/status', async (_req, res, _next) => {
+router.get('/2', async (_req, res) => {
+  res.render('queue2');
+})
+
+const status = async queue => {
   try {
-    const num_tickets = await get_num_tickets();
+    const num_tickets = await get_num_tickets(queue);
     const verb = num_tickets === 1 ? "is" : "are";
     const noun = num_tickets === 1 ? "ticket" : "tickets";
     const background_color = get_background_color(num_tickets);
 
     global.stored_ticket_value = num_tickets;
 
-    res.set('Access-Control-Allow-Origin', 'https://kb.northwestern.edu');
-
-    res.json({
+    return {
       num_tickets: num_tickets,
       verb: verb,
       noun: noun,
       background_color: background_color
-    });
+    };
   } catch (e) {
     console.error(e.message);
     
-    res.set('Access-Control-Allow-Origin', 'https://kb.northwestern.edu');
-
-    res.json({
+    return {
       num_tickets: 'an unknown amount of',
       verb: 'is',
       noun: 'tickets',
       background_color: '#000'
-    });
+    };
   }
+};
+
+router.get('/status', async (_req, res) => {
+  res.set('Access-Control-Allow-Origin', 'https://kb.northwestern.edu');
+
+  res.json(await status('AA_SUPPORT__bCENTER'));
+});
+
+router.get('/status2', async (_req, res) => {
+  res.set('Access-Control-Allow-Origin', 'https://kb.northwestern.edu');
+
+  res.json(await status('NUIT__uTSS__uUSSTier2'));
 });
 
 router.get('/quick', async (_req, res, _next) => {
