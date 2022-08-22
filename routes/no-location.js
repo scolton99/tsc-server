@@ -37,7 +37,7 @@ router.get('/', async (_req, res, next) => {
 
     const response = await bent_string('https://itsm-fp.northwestern.edu/MRcgi/MRWebServices.pl', fp_request_auth);
     xml2js.parseString(response, (xmlerr, xmlres) => {
-      const tickets = xmlres["SOAP-ENV:Envelope"]["SOAP-ENV:Body"][0]["namesp1:MRWebServices__searchResponse"][0]["return"][0]["item"];
+      const tickets = xmlres["soap:Envelope"]["soap:Body"][0]["namesp1:MRWebServices__searchResponse"][0]["return"][0]["item"];
       const list_clean = [];
   
       if (typeof(tickets) === "undefined")

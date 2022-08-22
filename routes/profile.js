@@ -37,8 +37,8 @@ const get_user_tickets = async netid => {
 
     // This is the worst thing ever written but you end up with the number of tickets currently in our queue!
     const {
-      'SOAP-ENV:Envelope': {
-        'SOAP-ENV:Body': [{
+      'soap:Envelope': {
+        'soap:Body': [{
           'namesp1:MRWebServices__searchResponse': [{
             return: [{
               item: [{

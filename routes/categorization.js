@@ -85,7 +85,7 @@ router.get('/:service_family/:service?/:category?/:sub_category?', async (req, r
           return next(err);
         }
 
-        const items = result["SOAP-ENV:Envelope"]["SOAP-ENV:Body"][0]["namesp1:MRWebServices__searchResponse"][0]["return"][0]["item"];
+        const items = result["soap:Envelope"]["soap:Body"][0]["namesp1:MRWebServices__searchResponse"][0]["return"][0]["item"];
         let formatted_items = [];
 
         for(const item of items) {

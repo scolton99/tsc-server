@@ -30,7 +30,7 @@ router.get('/status', async (_req, res, next) => {
       return next(err);
     }
 
-    const tickets = result["SOAP-ENV:Envelope"]["SOAP-ENV:Body"][0]["namesp1:MRWebServices__searchResponse"][0]["return"][0]["item"];
+    const tickets = result["soap:Envelope"]["soap:Body"][0]["namesp1:MRWebServices__searchResponse"][0]["return"][0]["item"];
     const list_clean = [];
 
     if (typeof(tickets) === "undefined")
