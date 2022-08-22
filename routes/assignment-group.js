@@ -62,7 +62,7 @@ router.get('/:group', async (req, res, next) => {
         return next(err);
       }
 
-      const items = result["SOAP-ENV:Envelope"]["SOAP-ENV:Body"][0]["namesp1:MRWebServices__searchResponse"][0]["return"][0]["item"];
+      const items = result["soap:Envelope"]["soap:Body"][0]["namesp1:MRWebServices__searchResponse"][0]["return"][0]["item"];
       let formatted_items = [];
       const possible_categories = ["service__bfamily", "service", "category", "sub__ucategory"];
 

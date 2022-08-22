@@ -106,8 +106,8 @@ router.post('/', async (req, res, next) => {
   const xml_obj = await xml2js.parseStringPromise(fp_res);
 
   const {
-    "SOAP-ENV:Envelope": {
-      "SOAP-ENV:Body": [{
+    "soap:Envelope": {
+      "soap:Body": [{
         "namesp1:MRWebServices__searchResponse": [{
           return: container
         }]
